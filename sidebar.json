@@ -1,0 +1,338 @@
+[
+    {
+        "title": "Introduction",
+        "path": "intro",
+        "collapsible": true,
+        "items": [
+            {
+                "title": "What is QPub?",
+                "path": "intro/qpub",
+                "collapsible": false
+            },
+            {
+                "title": "How to use QPub?",
+                "path": "intro/use-qpub",
+                "collapsible": false
+            },
+            {
+                "title": "Performance",
+                "path": "intro/performance",
+                "collapsible": false
+            },
+            {
+                "title": "Changelog",
+                "path": "changelog",
+                "collapsible": false
+            }
+        ]
+    },
+    {
+        "title": "Quick Start",
+        "path": "quickstart",
+        "collapsible": true,
+        "items": [
+            {
+                "title": "Overview",
+                "path": "quickstart",
+                "collapsible": false
+            },
+            {
+                "title": "JavaScript",
+                "path": "quickstart/javascript",
+                "collapsible": false
+            },
+            {
+                "title": "Node.js",
+                "path": "quickstart/nodejs",
+                "collapsible": false
+            },
+            {
+                "title": "React",
+                "path": "quickstart/react",
+                "collapsible": false
+            },
+            {
+                "title": "Python",
+                "path": "quickstart/python",
+                "collapsible": false
+            },
+            {
+                "title": "Go",
+                "path": "quickstart/go",
+                "collapsible": false
+            },
+            {
+                "title": "Rust",
+                "path": "quickstart/rust",
+                "collapsible": false
+            },
+            {
+                "title": "Java",
+                "path": "quickstart/java",
+                "collapsible": false
+            },
+            {
+                "title": "PHP",
+                "path": "quickstart/php",
+                "collapsible": false
+            },
+            {
+                "title": "Ruby",
+                "path": "quickstart/ruby",
+                "collapsible": false
+            },
+            {
+                "title": "Swift",
+                "path": "quickstart/swift",
+                "collapsible": false
+            },
+            {
+                "title": "Kotlin",
+                "path": "quickstart/kotlin",
+                "collapsible": false
+            },
+            {
+                "title": "React Native",
+                "path": "quickstart/react-native",
+                "collapsible": false
+            },
+            {
+                "title": "Flutter",
+                "path": "quickstart/flutter",
+                "collapsible": false
+            }
+        ]
+    },
+    {
+        "title": "Core Concepts",
+        "path": "core",
+        "collapsible": true,
+        "items": [
+            {
+                "title": "Authentication",
+                "path": "core/authentication",
+                "collapsible": false
+            }
+        ]
+    },
+    {
+        "title": "References",
+        "path": "reference",
+        "collapsible": true,
+        "items": [
+            {
+                "title": "REST SDK",
+                "path": "reference/sdk/rest",
+                "collapsible": true,
+                "items": [
+                    {
+                        "title": "Usage",
+                        "path": "reference/sdk/rest/usage",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Options",
+                        "path": "reference/sdk/rest/options",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Methods",
+                        "path": "reference/sdk/rest/methods",
+                        "collapsible": false
+                    }
+                ]
+            },
+            {
+                "title": "Socket SDK",
+                "path": "reference/sdk/socket",
+                "collapsible": true,
+                "items": [
+                    {
+                        "title": "Usage",
+                        "path": "reference/sdk/socket/usage",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Connection",
+                        "path": "reference/sdk/socket/connection",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Subscriptions",
+                        "path": "reference/sdk/socket/subscriptions",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Events",
+                        "path": "reference/sdk/socket/events",
+                        "collapsible": false
+                    }
+                ]
+            },
+            {
+                "title": "Socket",
+                "path": "reference/socket",
+                "collapsible": true,
+                "items": [
+                    {
+                        "title": "Overview",
+                        "path": "reference/socket",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Connection Lifecycle",
+                        "path": "reference/socket/connection-lifecycle",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Message Format",
+                        "path": "reference/socket/message-format",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Events",
+                        "path": "reference/socket/events",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Examples",
+                        "path": "reference/socket/examples",
+                        "collapsible": false
+                    }
+                ]
+            },
+            {
+                "title": "REST",
+                "path": "reference/rest",
+                "collapsible": true,
+                "items": [
+                    {
+                        "title": "Overview",
+                        "path": "reference/rest",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Authentication",
+                        "path": "reference/rest/authentication",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Endpoints",
+                        "path": "reference/rest/endpoints",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Examples",
+                        "path": "reference/rest/examples",
+                        "collapsible": false
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Dashboard",
+        "path": "dashboard",
+        "collapsible": true,
+        "items": [
+            {
+                "title": "Overview",
+                "path": "dashboard",
+                "collapsible": false
+            },
+            {
+                "title": "Accounts",
+                "path": "dashboard/accounts",
+                "collapsible": false
+            },
+            {
+                "title": "Projects",
+                "path": "dashboard/projects",
+                "collapsible": false
+            },
+            {
+                "title": "API Keys",
+                "path": "dashboard/api-keys",
+                "collapsible": false
+            },
+            {
+                "title": "Console",
+                "path": "dashboard/console",
+                "collapsible": false
+            }
+        ]
+    },
+    {
+        "title": "Enterprise",
+        "path": "enterprise",
+        "collapsible": true,
+        "items": [
+            {
+                "title": "Getting Started",
+                "path": "enterprise/getting-started",
+                "collapsible": true,
+                "items": [
+                    {
+                        "title": "Overview",
+                        "path": "enterprise/getting-started",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Installation",
+                        "path": "enterprise/getting-started/installation",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Usage",
+                        "path": "enterprise/getting-started/usage",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Configuration",
+                        "path": "enterprise/getting-started/configuration",
+                        "collapsible": false
+                    }
+                ]
+            },
+            {
+                "title": "Administration",
+                "path": "enterprise/administration",
+                "collapsible": true,
+                "items": [
+                    {
+                        "title": "User Management",
+                        "path": "enterprise/administration/user-management",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Licensing",
+                        "path": "enterprise/administration/licensing",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Monitoring",
+                        "path": "enterprise/administration/monitoring",
+                        "collapsible": false
+                    },
+                    {
+                        "title": "Scaling & Upgrades",
+                        "path": "enterprise/administration/scaling",
+                        "collapsible": false
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Community",
+        "path": "community",
+        "collapsible": true,
+        "items": [
+            {
+                "title": "Contribution Guide",
+                "path": "community/contribution",
+                "collapsible": false
+            }
+        ]
+    }
+]
