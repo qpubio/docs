@@ -4,11 +4,11 @@
         "items": [
             {
                 "title": "About QPub",
-                "path": "intro/about"
+                "path": "intro/about.mdx"
             },
             {
                 "title": "Using QPub",
-                "path": "intro/using"
+                "path": "intro/using.mdx"
             }
         ]
     },
@@ -17,15 +17,15 @@
         "items": [
             {
                 "title": "Quickstart Guide",
-                "path": "getting-started/quickstart"
+                "path": "getting-started/quickstart.mdx"
             },
             {
                 "title": "Choose an SDK",
-                "path": "getting-started/sdks"
+                "path": "getting-started/sdks.mdx"
             },
             {
                 "title": "API Overview",
-                "path": "getting-started/api-overview"
+                "path": "getting-started/apis.mdx"
             }
         ]
     },
@@ -37,23 +37,23 @@
                 "items": [
                     {
                         "title": "Overview",
-                        "path": "core/auth/overview"
+                        "path": "core/auth/index.mdx"
                     },
                     {
                         "title": "Basic Auth",
-                        "path": "core/auth/basic"
+                        "path": "core/auth/basic.mdx"
                     },
                     {
                         "title": "Token Auth",
-                        "path": "core/auth/token"
+                        "path": "core/auth/token.mdx"
                     },
                     {
                         "title": "Identified Client",
-                        "path": "core/auth/identified-client"
+                        "path": "core/auth/identified-client.mdx"
                     },
                     {
                         "title": "Permissions and Restrictions",
-                        "path": "core/auth/permissions"
+                        "path": "core/auth/permissions.mdx"
                     }
                 ]
             },
@@ -62,11 +62,11 @@
                 "items": [
                     {
                         "title": "Overview",
-                        "path": "core/connection/overview"
+                        "path": "core/connection/index.mdx"
                     },
                     {
                         "title": "Connection Lifecycle",
-                        "path": "core/connection/lifecycle"
+                        "path": "core/connection/lifecycle.mdx"
                     }
                 ]
             },
@@ -75,15 +75,15 @@
                 "items": [
                     {
                         "title": "Overview",
-                        "path": "core/channel/overview"
+                        "path": "core/channel/index.mdx"
                     },
                     {
                         "title": "Using Channel",
-                        "path": "core/channel/use"
+                        "path": "core/channel/using.mdx"
                     },
                     {
                         "title": "Channel Lifecycle",
-                        "path": "core/channel/lifecycle"
+                        "path": "core/channel/lifecycle.mdx"
                     }
                 ]
             },
@@ -92,15 +92,15 @@
                 "items": [
                     {
                         "title": "Overview",
-                        "path": "core/pubsub/overview"
+                        "path": "core/pubsub/index.mdx"
                     },
                     {
                         "title": "Publish",
-                        "path": "core/pubsub/publish"
+                        "path": "core/pubsub/publish.mdx"
                     },
                     {
                         "title": "Subscribe",
-                        "path": "core/pubsub/subscribe"
+                        "path": "core/pubsub/subscribe.mdx"
                     }
                 ]
             }
@@ -110,30 +110,30 @@
         "title": "API Reference",
         "items": [
             {
-                "title": "SDKs",
+                "title": "Socket SDK",
                 "items": [
                     {
-                        "title": "Socket SDK",
-                        "path": "api-references/socket-sdk"
-                    },
-                    {
-                        "title": "REST SDK",
-                        "path": "api-references/rest-sdk"
+                        "title": "Constructor",
+                        "path": "api/socket-sdk/constructor.mdx"
                     }
                 ]
             },
             {
-                "title": "APIs",
+                "title": "REST SDK",
                 "items": [
                     {
-                        "title": "Socket Protocol",
-                        "path": "api-references/socket-protocols"
-                    },
-                    {
-                        "title": "REST API",
-                        "path": "api-references/rest-api"
+                        "title": "Constructor",
+                        "path": "api/rest-sdk/constructor.mdx"
                     }
                 ]
+            },
+            {
+                "title": "Socket Protocol",
+                "path": "api/socket-protocol.mdx"
+            },
+            {
+                "title": "REST API",
+                "path": "api/rest-api.mdx"
             }
         ]
     },
@@ -142,27 +142,27 @@
         "items": [
             {
                 "title": "Overview",
-                "path": "dashboard/overview"
+                "path": "dashboard/index.mdx"
             },
             {
                 "title": "Accounts",
-                "path": "dashboard/accounts"
+                "path": "dashboard/accounts.mdx"
             },
             {
                 "title": "Projects",
-                "path": "dashboard/projects"
+                "path": "dashboard/projects.mdx"
             },
             {
                 "title": "API Keys",
-                "path": "dashboard/api-keys"
+                "path": "dashboard/api-keys.mdx"
             },
             {
                 "title": "Usage",
-                "path": "dashboard/usage"
+                "path": "dashboard/usage.mdx"
             },
             {
                 "title": "Console",
-                "path": "dashboard/console"
+                "path": "dashboard/console.mdx"
             }
         ]
     },
@@ -178,25 +178,25 @@
                 "items": [
                     {
                         "title": "Free",
-                        "path": "pricing/plans/free"
+                        "path": "pricing/plans/free.mdx"
                     },
                     {
                         "title": "Starter",
-                        "path": "pricing/plans/starter"
+                        "path": "pricing/plans/starter.mdx"
                     },
                     {
                         "title": "Pro",
-                        "path": "pricing/plans/pro"
+                        "path": "pricing/plans/pro.mdx"
                     }
                 ]
             },
             {
                 "title": "Limits",
-                "path": "pricing/limits"
+                "path": "pricing/limits.mdx"
             },
             {
                 "title": "Pricing FAQs",
-                "path": "pricing/faq"
+                "path": "pricing/faq.mdx"
             }
         ]
     },
@@ -205,16 +205,16 @@
         "items": [
             {
                 "title": "Contribution Guide",
-                "path": "community/contributing"
+                "path": "community/contributing.mdx"
             },
             {
                 "title": "Support",
-                "path": "community/support"
+                "path": "community/support.mdx"
             }
         ]
     },
     {
         "title": "Changelog",
-        "path": "changelog"
+        "path": "changelog.mdx"
     }
 ]
