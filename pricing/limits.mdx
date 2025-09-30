@@ -3,49 +3,32 @@ title: "Usage Limits"
 description: "Understand the usage limits and quotas for different QPub plans. Free, Starter, and Pro plan limits."
 ---
 
-Understand the usage limits and quotas for different QPub plans. QPub offers flexible pricing plans designed to accommodate applications of all sizes, from small personal projects to large-scale enterprise systems. Understanding these limits helps you choose the right plan and optimize your usage for cost efficiency.
+Understand the usage limits and quotas for different QPub plans.
 
-## Free Plan Limits and Capabilities
+## Free Plan Limits
 
-The free plan is designed to provide everything you need to get started with QPub and build small applications. With 10,000 API requests per month, you have sufficient capacity for development, testing, and small-scale production applications. This limit covers both REST API calls and WebSocket message publishing, giving you flexibility in how you use your quota.
+- **API Requests**: Up to 10,000 requests per month
+- **Connections**: Up to 100 concurrent connections
+- **Data Transfer**: Up to 1GB per month
+- **Channels**: Up to 10 channels
 
-Connection limits are set at 100 concurrent connections, which is adequate for small applications, development environments, and testing scenarios. This allows you to connect multiple clients simultaneously and test different user scenarios without restrictions.
+## Paid Plan Limits
 
-Data transfer is limited to 1GB per month, providing adequate bandwidth for text-based messaging, small file transfers, and typical application data. This limit encourages efficient data usage while providing sufficient capacity for most development and small-scale production use cases.
+### Starter Plan
+- **API Requests**: Up to 100,000 requests per month
+- **Connections**: Up to 1,000 concurrent connections
+- **Data Transfer**: Up to 10GB per month
+- **Channels**: Up to 100 channels
 
-Channel creation is limited to 10 channels, which is perfect for organizing different features, user groups, or application components. This limit encourages thoughtful channel design and provides enough flexibility for most small to medium applications.
+### Pro Plan
+- **API Requests**: Up to 1,000,000 requests per month
+- **Connections**: Up to 10,000 concurrent connections
+- **Data Transfer**: Up to 100GB per month
+- **Channels**: Unlimited channels
 
-## Paid Plan Limits and Scaling Options
+## Rate Limits
 
-### Starter Plan Capabilities
-
-The Starter plan is designed for growing applications and small businesses that need more capacity than the free plan provides. With 100,000 API requests per month, you have ten times the capacity of the free plan, making it suitable for applications with moderate usage patterns.
-
-Connection limits increase to 1,000 concurrent connections, supporting applications with many simultaneous users or complex architectures with multiple client types. This capacity is ideal for small to medium businesses, startups, and applications with growing user bases.
-
-Data transfer increases to 10GB per month, providing ample bandwidth for applications with regular file sharing, media content, or high-frequency data exchange. This limit supports most business applications while encouraging efficient data usage.
-
-Channel limits increase to 100 channels, providing significant flexibility for organizing complex applications with multiple features, user groups, or communication patterns. This capacity supports sophisticated application architectures and multi-tenant systems.
-
-### Pro Plan Enterprise Features
-
-The Pro plan is designed for production applications with high-volume requirements and enterprise needs. With 1,000,000 API requests per month, you have massive capacity for high-traffic applications, large-scale systems, and enterprise deployments.
-
-Connection limits increase to 10,000 concurrent connections, supporting applications with thousands of simultaneous users or complex microservice architectures. This capacity is ideal for large businesses, enterprise applications, and high-scale systems.
-
-Data transfer increases to 100GB per month, providing substantial bandwidth for applications with heavy data usage, media streaming, or high-frequency real-time updates. This limit supports enterprise applications with demanding data requirements.
-
-Channel limits are unlimited in the Pro plan, providing complete flexibility for organizing complex applications, multi-tenant systems, and large-scale architectures. This unlimited capacity supports the most sophisticated application designs and enterprise requirements.
-
-## Rate Limits and Fair Usage
-
-All plans are subject to rate limits to ensure fair usage and service stability across all customers. Rate limits are designed to prevent abuse while allowing normal application usage patterns. These limits are generous and rarely impact legitimate applications.
-
-Rate limits are applied per API key and include both request frequency limits and burst capacity allowances. The limits are designed to accommodate normal application usage patterns while preventing abuse and ensuring consistent service quality for all customers.
-
-Rate limiting includes automatic throttling when limits are exceeded, with clear error messages that help you understand and adjust your usage patterns. The system provides feedback to help you optimize your application's API usage and avoid hitting limits unnecessarily.
-
-Monitoring your usage against these limits helps you plan for scaling and identify opportunities for optimization. QPub provides detailed usage analytics and alerts to help you stay within your plan limits and understand your consumption patterns.
+All plans are subject to rate limits to ensure fair usage and service stability.
 
 ---
 

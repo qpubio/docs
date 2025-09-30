@@ -3,123 +3,94 @@ title: "APIs"
 description: "Learn about QPub's REST and WebSocket APIs for building real-time applications. Authentication and SDKs."
 ---
 
-Learn about QPub's REST and WebSocket APIs for building real-time applications. QPub provides two powerful APIs designed to meet different integration needs, whether you're building simple web applications or complex real-time systems.
+Learn about QPub's REST and WebSocket APIs for building real-time applications.
 
-## API Overview
+## Overview
 
-QPub offers two main APIs that complement each other for comprehensive application development. The REST API provides HTTP-based access for standard request/response operations, making it perfect for server-to-server communication, data management, and administrative tasks. This API follows RESTful principles and integrates seamlessly with existing web applications and backend services.
+QPub provides two main APIs for different use cases:
 
-The WebSocket API enables real-time bidirectional communication, allowing your applications to send and receive messages instantly. This is ideal for chat applications, live notifications, collaborative tools, and any scenario where real-time updates are essential. The WebSocket API maintains persistent connections and handles the complexity of real-time communication automatically.
+- **REST API**: HTTP-based API for standard request/response operations
+- **WebSocket API**: Real-time bidirectional communication
 
-Both APIs share the same authentication system and work together seamlessly. You can use the REST API for setup and configuration tasks, then leverage the WebSocket API for real-time features in the same application.
+## REST API
 
-## REST API for Standard Operations
+### Base URL
+```
+https://api.qpub.com/v1
+```
 
-The REST API is built on HTTP and provides a familiar interface for developers. It's perfect for operations like creating channels, managing users, retrieving message history, and handling administrative tasks. The API follows RESTful conventions, making it easy to integrate with existing tools and workflows.
-
-### Base URL and Authentication
-
-All REST API requests are made to `https://api.qpub.com/v1` and require authentication using your API key. Authentication is handled through the standard Authorization header with a Bearer token:
-
+### Authentication
 ```bash
 curl -H "Authorization: Bearer YOUR_API_KEY" \
      https://api.qpub.com/v1/channels
 ```
 
-This approach ensures secure communication and is compatible with all HTTP clients and libraries. Your API key provides access to all resources within your account, with permissions controlled through the dashboard.
+### Common Endpoints
+- `GET /channels` - List channels
+- `POST /channels` - Create channel
+- `POST /channels/{id}/messages` - Send message
+- `GET /channels/{id}/messages` - Get messages
 
-### Core Endpoints
+## WebSocket API
 
-The REST API provides comprehensive endpoints for managing all aspects of your QPub integration. Channel management includes listing existing channels, creating new ones, updating configurations, and retrieving detailed information about channel properties and usage statistics.
+### Connection URL
+```
+wss://api.qpub.com/v1/socket
+```
 
-Message operations allow you to send messages programmatically and retrieve message history for analysis, archiving, or displaying chat logs. The API supports various message types including text, JSON data, and binary content, with full metadata support for timestamps, authors, and custom properties.
-
-User and permission management endpoints enable you to control access, manage roles, and configure fine-grained permissions. This is essential for applications that need to control who can access specific channels or perform certain operations.
-
-## WebSocket API for Real-time Communication
-
-The WebSocket API provides the foundation for real-time features in your applications. It maintains persistent connections between clients and QPub servers, enabling instant message delivery and real-time updates. This API is designed for high-performance scenarios where latency matters.
-
-### Connection and Authentication
-
-Connections are established to `wss://api.qpub.com/v1/socket` using standard WebSocket protocols. Once connected, authentication is handled by sending an auth message with your API key:
-
+### Authentication
 ```javascript
+// Send auth message after connection
 {
   "type": "auth",
   "apiKey": "your-api-key"
 }
 ```
 
-The connection process includes automatic reconnection handling, connection health monitoring, and graceful error handling. This ensures your applications remain connected even during network interruptions or server maintenance.
-
-### Message Format and Types
-
-All WebSocket communication uses a consistent JSON message format. Client-to-server messages include the message type, target channel, and data payload:
-
+### Message Format
 ```javascript
-// Publishing a message
+// Client to server
 {
   "type": "publish",
   "channel": "my-channel",
-  "data": { 
-    "text": "Hello!",
-    "author": "user123"
-  }
+  "data": { "text": "Hello!" }
 }
-```
 
-Server-to-client messages include the same information plus metadata like timestamps and message IDs:
-
-```javascript
-// Receiving a message
+// Server to client
 {
   "type": "message",
   "channel": "my-channel",
-  "data": { 
-    "text": "Hello!",
-    "author": "user123"
-  },
-  "timestamp": "2024-01-01T00:00:00Z",
-  "messageId": "msg_123456"
+  "data": { "text": "Hello!" },
+  "timestamp": "2024-01-01T00:00:00Z"
 }
 ```
 
-## Official SDKs
-
-To simplify integration, QPub provides official SDKs for popular programming languages. These SDKs handle the complexity of API communication, authentication, connection management, and error handling, allowing you to focus on your application logic.
+## SDKs
 
 ### JavaScript SDK
-
-The JavaScript SDK provides both Socket and REST clients, making it easy to integrate QPub into web applications, Node.js backends, or React/Vue applications:
-
 ```javascript
-// WebSocket client for real-time features
 import { QPubSocket } from '@qpub/socket-sdk';
 
 const client = new QPubSocket({
   apiKey: 'your-api-key'
 });
+```
 
-// REST client for standard operations
+### REST SDK
+```javascript
 import { QPubREST } from '@qpub/rest-sdk';
 
-const restClient = new QPubREST({
+const client = new QPubREST({
   apiKey: 'your-api-key'
 });
 ```
 
-### Multi-Language Support
+## Getting Started
 
-SDKs are available for Python, Go, Java, and other popular languages, each optimized for the specific ecosystem and following language conventions. All SDKs provide consistent APIs and features, making it easy to work with QPub across different parts of your application stack.
-
-## Getting Started with APIs
-
-To begin using QPub's APIs, start by obtaining your API key through the dashboard. This key provides access to all API endpoints and should be kept secure. Choose the appropriate API based on your needs - use the REST API for standard operations and the WebSocket API for real-time features.
-
-Make your first API request to verify your setup and understand the response format. The APIs provide detailed error messages and comprehensive documentation to help you troubleshoot any issues. As you become more familiar with the APIs, you can explore advanced features like custom message types, channel permissions, and real-time analytics.
-
-The combination of REST and WebSocket APIs provides everything you need to build sophisticated real-time applications, from simple chat features to complex collaborative tools and real-time data streaming systems.
+1. **Get API Key**: Sign up and obtain your API key
+2. **Choose API**: Select REST or WebSocket based on your needs
+3. **Make First Request**: Send your first API request
+4. **Build Application**: Integrate QPub into your application
 
 ---
 

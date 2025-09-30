@@ -3,123 +3,83 @@ title: "Pub/Sub"
 description: "Publish and subscribe messaging system for real-time communication. Publishers, subscribers, channels, and messages."
 ---
 
-Publish and subscribe messaging system for real-time communication. QPub's publish/subscribe system enables real-time messaging between clients through channels, providing scalable and reliable message delivery that forms the foundation of modern real-time applications.
+Publish and subscribe messaging system for real-time communication.
 
-## Understanding the Pub/Sub Model
+## Overview
 
-QPub's publish/subscribe messaging system is designed around a simple but powerful model that enables flexible, scalable real-time communication. The system consists of four key components that work together to provide reliable message delivery and efficient resource utilization.
+QPub's publish/subscribe system enables real-time messaging between clients through channels, providing scalable and reliable message delivery.
 
-**Publishers** are applications or services that send messages to channels. They can be web applications, mobile apps, backend services, IoT devices, or any system capable of making HTTP requests or WebSocket connections. Publishers don't need to know who will receive their messages, making the system highly decoupled and scalable.
+## Key Concepts
 
-**Subscribers** are applications or services that receive messages from channels. They express interest in specific channels and receive all messages published to those channels. Subscribers can be multiple instances of the same application, different applications, or completely different systems, enabling flexible communication patterns.
+### Publishers
+Applications or services that send messages to channels.
 
-**Channels** are named message streams that organize and route messages. They act as intermediaries between publishers and subscribers, providing the organizational structure for your real-time communications. Channels can be public or private, persistent or temporary, and can have custom configurations for message retention, rate limiting, and access control.
+### Subscribers
+Applications or services that receive messages from channels.
 
-**Messages** are data packets containing information to be communicated. They can be simple text, structured JSON data, binary content, or any combination of these. Messages include metadata like timestamps, message IDs, and custom properties that provide rich information for processing and routing.
+### Channels
+Named message streams that organize and route messages.
 
-## Basic Pub/Sub Operations
+### Messages
+Data packets containing information to be communicated.
+
+## Basic Operations
 
 ### Publishing Messages
-
-Publishing messages is straightforward and can be done through either the REST API or WebSocket connection. Here's how to publish a message with rich metadata:
-
 ```javascript
 // Publish a message to a channel
 await client.publish('my-channel', {
   text: 'Hello, World!',
   author: 'user123',
-  timestamp: new Date().toISOString(),
-  metadata: {
-    priority: 'normal',
-    category: 'general'
-  }
+  timestamp: new Date().toISOString()
 });
 ```
 
-The publishing operation is asynchronous and returns immediately, allowing your application to continue processing while the message is delivered to subscribers. QPub handles the complexity of message routing, delivery guarantees, and error handling automatically.
-
 ### Subscribing to Channels
-
-Subscribing to channels enables your application to receive real-time updates. The subscription process is simple and provides immediate access to new messages:
-
 ```javascript
 // Subscribe to receive messages
 client.subscribe('my-channel', (message) => {
   console.log('Received message:', message);
-  // Process the message in your application
-  handleMessage(message);
 });
 ```
 
-Subscriptions are persistent and will continue to receive messages until explicitly unsubscribed. The system handles connection interruptions gracefully, automatically reconnecting and delivering any missed messages.
-
-### Managing Subscriptions
-
-You can unsubscribe from channels when they're no longer needed, which helps optimize resource usage and reduce unnecessary processing:
-
+### Unsubscribing
 ```javascript
 // Stop receiving messages from a channel
 client.unsubscribe('my-channel');
 ```
 
-Unsubscribing is immediate and stops message delivery to your application. You can resubscribe at any time to resume receiving messages from the channel.
-
-## Message Types and Data Formats
+## Message Types
 
 ### Text Messages
-
-Text messages are the simplest form of communication, perfect for chat applications, notifications, and simple data exchange:
-
 ```javascript
 client.publish('chat', {
   type: 'text',
-  content: 'Hello everyone!',
-  author: 'user123'
+  content: 'Hello everyone!'
 });
 ```
 
-Text messages are efficiently processed and delivered, making them ideal for high-frequency communication scenarios.
-
-### Structured JSON Data
-
-JSON messages enable complex data exchange between applications, perfect for configuration updates, sensor data, and application state synchronization:
-
+### JSON Data
 ```javascript
 client.publish('sensor-data', {
   temperature: 23.5,
   humidity: 65.2,
-  location: 'room-101',
-  timestamp: new Date().toISOString(),
-  sensor_id: 'temp_001'
+  location: 'room-101'
 });
 ```
-
-Structured data enables sophisticated applications that need to exchange complex information in real-time.
 
 ### Binary Data
-
-Binary messages support file transfers, images, and other non-text data:
-
 ```javascript
 const imageData = new Uint8Array([...]);
-client.publish('images', imageData, {
-  filename: 'profile.jpg',
-  contentType: 'image/jpeg',
-  size: imageData.length
-});
+client.publish('images', imageData);
 ```
 
-Binary data support enables rich media sharing and file synchronization in real-time applications.
+## Advanced Features
 
-## Advanced Pub/Sub Features
-
-QPub's publish/subscribe system includes advanced features that enable sophisticated real-time applications. **Message Persistence** stores messages for offline subscribers, ensuring that important messages aren't lost when clients are temporarily disconnected. This is essential for reliable communication in mobile applications and systems with intermittent connectivity.
-
-**Message Ordering** guarantees that messages are delivered to subscribers in the order they were published, which is crucial for applications that depend on sequential data processing or maintain application state through message sequences.
-
-**Fan-out Distribution** efficiently broadcasts messages to multiple subscribers simultaneously, optimizing network usage and reducing latency for applications with many concurrent users.
-
-**Selective Subscriptions** allow subscribers to receive only specific types of messages or messages matching certain criteria, reducing unnecessary processing and improving application efficiency.
+- **Message Persistence**: Store messages for offline subscribers
+- **Message Ordering**: Guarantee message delivery order
+- **Fan-out Distribution**: Efficient message broadcasting
+- **Selective Subscriptions**: Subscribe to specific message types
 
 ---
 
