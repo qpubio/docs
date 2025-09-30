@@ -1,0 +1,92 @@
+---
+title: "Permissions"
+description: "Configure and manage fine-grained permissions in QPub. Channel permissions, role-based access, and security controls."
+---
+
+# Permissions
+
+Learn how to configure and manage fine-grained permissions in QPub.
+
+## Overview
+
+QPub provides a comprehensive permissions system to control access to channels, messages, and administrative functions.
+
+## Permission Types
+
+### Channel Permissions
+- **read**: Subscribe to channel and receive messages
+- **write**: Publish messages to channel
+- **admin**: Manage channel settings and permissions
+- **moderate**: Remove messages and manage subscribers
+
+### System Permissions
+- **create_channels**: Create new channels
+- **delete_channels**: Delete existing channels
+- **manage_users**: Add/remove users and permissions
+- **view_analytics**: Access usage analytics and metrics
+
+## Permission Configuration
+
+### User-Level Permissions
+```javascript
+// Grant permissions to a user
+await client.grantPermissions('user123', [
+  'read:channel-general',
+  'write:channel-general',
+  'create_channels'
+]);
+```
+
+### Role-Based Permissions
+```javascript
+// Create a role with permissions
+const moderatorRole = await client.createRole({
+  name: 'moderator',
+  permissions: [
+    'read:*',
+    'write:*',
+    'moderate:*'
+  ]
+});
+
+// Assign role to user
+await client.assignRole('user123', 'moderator');
+```
+
+### Channel-Specific Permissions
+```javascript
+// Set channel permissions
+await client.setChannelPermissions('private-channel', {
+  'user:123': ['read', 'write'],
+  'role:admin': ['read', 'write', 'admin'],
+  'role:guest': ['read']
+});
+```
+
+## Permission Inheritance
+
+Permissions can be inherited through:
+- **User roles**: Users inherit permissions from their assigned roles
+- **Channel hierarchies**: Sub-channels inherit permissions from parent channels
+- **Group memberships**: Users inherit permissions from their groups
+
+## Permission Checking
+
+### Server-Side Validation
+All permissions are validated server-side before allowing operations.
+
+### Client-Side Checking
+```javascript
+// Check if user has permission
+const canPublish = await client.hasPermission('write:my-channel');
+
+if (canPublish) {
+  await client.publish('my-channel', message);
+} else {
+  console.log('Insufficient permissions');
+}
+```
+
+---
+
+*This page is under construction. Permissions documentation will be expanded soon.*

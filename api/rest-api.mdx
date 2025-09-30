@@ -1,0 +1,52 @@
+---
+title: "REST API"
+description: "Access QPub services through our RESTful API endpoints. HTTP-based access to all QPub services and features."
+---
+
+# REST API
+
+Access QPub services through our RESTful API endpoints.
+
+## Overview
+
+The QPub REST API provides HTTP-based access to all QPub services and features.
+
+## Base URL
+
+```
+https://api.qpub.com/v1
+```
+
+## Authentication
+
+All API requests require authentication using your API key:
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+     https://api.qpub.com/v1/channels
+```
+
+## Core Endpoints
+
+### Channels
+- `GET /channels` - List channels
+- `POST /channels` - Create channel
+- `GET /channels/{id}` - Get channel details
+- `PUT /channels/{id}` - Update channel
+- `DELETE /channels/{id}` - Delete channel
+
+### Messages
+- `POST /channels/{id}/messages` - Send message
+- `GET /channels/{id}/messages` - Get messages
+
+### Connections
+- `GET /connections` - List connections
+- `POST /connections` - Create connection
+
+## Response Format
+
+All responses are returned in JSON format with consistent structure.
+
+---
+
+*This page is under construction. REST API documentation will be expanded soon.*

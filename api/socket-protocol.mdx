@@ -1,0 +1,66 @@
+---
+title: "Socket Protocol"
+description: "Understand the QPub WebSocket protocol for real-time communication. Connection, authentication, and message format."
+---
+
+# Socket Protocol
+
+Understand the QPub WebSocket protocol for real-time communication.
+
+## Overview
+
+The QPub Socket Protocol provides real-time, bidirectional communication using WebSocket connections.
+
+## Connection
+
+### WebSocket URL
+```
+wss://api.qpub.com/v1/socket
+```
+
+### Authentication
+Send authentication message upon connection:
+```json
+{
+  "type": "auth",
+  "apiKey": "your-api-key"
+}
+```
+
+## Message Format
+
+All messages follow a consistent JSON structure:
+
+```json
+{
+  "type": "message_type",
+  "data": { ... },
+  "timestamp": "2024-01-01T00:00:00Z"
+}
+```
+
+## Message Types
+
+### Client to Server
+- **auth**: Authenticate connection
+- **subscribe**: Subscribe to channel
+- **unsubscribe**: Unsubscribe from channel
+- **publish**: Publish message to channel
+
+### Server to Client
+- **connected**: Connection established
+- **message**: Received message
+- **error**: Error notification
+- **status**: Connection status update
+
+## Connection Lifecycle
+
+1. **Connect**: Establish WebSocket connection
+2. **Authenticate**: Send authentication message
+3. **Subscribe**: Subscribe to channels
+4. **Communicate**: Send and receive messages
+5. **Disconnect**: Close connection
+
+---
+
+*This page is under construction. Socket protocol documentation will be expanded soon.*

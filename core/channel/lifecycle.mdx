@@ -1,0 +1,84 @@
+---
+title: "Channel Lifecycle"
+description: "Understand the complete lifecycle of channels in QPub. From creation to deletion with specific behaviors and capabilities."
+---
+
+# Channel Lifecycle
+
+Understand the complete lifecycle of channels in QPub.
+
+## Overview
+
+Channels in QPub go through several stages from creation to deletion, each with specific behaviors and capabilities.
+
+## Channel States
+
+### 1. Created
+- Channel is created but not yet active
+- No subscribers or messages
+- Configuration can be modified
+
+### 2. Active
+- Channel is ready for publishing and subscribing
+- Accepting new subscribers
+- Processing messages
+
+### 3. Paused
+- Channel is temporarily disabled
+- Existing subscribers remain connected
+- No new messages are processed
+
+### 4. Archived
+- Channel is read-only
+- Historical messages remain accessible
+- No new publishing or subscribing allowed
+
+### 5. Deleted
+- Channel is permanently removed
+- All data is purged
+- Cannot be recovered
+
+## Lifecycle Operations
+
+### Creating Channels
+```javascript
+// Create a new channel
+const channel = await client.createChannel({
+  name: 'my-channel',
+  type: 'public',
+  description: 'My custom channel'
+});
+```
+
+### Updating Channels
+```javascript
+// Update channel configuration
+await client.updateChannel('my-channel', {
+  description: 'Updated description',
+  settings: { maxSubscribers: 1000 }
+});
+```
+
+### Pausing Channels
+```javascript
+// Pause channel activity
+await client.pauseChannel('my-channel');
+```
+
+### Deleting Channels
+```javascript
+// Delete channel permanently
+await client.deleteChannel('my-channel');
+```
+
+## Automatic Lifecycle Management
+
+QPub automatically manages channel lifecycle based on:
+- Usage patterns
+- Subscription activity
+- Resource consumption
+- Configuration policies
+
+---
+
+*This page is under construction. Channel lifecycle documentation will be expanded soon.*

@@ -1,0 +1,60 @@
+---
+title: "Socket SDK Constructor"
+description: "Initialize and configure the QPub Socket SDK. Constructor options and configuration examples."
+---
+
+# Socket SDK Constructor
+
+Initialize and configure the QPub Socket SDK.
+
+## Overview
+
+The Socket SDK constructor creates a new instance of the QPub client for real-time communication.
+
+## Basic Usage
+
+```javascript
+import { QPubSocket } from '@qpub/socket-sdk';
+
+const client = new QPubSocket({
+  apiKey: 'your-api-key',
+  endpoint: 'wss://api.qpub.com'
+});
+```
+
+## Constructor Options
+
+### Required Parameters
+
+- **apiKey**: Your QPub API key for authentication
+
+### Optional Parameters
+
+- **endpoint**: WebSocket endpoint URL (defaults to production)
+- **autoConnect**: Automatically connect on initialization
+- **reconnect**: Enable automatic reconnection
+- **timeout**: Connection timeout in milliseconds
+
+## Configuration Examples
+
+### Basic Configuration
+```javascript
+const client = new QPubSocket({
+  apiKey: 'your-api-key'
+});
+```
+
+### Advanced Configuration
+```javascript
+const client = new QPubSocket({
+  apiKey: 'your-api-key',
+  endpoint: 'wss://api.qpub.com',
+  autoConnect: true,
+  reconnect: true,
+  timeout: 30000
+});
+```
+
+---
+
+*This page is under construction. Socket SDK constructor documentation will be expanded soon.*

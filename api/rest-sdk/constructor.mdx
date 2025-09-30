@@ -1,0 +1,62 @@
+---
+title: "REST SDK Constructor"
+description: "Initialize and configure the QPub REST SDK. Constructor options and configuration examples."
+---
+
+# REST SDK Constructor
+
+Initialize and configure the QPub REST SDK.
+
+## Overview
+
+The REST SDK constructor creates a new instance of the QPub client for HTTP-based API interactions.
+
+## Basic Usage
+
+```javascript
+import { QPubREST } from '@qpub/rest-sdk';
+
+const client = new QPubREST({
+  apiKey: 'your-api-key',
+  baseURL: 'https://api.qpub.com'
+});
+```
+
+## Constructor Options
+
+### Required Parameters
+
+- **apiKey**: Your QPub API key for authentication
+
+### Optional Parameters
+
+- **baseURL**: API base URL (defaults to production)
+- **timeout**: Request timeout in milliseconds
+- **retries**: Number of retry attempts for failed requests
+- **headers**: Additional HTTP headers
+
+## Configuration Examples
+
+### Basic Configuration
+```javascript
+const client = new QPubREST({
+  apiKey: 'your-api-key'
+});
+```
+
+### Advanced Configuration
+```javascript
+const client = new QPubREST({
+  apiKey: 'your-api-key',
+  baseURL: 'https://api.qpub.com',
+  timeout: 10000,
+  retries: 3,
+  headers: {
+    'User-Agent': 'MyApp/1.0'
+  }
+});
+```
+
+---
+
+*This page is under construction. REST SDK constructor documentation will be expanded soon.*

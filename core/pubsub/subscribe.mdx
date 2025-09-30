@@ -1,0 +1,68 @@
+---
+title: "Subscribe"
+description: "Learn how to subscribe to channels and receive real-time messages. Subscription options and event handlers."
+---
+
+# Subscribe
+
+Learn how to subscribe to channels and receive real-time messages.
+
+## Overview
+
+Subscribing to channels allows you to receive real-time messages and updates from QPub.
+
+## Basic Subscription
+
+### JavaScript SDK
+```javascript
+// Subscribe to a channel
+client.subscribe('my-channel', (message) => {
+  console.log('Received:', message);
+});
+```
+
+### REST API
+```bash
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  https://api.qpub.com/v1/subscriptions \
+  -d '{"channel": "my-channel"}'
+```
+
+## Subscription Options
+
+### With Event Handlers
+```javascript
+client.subscribe('my-channel', {
+  onMessage: (message) => {
+    console.log('New message:', message);
+  },
+  onError: (error) => {
+    console.error('Subscription error:', error);
+  }
+});
+```
+
+### Channel Patterns
+```javascript
+// Subscribe to multiple channels
+client.subscribe(['channel-1', 'channel-2', 'channel-3']);
+
+// Subscribe with pattern matching
+client.subscribe('user-*'); // Matches user-123, user-456, etc.
+```
+
+## Unsubscribing
+
+```javascript
+// Unsubscribe from a channel
+client.unsubscribe('my-channel');
+
+// Unsubscribe from multiple channels
+client.unsubscribe(['channel-1', 'channel-2']);
+```
+
+---
+
+*This page is under construction. Subscribe documentation will be expanded soon.*

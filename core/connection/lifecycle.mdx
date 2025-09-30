@@ -1,0 +1,101 @@
+---
+title: "Connection Lifecycle"
+description: "Understand how QPub connections are established, maintained, and managed. Connection states and event handling."
+---
+
+# Connection Lifecycle
+
+Understand how QPub connections are established, maintained, and managed.
+
+## Overview
+
+QPub connections go through several phases from initial establishment to final termination, each with specific behaviors and event handling.
+
+## Connection States
+
+### 1. Disconnected
+- No active connection to QPub
+- All operations are queued
+- Automatic reconnection may be attempted
+
+### 2. Connecting
+- Attempting to establish connection
+- Authentication in progress
+- Connection parameters being negotiated
+
+### 3. Connected
+- Active connection established
+- Ready to send and receive messages
+- All features available
+
+### 4. Reconnecting
+- Connection lost, attempting to reconnect
+- Queuing outgoing messages
+- Maintaining subscription state
+
+### 5. Failed
+- Connection permanently failed
+- Manual intervention required
+- Error details available
+
+## Connection Events
+
+### JavaScript SDK
+```javascript
+client.on('connecting', () => {
+  console.log('Connecting to QPub...');
+});
+
+client.on('connected', () => {
+  console.log('Connected successfully');
+});
+
+client.on('disconnected', () => {
+  console.log('Disconnected from QPub');
+});
+
+client.on('reconnecting', () => {
+  console.log('Reconnecting...');
+});
+
+client.on('error', (error) => {
+  console.error('Connection error:', error);
+});
+```
+
+## Connection Management
+
+### Manual Connection
+```javascript
+// Connect manually
+await client.connect();
+
+// Disconnect manually
+await client.disconnect();
+```
+
+### Automatic Reconnection
+```javascript
+const client = new QPubSocket({
+  apiKey: 'your-api-key',
+  reconnect: true,
+  reconnectDelay: 1000,
+  maxReconnectAttempts: 5
+});
+```
+
+## Connection Health Monitoring
+
+```javascript
+// Check connection status
+const isConnected = client.isConnected();
+
+// Get connection info
+const connectionInfo = client.getConnectionInfo();
+console.log('Connected to:', connectionInfo.endpoint);
+console.log('Uptime:', connectionInfo.uptime);
+```
+
+---
+
+*This page is under construction. Connection lifecycle documentation will be expanded soon.*

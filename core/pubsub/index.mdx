@@ -1,0 +1,88 @@
+---
+title: "Pub/Sub"
+description: "Publish and subscribe messaging system for real-time communication. Publishers, subscribers, channels, and messages."
+---
+
+# Pub/Sub
+
+Publish and subscribe messaging system for real-time communication.
+
+## Overview
+
+QPub's publish/subscribe system enables real-time messaging between clients through channels, providing scalable and reliable message delivery.
+
+## Key Concepts
+
+### Publishers
+Applications or services that send messages to channels.
+
+### Subscribers
+Applications or services that receive messages from channels.
+
+### Channels
+Named message streams that organize and route messages.
+
+### Messages
+Data packets containing information to be communicated.
+
+## Basic Operations
+
+### Publishing Messages
+```javascript
+// Publish a message to a channel
+await client.publish('my-channel', {
+  text: 'Hello, World!',
+  author: 'user123',
+  timestamp: new Date().toISOString()
+});
+```
+
+### Subscribing to Channels
+```javascript
+// Subscribe to receive messages
+client.subscribe('my-channel', (message) => {
+  console.log('Received message:', message);
+});
+```
+
+### Unsubscribing
+```javascript
+// Stop receiving messages from a channel
+client.unsubscribe('my-channel');
+```
+
+## Message Types
+
+### Text Messages
+```javascript
+client.publish('chat', {
+  type: 'text',
+  content: 'Hello everyone!'
+});
+```
+
+### JSON Data
+```javascript
+client.publish('sensor-data', {
+  temperature: 23.5,
+  humidity: 65.2,
+  location: 'room-101'
+});
+```
+
+### Binary Data
+```javascript
+const imageData = new Uint8Array([...]);
+client.publish('images', imageData);
+```
+
+## Advanced Features
+
+- **Message Persistence**: Store messages for offline subscribers
+- **Message Ordering**: Guarantee message delivery order
+- **Fan-out Distribution**: Efficient message broadcasting
+- **Selective Subscriptions**: Subscribe to specific message types
+
+---
+
+*This page is under construction. Pub/Sub documentation will be expanded soon.*

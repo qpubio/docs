@@ -1,0 +1,99 @@
+---
+title: "APIs"
+description: "Learn about QPub's REST and WebSocket APIs for building real-time applications. Authentication and SDKs."
+---
+
+# APIs
+
+Learn about QPub's REST and WebSocket APIs for building real-time applications.
+
+## Overview
+
+QPub provides two main APIs for different use cases:
+
+- **REST API**: HTTP-based API for standard request/response operations
+- **WebSocket API**: Real-time bidirectional communication
+
+## REST API
+
+### Base URL
+```
+https://api.qpub.com/v1
+```
+
+### Authentication
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+     https://api.qpub.com/v1/channels
+```
+
+### Common Endpoints
+- `GET /channels` - List channels
+- `POST /channels` - Create channel
+- `POST /channels/{id}/messages` - Send message
+- `GET /channels/{id}/messages` - Get messages
+
+## WebSocket API
+
+### Connection URL
+```
+wss://api.qpub.com/v1/socket
+```
+
+### Authentication
+```javascript
+// Send auth message after connection
+{
+  "type": "auth",
+  "apiKey": "your-api-key"
+}
+```
+
+### Message Format
+```javascript
+// Client to server
+{
+  "type": "publish",
+  "channel": "my-channel",
+  "data": { "text": "Hello!" }
+}
+
+// Server to client
+{
+  "type": "message",
+  "channel": "my-channel",
+  "data": { "text": "Hello!" },
+  "timestamp": "2024-01-01T00:00:00Z"
+}
+```
+
+## SDKs
+
+### JavaScript SDK
+```javascript
+import { QPubSocket } from '@qpub/socket-sdk';
+
+const client = new QPubSocket({
+  apiKey: 'your-api-key'
+});
+```
+
+### REST SDK
+```javascript
+import { QPubREST } from '@qpub/rest-sdk';
+
+const client = new QPubREST({
+  apiKey: 'your-api-key'
+});
+```
+
+## Getting Started
+
+1. **Get API Key**: Sign up and obtain your API key
+2. **Choose API**: Select REST or WebSocket based on your needs
+3. **Make First Request**: Send your first API request
+4. **Build Application**: Integrate QPub into your application
+
+---
+
+*This page is under construction. API documentation will be expanded soon.*

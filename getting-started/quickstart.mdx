@@ -1,0 +1,101 @@
+---
+title: "Quickstart"
+description: "Get started with QPub in minutes using our quickstart guide. Install SDK, create connection, and send your first message."
+---
+
+# Quickstart
+
+Get started with QPub in minutes using our quickstart guide.
+
+## Prerequisites
+
+- QPub account (sign up at [qpub.com](https://qpub.com))
+- Basic knowledge of JavaScript/TypeScript
+
+## Step 1: Get Your API Key
+
+1. Sign up for a QPub account
+2. Navigate to your dashboard
+3. Generate an API key from the API Keys section
+4. Copy your API key for use in your application
+
+## Step 2: Install the SDK
+
+```bash
+npm install @qpub/socket-sdk
+```
+
+## Step 3: Create Your First Connection
+
+```javascript
+import { QPubSocket } from '@qpub/socket-sdk';
+
+const client = new QPubSocket({
+  apiKey: 'your-api-key-here'
+});
+
+// Connect to QPub
+await client.connect();
+```
+
+## Step 4: Subscribe to a Channel
+
+```javascript
+// Subscribe to receive messages
+client.subscribe('my-channel', (message) => {
+  console.log('Received message:', message);
+});
+```
+
+## Step 5: Publish Your First Message
+
+```javascript
+// Publish a message to the channel
+await client.publish('my-channel', {
+  text: 'Hello, QPub!',
+  timestamp: new Date().toISOString()
+});
+```
+
+## Complete Example
+
+```javascript
+import { QPubSocket } from '@qpub/socket-sdk';
+
+async function main() {
+  // Initialize client
+  const client = new QPubSocket({
+    apiKey: 'your-api-key-here'
+  });
+
+  // Connect
+  await client.connect();
+  console.log('Connected to QPub!');
+
+  // Subscribe to channel
+  client.subscribe('demo-channel', (message) => {
+    console.log('Received:', message);
+  });
+
+  // Publish message
+  await client.publish('demo-channel', {
+    text: 'Hello from my QPub app!',
+    author: 'quickstart-user'
+  });
+
+  console.log('Message sent!');
+}
+
+main().catch(console.error);
+```
+
+## Next Steps
+
+- Explore the [APIs documentation](./apis.mdx)
+- Learn about [SDKs](./sdks.mdx)
+- Check out [Channel usage](../core/channel/using.mdx)
+- Read about [Authentication](../core/auth/index.mdx)
+
+---
+
+*This page is under construction. Quickstart guide will be expanded soon.*

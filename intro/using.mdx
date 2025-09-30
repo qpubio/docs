@@ -1,0 +1,87 @@
+---
+title: "Using QPub"
+description: "Learn how to effectively use QPub in your applications and workflows. Core concepts, use cases, and best practices."
+---
+
+# Using QPub
+
+Learn how to effectively use QPub in your applications and workflows.
+
+## Overview
+
+QPub is a real-time messaging platform that enables instant communication between applications, services, and users through a simple yet powerful publish/subscribe model.
+
+## Core Concepts
+
+### Channels
+Channels are named streams where messages are published and subscribed to. Think of them as topics or rooms where communication happens.
+
+### Messages
+Messages are the data packets that flow through channels. They can contain any JSON data, text, or binary content.
+
+### Publishers and Subscribers
+- **Publishers**: Send messages to channels
+- **Subscribers**: Receive messages from channels
+
+## Common Use Cases
+
+### Real-time Chat
+```javascript
+// Subscribe to chat messages
+client.subscribe('chat-room', (message) => {
+  displayMessage(message);
+});
+
+// Send chat message
+client.publish('chat-room', {
+  text: 'Hello everyone!',
+  author: 'user123'
+});
+```
+
+### Live Notifications
+```javascript
+// Subscribe to user notifications
+client.subscribe('user-123-notifications', (notification) => {
+  showNotification(notification);
+});
+```
+
+### Data Streaming
+```javascript
+// Stream sensor data
+client.subscribe('sensor-data', (data) => {
+  updateDashboard(data);
+});
+```
+
+### Collaborative Features
+```javascript
+// Real-time document collaboration
+client.subscribe('document-456-changes', (change) => {
+  applyDocumentChange(change);
+});
+```
+
+## Best Practices
+
+1. **Use descriptive channel names** that clearly indicate their purpose
+2. **Implement proper error handling** for connection issues
+3. **Consider message size** and frequency for optimal performance
+4. **Use appropriate authentication** for sensitive channels
+5. **Monitor usage** to stay within your plan limits
+
+## Integration Patterns
+
+### Web Applications
+Integrate QPub into web apps for real-time features like live updates, notifications, and collaborative editing.
+
+### Mobile Applications
+Use QPub in mobile apps for push notifications, real-time messaging, and live data synchronization.
+
+### Backend Services
+Connect backend services through QPub for microservice communication, event-driven architectures, and data streaming.
+
+---
+
+*This page is under construction. Usage documentation will be expanded soon.*

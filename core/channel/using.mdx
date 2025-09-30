@@ -1,0 +1,105 @@
+---
+title: "Using Channels"
+description: "Learn how to effectively use channels in your QPub applications. Best practices, naming conventions, and configuration."
+---
+
+# Using Channels
+
+Learn how to effectively use channels in your QPub applications.
+
+## Overview
+
+Channels are the primary way to organize and route messages in QPub. This guide covers best practices for using channels effectively.
+
+## Channel Types
+
+### Public Channels
+```javascript
+// Create a public channel
+const publicChannel = await client.createChannel({
+  name: 'general-chat',
+  type: 'public',
+  description: 'General discussion channel'
+});
+```
+
+### Private Channels
+```javascript
+// Create a private channel
+const privateChannel = await client.createChannel({
+  name: 'team-dashboard',
+  type: 'private',
+  permissions: ['team-member']
+});
+```
+
+### Presence Channels
+```javascript
+// Create a presence channel
+const presenceChannel = await client.createChannel({
+  name: 'online-users',
+  type: 'presence',
+  trackPresence: true
+});
+```
+
+## Channel Naming Conventions
+
+### Recommended Patterns
+- Use descriptive names: `user-notifications`, `order-updates`
+- Use hierarchical naming: `app.feature.subfeature`
+- Include environment prefixes: `prod.user-chat`, `dev.test-channel`
+
+### Examples
+```javascript
+// Good channel names
+'user-123-notifications'
+'chat-room-general'
+'order-processing-updates'
+'analytics-page-views'
+
+// Avoid generic names
+'channel1'
+'test'
+'data'
+```
+
+## Channel Configuration
+
+### Basic Configuration
+```javascript
+const channel = await client.createChannel({
+  name: 'my-channel',
+  description: 'Channel description',
+  type: 'public',
+  maxSubscribers: 1000,
+  messageRetention: 7 // days
+});
+```
+
+### Advanced Configuration
+```javascript
+const channel = await client.createChannel({
+  name: 'secure-channel',
+  type: 'private',
+  permissions: ['admin', 'moderator'],
+  encryption: true,
+  auditLog: true,
+  rateLimiting: {
+    messagesPerMinute: 100,
+    subscribersPerSecond: 10
+  }
+});
+```
+
+## Best Practices
+
+1. **Use meaningful names** that describe the channel's purpose
+2. **Limit channel scope** to specific features or user groups
+3. **Implement proper permissions** for sensitive channels
+4. **Monitor channel usage** to optimize performance
+5. **Clean up unused channels** to reduce clutter
+
+---
+
+*This page is under construction. Channel usage documentation will be expanded soon.*

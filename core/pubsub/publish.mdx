@@ -1,0 +1,73 @@
+---
+title: "Publish"
+description: "Learn how to publish messages to channels using QPub. Send real-time data to subscribers with different message types."
+---
+
+# Publish
+
+Learn how to publish messages to channels using QPub.
+
+## Overview
+
+Publishing messages allows you to send real-time data to subscribers on specific channels.
+
+## Basic Publishing
+
+### JavaScript SDK
+```javascript
+// Publish a simple message
+client.publish('my-channel', {
+  text: 'Hello, World!',
+  timestamp: new Date().toISOString()
+});
+```
+
+### REST API
+```bash
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  https://api.qpub.com/v1/channels/my-channel/messages \
+  -d '{"text": "Hello, World!", "timestamp": "2024-01-01T00:00:00Z"}'
+```
+
+## Message Types
+
+### Text Messages
+```javascript
+client.publish('chat-room', {
+  type: 'text',
+  content: 'Hello everyone!',
+  author: 'user123'
+});
+```
+
+### JSON Data
+```javascript
+client.publish('data-stream', {
+  type: 'sensor-data',
+  temperature: 23.5,
+  humidity: 65.2,
+  location: { lat: 40.7128, lng: -74.0060 }
+});
+```
+
+### Binary Data
+```javascript
+const binaryData = new Uint8Array([1, 2, 3, 4, 5]);
+client.publish('binary-channel', binaryData);
+```
+
+## Publishing Options
+
+```javascript
+client.publish('my-channel', message, {
+  persistent: true,    // Store message for offline subscribers
+  priority: 'high',    // Message priority
+  ttl: 3600           // Time to live in seconds
+});
+```
+
+---
+
+*This page is under construction. Publish documentation will be expanded soon.*

@@ -1,0 +1,111 @@
+---
+title: "Token Authentication"
+description: "Use API tokens for secure programmatic access to QPub. Create, manage, and use tokens for authentication."
+---
+
+# Token Authentication
+
+Learn how to use API tokens for secure programmatic access to QPub.
+
+## Overview
+
+Token authentication provides a secure way to authenticate API requests and SDK connections using bearer tokens.
+
+## Token Types
+
+### API Tokens
+- **Permanent Tokens**: Long-lived tokens for applications
+- **Temporary Tokens**: Short-lived tokens for specific operations
+- **Scoped Tokens**: Tokens with limited permissions
+
+### JWT Tokens
+- **Signed Tokens**: Cryptographically signed tokens
+- **Self-Contained**: Include all necessary information
+- **Expirable**: Built-in expiration handling
+
+## Creating Tokens
+
+### API Token Creation
+```javascript
+// Create a new API token
+const token = await client.createToken({
+  name: 'My App Token',
+  permissions: [
+    'read:channels',
+    'write:messages',
+    'subscribe:*'
+  ],
+  expiresIn: 86400 // 24 hours
+});
+```
+
+### JWT Token Generation
+```javascript
+// Generate JWT token
+const jwtToken = await client.generateJWT({
+  subject: 'user123',
+  permissions: ['read:channels'],
+  expiresIn: 3600 // 1 hour
+});
+```
+
+## Using Tokens
+
+### SDK Authentication
+```javascript
+// Initialize client with token
+const client = new QPubSocket({
+  token: 'your-api-token'
+});
+
+// Or with JWT
+const client = new QPubSocket({
+  jwtToken: 'your-jwt-token'
+});
+```
+
+### REST API Authentication
+```bash
+# Using API token
+curl -H "Authorization: Bearer YOUR_API_TOKEN" \
+     https://api.qpub.com/v1/channels
+
+# Using JWT token
+curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+     https://api.qpub.com/v1/channels
+```
+
+## Token Management
+
+### Listing Tokens
+```javascript
+// List all tokens
+const tokens = await client.listTokens();
+```
+
+### Revoking Tokens
+```javascript
+// Revoke a specific token
+await client.revokeToken('token-id');
+
+// Revoke all tokens for a user
+await client.revokeAllTokens('user123');
+```
+
+### Token Refresh
+```javascript
+// Refresh an expiring token
+const newToken = await client.refreshToken('old-token');
+```
+
+## Security Best Practices
+
+1. **Store tokens securely** - Use secure storage mechanisms
+2. **Rotate tokens regularly** - Implement token rotation policies
+3. **Use minimal permissions** - Grant only necessary permissions
+4. **Monitor token usage** - Track token access patterns
+5. **Implement expiration** - Set appropriate token lifetimes
+
+---
+
+*This page is under construction. Token authentication documentation will be expanded soon.*
