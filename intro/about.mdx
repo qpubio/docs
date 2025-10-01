@@ -1,76 +1,195 @@
 ---
 title: "About QPub"
-description: "Learn about QPub's mission, features, and how it can help you build real-time applications. Key features and use cases."
+description: "Enterprise real-time messaging platform with WebSocket APIs and pub/sub channels. Build chat apps, IoT dashboards, and live notifications with millisecond latency."
 ---
-
-Learn about QPub's mission, features, and how it can help you build real-time applications.
 
 ## What is QPub?
 
-QPub is a real-time messaging platform designed to make it easy for developers to add instant communication features to their applications. Built with scalability and reliability in mind, QPub handles the complexity of real-time messaging so you can focus on building great user experiences.
+QPub is a high-performance, enterprise-grade real-time messaging platform that empowers developers to create and deliver instant digital experiences. By leveraging QPub's robust APIs and SDKs, developers can build applications that communicate in real-time without worrying about the complexities of scaling, latency, data integrity, and network outages.
+
+At its core, QPub is a cloud-based publish/subscribe platform-as-a-service (PaaS) that ensures messages published by any device are received instantaneously by any number of subscribing devices with millisecond latency.
 
 ## Key Features
 
-### Real-time Communication
-- **Instant messaging** with sub-second latency
-- **Bidirectional communication** through WebSocket connections
-- **Reliable delivery** with automatic retry mechanisms
+### High-Performance Real-Time Messaging
 
-### Scalable Infrastructure
-- **Global edge network** for low-latency worldwide access
-- **Auto-scaling** to handle traffic spikes
-- **High availability** with 99.9% uptime SLA
+- **Millisecond Latency**: Optimized for real-time communication with minimal delay
+- **WebSocket & REST APIs**: Flexible integration options for any application
+- **Multi-Protocol Support**: Seamless integration with existing systems
+- **Message Persistence**: Reliable message delivery with persistent storage
 
-### Developer-Friendly
-- **Simple APIs** for REST and WebSocket communication
-- **Multiple SDKs** for popular programming languages
-- **Comprehensive documentation** with examples
+### Advanced Security & Multi-tenancy
 
-### Security & Privacy
-- **End-to-end encryption** for sensitive data
-- **Fine-grained permissions** for access control
-- **Compliance ready** with SOC 2 and GDPR support
+- **Multi-tenant Architecture**: Complete project isolation for data security
+- **Built-in Authentication**: Robust API key and JWT token-based authentication
+- **Fine-grained Authorization**: Granular control over publishing and subscribing permissions
+- **TLS Encryption**: Secure communication channels
+- **Rate Limiting**: Protection against abuse and DDoS attacks
 
-## Use Cases
+### Enterprise Scalability & Reliability
 
-### Real-time Chat
-Build chat applications with instant message delivery, typing indicators, and presence awareness.
+- **Horizontal Scaling**: Scale your messaging infrastructure as needed
+- **Cluster Support**: Deploy across multiple regions and zones
+- **High Availability**: Built-in redundancy and failover capabilities
+- **Load Balancing**: Automatic distribution of message processing
+- **Connection Management**: Efficient handling of millions of concurrent connections
 
-### Live Notifications
-Send real-time notifications to users across web, mobile, and desktop applications.
+### Comprehensive Monitoring & Analytics
 
-### Collaborative Tools
-Enable real-time collaboration with live document editing, shared whiteboards, and team communication.
+- **Real-time Stats**: Live monitoring of system performance
+- **Usage Tracking**: Detailed metrics for connections, channels, and messages
+- **Bandwidth Monitoring**: Track data transfer and optimize costs
+- **Health Checks**: Proactive system monitoring and alerts
+- **Detailed Logging**: Comprehensive audit trail for compliance
 
-### IoT and Data Streaming
-Stream sensor data, monitor devices, and build real-time dashboards.
+### Flexible Deployment Options
 
-### Gaming
-Create multiplayer games with real-time player synchronization and game state updates.
+- **Cloud Hosted**: Fully managed service with automatic scaling
+- **Self-Hosted**: Deploy in your own infrastructure with complete control
+- **Private Cloud**: Enterprise deployment with custom security policies
+- **Hybrid Solutions**: Mix of cloud and on-premises deployments
+
+## About the QPub APIs
+
+When building applications with QPub, there are multiple integration approaches available. However, using QPub SDKs is the recommended choice as they provide a comprehensive set of features with consistent, user-friendly APIs that work seamlessly across various platforms.
+
+### Connection Protocols
+
+**WebSocket Protocol (Recommended)**
+
+- Bi-directional communication channel with persistent, single-socket connection
+- Optimal for real-time applications requiring low latency
+- Most QPub SDKs utilize WebSockets for establishing real-time connections
+- Supports automatic reconnection and connection state management
+
+**REST API**
+
+- Used for authentication, configuration, and management operations
+- Simple HTTP requests for non-real-time operations
+- Perfect for administrative tasks and integration with existing systems
+
+In summary, QPub SDKs and the WebSocket protocol are the go-to tools for building real-time applications with QPub, providing developers with a powerful and efficient way to create seamless and reliable connections.
+
+## Pub/Sub Channels
+
+Channels are the fundamental components of QPub's pub/sub model. They serve as organized message topics or categories, allowing publishers to send messages to specific channels while subscribers receive only messages from channels they're subscribed to.
+
+### Channel Features
+
+- **Project Isolation**: Channels are scoped to specific projects for security
+- **Wildcard Support**: Subscribe to multiple channels using pattern matching
+- **Presence Tracking**: Monitor who's connected to channels
+- **Message History**: Optional message persistence and retrieval
+- **Rate Limiting**: Per-channel rate limiting and quota management
+
+### Supported Message Patterns
+
+**One-to-Many (Fan-out)**
+Multiple subscribers receive the same message from a single publisher. Perfect for:
+
+- Game updates to sports fans
+- Public transport times and status updates
+- Live news and alerts broadcasting
+- Real-time dashboard updates
+
+**Many-to-One**
+Multiple publishers send messages to a single subscriber. Ideal for:
+
+- IoT sensor data collection
+- Multi-location monitoring systems
+- Centralized logging and analytics
+- Vehicle tracking systems
+
+**Many-to-Many**
+Variable numbers of publishers and subscribers. Commonly used for:
+
+- Chat applications (direct messaging and group chats)
+- Collaborative editing tools
+- Multiplayer gaming
+- Real-time collaboration platforms
+
+## Use Cases & Industries
+
+QPub's capabilities benefit a wide range of industries and use cases:
+
+### Real-Time Applications
+
+- Live dashboards and monitoring systems
+- Collaborative tools and applications
+- Real-time analytics and reporting
+- Live tracking and location services
+
+### Business Communication
+
+- Internal messaging systems
+- Real-time notifications
+- Live updates and alerts
+- Cross-department communication
+
+### IoT & Device Management
+
+- Device monitoring and control
+- Real-time sensor data processing
+- Remote device management
+- IoT platform integration
+
+### Financial Services
+
+- Real-time market data distribution
+- Trading platforms
+- Financial alerts and notifications
+- Transaction processing
+
+### EdTech & Healthcare
+
+- Live classroom interactions
+- Patient monitoring systems
+- Real-time collaboration tools
+- Emergency notification systems
+
+## Billing & Subscription Management
+
+QPub offers flexible billing options with comprehensive usage tracking:
+
+### Subscription Plans
+
+- **Free Tier**: Perfect for development and small applications
+- **Professional Plans**: Scalable options for growing businesses
+- **Enterprise Plans**: Custom solutions for large organizations
+
+### Usage-Based Pricing
+
+- **Connection Minutes**: Pay for active connection time
+- **Channel Minutes**: Pay for channel usage duration
+- **Message Volume**: Pay per message sent
+- **Bandwidth**: Pay for data transfer
+
+### Billing Features
+
+- **Stripe Integration**: Professional billing and subscription management
+- **Overage Protection**: Automatic handling of usage limits
+- **Detailed Reporting**: Comprehensive usage analytics
+- **Flexible Billing**: Annual and monthly subscription options
 
 ## Why Choose QPub?
 
-### Easy Integration
-Get started in minutes with our simple APIs and comprehensive SDKs.
-
-### Reliable Service
-Built on proven infrastructure with automatic failover and redundancy.
-
-### Cost Effective
-Pay only for what you use with transparent pricing and generous free tier.
-
-### Expert Support
-Get help when you need it with dedicated support and community resources.
+1. **Enterprise Ready**: Built with modern business requirements in mind
+2. **Scalable**: Grow from single server to global cluster
+3. **Secure**: Advanced security features with multi-tenant isolation
+4. **Flexible**: Multiple deployment and integration options
+5. **Reliable**: High availability and fault tolerance
+6. **Cost-Effective**: Optimize resources and reduce operational costs
+7. **Easy Integration**: Simple APIs, comprehensive documentation, and official SDKs
+8. **Future-Proof**: Built on modern, scalable technologies
 
 ## Getting Started
 
-Ready to start building with QPub?
+Ready to build real-time applications with QPub? We offer:
 
-1. [Sign up for a free account](https://qpub.com/signup)
-2. [Follow our quickstart guide](../getting-started/quickstart.mdx)
-3. [Explore the APIs](../getting-started/apis.mdx)
-4. [Join our community](../community/support.mdx)
+- **Comprehensive Documentation**: Detailed guides and API references
+- **Official SDKs**: Available for popular programming languages and platforms
+- **Developer Support**: Community support and professional assistance
+- **Flexible Deployment**: Choose between cloud-hosted or self-hosted solutions
+- **Custom Solutions**: Tailored implementations for enterprise needs
 
----
-
-*This page is under construction. About documentation will be expanded soon.*
+Start building your real-time application today with QPub's powerful messaging platform.
