@@ -53,7 +53,7 @@
                         "path": "core/auth/identified-client.mdx"
                     },
                     {
-                        "title": "Permissions and Restrictions",
+                        "title": "Permissions",
                         "path": "core/auth/permissions.mdx"
                     }
                 ]
