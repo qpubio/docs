@@ -20,13 +20,13 @@ Get started with QPub in minutes using our quickstart guide.
 ## Step 2: Install the SDK
 
 ```bash
-npm install @qpub/socket-sdk
+npm install @qpub/sdk
 ```
 
 ## Step 3: Create Your First Connection
 
 ```javascript
-import { QPubSocket } from '@qpub/socket-sdk';
+import { QPubSocket } from '@qpub/sdk';
 
 const client = new QPubSocket({
   apiKey: 'your-api-key-here'
@@ -58,7 +58,7 @@ await client.publish('my-channel', {
 ## Complete Example
 
 ```javascript
-import { QPubSocket } from '@qpub/socket-sdk';
+import { QPubSocket } from '@qpub/sdk';
 
 async function main() {
   // Initialize client
