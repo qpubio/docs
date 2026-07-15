@@ -54,7 +54,7 @@ Use `QPub.Socket` and `QPub.Rest` — not `QPubSocket` / `QPubREST`.
 4. Keep pages short and practical. Prefer runnable examples.
 5. If something cannot be verified, mark it `TODO` instead of guessing.
 6. Avoid marketing language and internal architecture (NATS, DDD, cluster details).
-7. Internal cross-links must use the site prefix: `[Quickstart](/docs/getting-started/quickstart)`, not `/getting-started/...`.
+7. Internal cross-links use repo-root paths (GitHub-friendly): `[Quickstart](/getting-started/quickstart)`. Optional `.mdx` suffix is fine. The website rewrites these to `/docs/...` when rendering — do not hardcode `/docs` in content.
 8. MDX treats `{...}` as JavaScript. Do not use Pandoc-style heading IDs like `## Title {#id}`; rely on auto-generated slugs instead.
 9. The website loads MDX from this repo locally in development (`DOCS_CONTENT_PATH` or `../docs`). Production fetches GitHub `main` — push docs before expecting live site updates.
 

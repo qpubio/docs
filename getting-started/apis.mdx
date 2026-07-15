@@ -35,7 +35,7 @@ Both REST and WebSocket accept:
 
 Optional **alias** can be sent as `X-Alias` (REST) or `alias` query param (Socket).
 
-Details: [Authentication](/docs/core/auth).
+Details: [Authentication](/core/auth).
 
 ## REST capabilities
 
@@ -45,14 +45,14 @@ Public REST routes under `/v1`:
 - Publish to one or many channels
 - Queue config, jobs, pull/ack/nack, workers
 
-Full list: [REST API](/docs/api/rest-api).
+Full list: [REST API](/api/rest-api).
 
 ## WebSocket capabilities
 
 Connect to `GET /v1` with auth credentials, then exchange JSON messages with numeric `action` codes (subscribe, publish, ping, …).
 
-Full protocol: [Socket Protocol](/docs/api/socket-protocol).
+Full protocol: [Socket Protocol](/api/socket-protocol).
 
 ## Dashboard API
 
-The dashboard uses a separate user-auth API (email/password or OAuth) for accounts, projects, API keys, usage, and billing. It is not used by Socket/REST messaging clients. See [Dashboard](/docs/dashboard).
+The dashboard uses a separate user-auth API (email/password or OAuth) for accounts, projects, API keys, usage, and billing. It is not used by Socket/REST messaging clients. See [Dashboard](/dashboard).

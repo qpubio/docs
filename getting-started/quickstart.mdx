@@ -8,7 +8,7 @@ Get a working pub/sub loop with `@qpub/sdk` in a few minutes.
 ## Prerequisites
 
 - A QPub account and project
-- An API key from the [dashboard](/docs/dashboard/api-keys)
+- An API key from the [dashboard](/dashboard/api-keys)
 - Node.js, Bun, or a browser environment
 
 ## 1. Install
@@ -36,7 +36,7 @@ socket.connection.on("connected", async () => {
 
 By default the Socket client connects automatically (`autoConnect: true`) to `wss://socket.qpub.io/v1`.
 
-> Do not put a production API key secret in a public browser app. Use [token auth](/docs/core/auth/token) instead.
+> Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token) instead.
 
 ## 3. Publish (REST)
 
@@ -95,6 +95,6 @@ const rest = new QPub.Rest({
 
 ## Next steps
 
-- [API key vs token auth](/docs/core/auth)
-- [Connection lifecycle](/docs/core/connection/lifecycle)
-- [Queues](/docs/core/queue)
+- [API key vs token auth](/core/auth)
+- [Connection lifecycle](/core/connection/lifecycle)
+- [Queues](/core/queue)
