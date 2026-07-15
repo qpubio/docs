@@ -3,7 +3,9 @@ title: "SDKs"
 description: "Official QPub JavaScript SDK installation and usage."
 ---
 
-QPub’s official client library is `@qpub/sdk` for JavaScript and TypeScript (browsers, Node.js, Bun, and React).
+QPub’s official client library is `@qpub/sdk` for JavaScript and TypeScript (browsers, Node.js, Bun, and React). Use the **Examples** controls to switch **Socket** vs **REST** and **JavaScript** vs **React**.
+
+<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "react"]}>
 
 ## Install
 
@@ -19,38 +21,30 @@ bun add @qpub/sdk
 | `@qpub/sdk/react` | React providers and hooks |
 | CDN UMD | Global `QPub` in the browser |
 
-## Socket client
+<When lang="react">
+Import providers and hooks from `@qpub/sdk/react` (same package).
+</When>
 
-Use for real-time subscribe and publish:
+## Quick example
 
-```javascript
-import { QPub } from "@qpub/sdk";
+<When group="Socket">
 
-const socket = new QPub.Socket({ apiKey: process.env.QPUB_API_KEY });
+Use the Socket client for realtime subscribe and publish:
+
+<CodeExamples
+  codeSnippets={{
+    Socket: {
+      javascript: `import { QPub } from "@qpub/sdk";
+
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+});
 
 socket.connection.on("connected", async () => {
   const ch = socket.channels.get("news");
   await ch.subscribe((msg) => console.log(msg.data));
-});
-```
-
-## REST client
-
-Use for server publish, tokens, and queues:
-
-```javascript
-import { QPub } from "@qpub/sdk";
-
-const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
-await rest.channels.get("news").publish({ headline: "Ship it" });
-```
-
-## React
-
-For browsers, pass a JWT or token request from your backend — not a secret API key in a public env var.
-
-```tsx
-import { useEffect, useCallback } from "react";
+});`,
+      react: `import { useCallback, useEffect } from "react";
 import {
   SocketProvider,
   useChannel,
@@ -93,11 +87,84 @@ function Chat() {
       </button>
     </div>
   );
-}
-```
+}`,
+    },
+  }}
+/>
 
-See [Token Auth](/core/auth/token) for issuing `tokenRequest` on the server.
+<When lang="javascript">
+> Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token) instead.
+</When>
+
+<When lang="react">
+For browsers, pass a JWT or [token request](/core/auth/token) into `SocketProvider` — not a secret API key in a public env var.
+</When>
+
+</When>
+
+<When group="REST">
+
+Use the REST client for server publish, tokens, and queues:
+
+<CodeExamples
+  codeSnippets={{
+    REST: {
+      javascript: `import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
+});
+
+await rest.channels.get("news").publish({ headline: "Ship it" });`,
+      react: `import { useState } from "react";
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY, // trusted / server-only env
+});
+
+export function PublishButton() {
+  const [busy, setBusy] = useState(false);
+
+  return (
+    <button
+      disabled={busy}
+      onClick={async () => {
+        setBusy(true);
+        try {
+          await rest.channels.get("news").publish({ headline: "Ship it" });
+        } finally {
+          setBusy(false);
+        }
+      }}
+    >
+      Publish
+    </button>
+  );
+}`,
+    },
+  }}
+/>
+
+<When lang="javascript">
+Keep the API key on a trusted server. Use [queues](/core/queue) and [token issue](/core/auth/token) from the same client.
+</When>
+
+<When lang="react">
+Call REST from a server action or trusted backend. For browser realtime, switch to **Socket** and use `@qpub/sdk/react`.
+</When>
+
+</When>
+
+## Next steps
+
+- [Quickstart](/getting-started/quickstart)
+- [Publish](/core/pubsub/publish) / [Subscribe](/core/pubsub/subscribe)
+- [Token Auth](/core/auth/token)
+- [Socket SDK](/api/socket-sdk/constructor) / [REST SDK](/api/rest-sdk/constructor)
 
 ## Other languages
 
 Use the [REST API](/api/rest-api) and [Socket Protocol](/api/socket-protocol) directly. Official SDKs for other languages are not documented yet.
+
+</ExampleScope>

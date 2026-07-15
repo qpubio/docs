@@ -5,9 +5,51 @@ description: "Issue and use short-lived JWTs for QPub clients."
 
 JWTs give clients temporary access without exposing the API key secret. Tokens are issued from an API key and can carry an **alias** and **permission** scope.
 
+Use the **Examples** controls to switch **Socket** vs **REST** and **JavaScript** vs **React**.
+
+<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "react"]}>
+
 ## Using a token
 
-**REST**
+<When group="Socket">
+
+Connect with a JWT via query/`access_token`, or let the SDK fetch one:
+
+```
+wss://socket.qpub.io/v1?access_token=<jwt>
+```
+
+<CodeExamples
+  codeSnippets={{
+    Socket: {
+      javascript: `import { QPub } from "@qpub/sdk";
+
+const socket = new QPub.Socket({
+  authUrl: "https://your-app.example/api/qpub-token",
+});
+// Your authUrl should return { token: "<jwt>" }`,
+      react: `import { SocketProvider } from "@qpub/sdk/react";
+
+function App() {
+  return (
+    <SocketProvider
+      options={{
+        authUrl: "https://your-app.example/api/qpub-token",
+      }}
+    >
+      {children}
+    </SocketProvider>
+  );
+}`,
+    },
+  }}
+/>
+
+</When>
+
+<When group="REST">
+
+Call REST with a Bearer JWT:
 
 ```bash
 curl -X POST "https://rest.qpub.io/v1/channel/demo/messages" \
@@ -16,22 +58,13 @@ curl -X POST "https://rest.qpub.io/v1/channel/demo/messages" \
   -d '{"messages":[{"data":{"text":"Hello"}}]}'
 ```
 
-**WebSocket**
+On a trusted server you usually keep using `QPub.Rest({ apiKey })` instead of a JWT. For browsers, mint a JWT (or token request) on your backend and call REST with `Authorization: Bearer <jwt>` — or use **Socket** for realtime clients.
 
-```
-wss://socket.qpub.io/v1?access_token=<jwt>
-```
-
-**SDK**
-
-```javascript
-const socket = new QPub.Socket({
-  authUrl: "https://your-app.example/api/qpub-token",
-});
-// Your authUrl should return { token: "<jwt>" }
-```
+</When>
 
 ## Issue a token (server)
+
+Always mint tokens on a **trusted server** with the API key secret. This step is the same regardless of whether clients use Socket or REST.
 
 ### REST endpoint
 
@@ -66,6 +99,8 @@ Body (all optional):
 ### SDK
 
 ```javascript
+import { QPub } from "@qpub/sdk";
+
 const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
 
 const token = await rest.auth.issueToken({
@@ -84,6 +119,8 @@ For untrusted clients, create a **signed token request** on your server, send it
 ### Server
 
 ```javascript
+import { QPub } from "@qpub/sdk";
+
 const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
 
 const tokenRequest = await rest.auth.createTokenRequest({
@@ -95,13 +132,52 @@ const tokenRequest = await rest.auth.createTokenRequest({
 
 ### Client
 
-```javascript
-const socket = new QPub.Socket({
+<When group="Socket">
+
+<CodeExamples
+  codeSnippets={{
+    Socket: {
+      javascript: `const socket = new QPub.Socket({
   tokenRequest, // auto-requests a token on init when provided
+});
+
+// Or: await socket.auth.requestToken(tokenRequest);`,
+      react: `function App({ tokenRequest }) {
+  return (
+    <SocketProvider options={{ tokenRequest }}>
+      {children}
+    </SocketProvider>
+  );
+}`,
+    },
+  }}
+/>
+
+</When>
+
+<When group="REST">
+
+Exchange the token request for a JWT, then call REST with Bearer auth. Prefer Socket + `tokenRequest` for browser realtime clients.
+
+```javascript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest();
+const { token } = await rest.auth.requestToken(tokenRequest);
+
+await fetch("https://rest.qpub.io/v1/channel/demo/messages", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    messages: [{ data: { text: "Hello" } }],
+  }),
 });
 ```
 
-Or call `socket.auth.requestToken(tokenRequest)` yourself.
+</When>
 
 ### REST exchange
 
@@ -120,9 +196,21 @@ Body includes `aki`, `timestamp`, optional `alias` / `permission`, and `signatur
 
 ## Auth events (SDK)
 
+<When group="Socket">
+
 Listen on `socket.auth`:
 
 - `token_updated`
 - `token_expired`
 - `token_error`
 - `auth_error`
+
+</When>
+
+<When group="REST">
+
+Auth lifecycle events (`token_updated`, `token_expired`, …) are exposed on the **Socket** client’s `socket.auth`. REST calls fail with HTTP errors when a JWT is missing or expired — refresh via your backend and retry.
+
+</When>
+
+</ExampleScope>

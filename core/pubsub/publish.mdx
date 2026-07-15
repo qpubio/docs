@@ -3,27 +3,120 @@ title: "Publish"
 description: "Publish messages to channels over WebSocket or REST."
 ---
 
-## Socket
+Publish to a named channel with `publish` permission. Use the **Examples** controls to switch **Socket** vs **REST** and **JavaScript** vs **React**.
 
-```javascript
-const channel = socket.channels.get("notifications");
-await channel.publish(
-  { title: "New order", orderId: "ord_1" },
-  { event: "order.created", alias: "api" }
-);
-```
+<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "react"]}>
 
-Requires `publish` permission on that channel.
+## Publish a message
 
-## REST (single channel)
+<When group="Socket">
 
-```javascript
-const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+Publish over the WebSocket client after you are connected.
+
+<CodeExamples
+  codeSnippets={{
+    Socket: {
+      javascript: `import { QPub } from "@qpub/sdk";
+
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+});
+
+socket.connection.on("connected", async () => {
+  const channel = socket.channels.get("notifications");
+  await channel.publish(
+    { title: "New order", orderId: "ord_1" },
+    { event: "order.created", alias: "api" }
+  );
+});`,
+      react: `import { SocketProvider, useChannel } from "@qpub/sdk/react";
+
+function App() {
+  return (
+    <SocketProvider options={{ apiKey: process.env.QPUB_API_KEY }}>
+      <PublishButton />
+    </SocketProvider>
+  );
+}
+
+function PublishButton() {
+  const { publish, ready } = useChannel("notifications");
+
+  return (
+    <button
+      disabled={!ready}
+      onClick={() =>
+        publish(
+          { title: "New order", orderId: "ord_1" },
+          { event: "order.created" }
+        )
+      }
+    >
+      Publish
+    </button>
+  );
+}`,
+    },
+  }}
+/>
+
+Socket publish does not return the REST `published` payload.
+
+<When lang="react">
+Prefer a JWT or [token request](/core/auth/token) in `SocketProvider` for browsers instead of a production API key secret.
+</When>
+
+</When>
+
+<When group="REST">
+
+Publish over HTTP with the REST client (`https://rest.qpub.io/v1`).
+
+<CodeExamples
+  codeSnippets={{
+    REST: {
+      javascript: `import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
+});
+
 await rest.channels.get("notifications").publish(
   { title: "New order" },
   { event: "order.created" }
-);
-```
+);`,
+      react: `import { useState } from "react";
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY, // trusted / server-only env
+});
+
+export function PublishButton() {
+  const [busy, setBusy] = useState(false);
+
+  return (
+    <button
+      disabled={busy}
+      onClick={async () => {
+        setBusy(true);
+        try {
+          await rest.channels.get("notifications").publish(
+            { title: "New order" },
+            { event: "order.created" }
+          );
+        } finally {
+          setBusy(false);
+        }
+      }}
+    >
+      Publish
+    </button>
+  );
+}`,
+    },
+  }}
+/>
 
 HTTP:
 
@@ -44,16 +137,40 @@ POST /v1/channel/:channelName/messages
 
 Successful publishes return **201** with a `published` array (`channel`, `message_id`, `published_at`, `payload_count`). Partial multi-channel failures may return **207** (`PARTIAL_CONTENT`) with those fields under `details`.
 
-## REST (multiple channels)
+<When lang="javascript">
+Run REST publish from a trusted server or script that can hold the API key secret.
+</When>
 
-```javascript
-await rest.channels.publishBatch(
+<When lang="react">
+Call REST from an event handler or server action. Keep secrets off the public client bundle.
+</When>
+
+</When>
+
+## Batch publish (REST)
+
+<When group="REST">
+
+Publish the same messages to multiple channels:
+
+<CodeExamples
+  codeSnippets={{
+    REST: {
+      javascript: `await rest.channels.publishBatch(
   ["notifications", "ops"],
   [
     { data: { title: "New order" }, event: "order.created" },
   ]
-);
-```
+);`,
+      react: `await rest.channels.publishBatch(
+  ["notifications", "ops"],
+  [
+    { data: { title: "New order" }, event: "order.created" },
+  ]
+);`,
+    },
+  }}
+/>
 
 HTTP:
 
@@ -70,6 +187,14 @@ POST /v1/channels/messages
 }
 ```
 
+</When>
+
+<When group="Socket">
+
+Batch publish to multiple channels is a **REST** feature (`publishBatch` / `POST /v1/channels/messages`). Switch to **REST** above, or publish once per channel on the Socket.
+
+</When>
+
 ## curl
 
 ```bash
@@ -84,4 +209,6 @@ curl -X POST "https://rest.qpub.io/v1/channel/notifications/messages" \
 
 - At least one message is required in the REST body.
 - Message size and rate limits depend on your [plan](/pricing/limits).
-- Socket publish does not return the REST `published` payload.
+- Subscribers need a [Socket subscription](/core/pubsub/subscribe) to receive messages in realtime.
+
+</ExampleScope>

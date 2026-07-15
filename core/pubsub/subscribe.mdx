@@ -3,54 +3,142 @@ title: "Subscribe"
 description: "Subscribe to channel messages with the Socket SDK."
 ---
 
-Subscribing requires a WebSocket connection (`QPub.Socket`) and `subscribe` permission on the channel.
+Subscribing requires a WebSocket connection and `subscribe` permission on the channel. Use the **Examples** controls to switch **JavaScript** vs **React**.
+
+REST cannot open a realtime subscription — publish with REST, receive with Socket.
+
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "react"]}>
 
 ## Basic subscribe
 
-```javascript
-import { QPub } from "@qpub/sdk";
+<CodeExamples
+  codeSnippets={{
+    Socket: {
+      javascript: `import { QPub } from "@qpub/sdk";
 
-const socket = new QPub.Socket({ apiKey: process.env.QPUB_API_KEY });
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+});
 
 socket.connection.on("connected", async () => {
   const channel = socket.channels.get("notifications");
   await channel.subscribe((message) => {
     console.log(message.data);
   });
-});
-```
+});`,
+      react: `import { useCallback, useEffect } from "react";
+import {
+  SocketProvider,
+  useChannel,
+  useConnection,
+  type Message,
+} from "@qpub/sdk/react";
+
+function App() {
+  return (
+    <SocketProvider options={{ apiKey: process.env.QPUB_API_KEY }}>
+      <Inbox />
+    </SocketProvider>
+  );
+}
+
+function Inbox() {
+  const { status } = useConnection();
+  const { subscribe, unsubscribe, ready } = useChannel("notifications");
+
+  const onMessage = useCallback((message: Message) => {
+    console.log(message.data);
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    subscribe(onMessage);
+    return () => {
+      unsubscribe(onMessage);
+    };
+  }, [ready, subscribe, unsubscribe, onMessage]);
+
+  return <p>Status: {status}</p>;
+}`,
+    },
+  }}
+/>
 
 `subscribe` returns a Promise that resolves when the server acknowledges the subscription.
 
-## Event filter (SDK)
+<When lang="javascript">
+> Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token) instead.
+</When>
 
-```javascript
-await channel.subscribe(
-  (message) => console.log(message.data),
-  { event: "order.created" }
-);
-```
+<When lang="react">
+Prefer a JWT or [token request](/core/auth/token) in `SocketProvider` options instead of embedding a production API key secret.
+</When>
+
+## Event filter (SDK)
 
 The client still subscribes to the whole channel on the server. The SDK delivers only matching `event` values to this handler.
 
+<CodeExamples
+  codeSnippets={{
+    Socket: {
+      javascript: `await channel.subscribe(
+  (message) => console.log(message.data),
+  { event: "order.created" }
+);`,
+      react: `const { subscribe, unsubscribe, ready } = useChannel("notifications");
+
+useEffect(() => {
+  if (!ready) return;
+  const onMessage = (message) => console.log(message.data);
+  subscribe(onMessage, { event: "order.created" });
+  return () => unsubscribe(onMessage);
+}, [ready, subscribe, unsubscribe]);`,
+    },
+  }}
+/>
+
 ## Unsubscribe
 
-```javascript
-await channel.unsubscribe();
-```
+<CodeExamples
+  codeSnippets={{
+    Socket: {
+      javascript: `await channel.unsubscribe();`,
+      react: `const { unsubscribe } = useChannel("notifications");
+
+// Remove a specific handler:
+await unsubscribe(onMessage);
+
+// Or omit the callback to clear handlers for this channel (SDK behavior).
+await unsubscribe();`,
+    },
+  }}
+/>
 
 ## Production clients
 
 Prefer a scoped JWT or token request so the browser never holds the API key secret:
 
-```javascript
-const socket = new QPub.Socket({
+<CodeExamples
+  codeSnippets={{
+    Socket: {
+      javascript: `const socket = new QPub.Socket({
   tokenRequest, // from your backend
-});
-```
+});`,
+      react: `function App({ tokenRequest }) {
+  return (
+    <SocketProvider options={{ tokenRequest }}>
+      <Inbox />
+    </SocketProvider>
+  );
+}`,
+    },
+  }}
+/>
 
 See [Token Auth](/core/auth/token).
 
 ## Protocol
 
 Under the hood the client sends action `4` (subscribe) and receives `5` (subscribed) / `10` (message). See [Socket Protocol](/api/socket-protocol).
+
+</ExampleScope>
