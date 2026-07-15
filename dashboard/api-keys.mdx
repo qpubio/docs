@@ -26,8 +26,8 @@ const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
 const socket = new QPub.Socket({ apiKey: process.env.QPUB_API_KEY });
 ```
 
-For browsers, do not embed the secret. Issue a [JWT or token request](/core/auth/token) from your backend instead.
+For browsers, do not embed the secret. Issue a [JWT or token request](/docs/core/auth/token) from your backend instead.
 
 ## Permissions
 
-Keys can carry a permission map (`publish`, `subscribe`, `enqueue`, …). See [Permissions](/core/auth/permissions).
+Keys can carry a permission map (`publish`, `subscribe`, `enqueue`, …). See [Permissions](/docs/core/auth/permissions).

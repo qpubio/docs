@@ -54,6 +54,7 @@ Use `QPub.Socket` and `QPub.Rest` — not `QPubSocket` / `QPubREST`.
 4. Keep pages short and practical. Prefer runnable examples.
 5. If something cannot be verified, mark it `TODO` instead of guessing.
 6. Avoid marketing language and internal architecture (NATS, DDD, cluster details).
+7. Internal cross-links must use the site prefix: `[Quickstart](/docs/getting-started/quickstart)`, not `/getting-started/...`.
 
 ## Contributing
 

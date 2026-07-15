@@ -47,9 +47,9 @@ REST does **not** subscribe to channels.
 
 ### Real-time app
 
-1. Create a project and API key in the [dashboard](/dashboard).
+1. Create a project and API key in the [dashboard](/docs/dashboard).
 2. On your server, keep the API key secret.
-3. For browsers, issue a JWT or signed [token request](/core/auth/token) with limited permissions.
+3. For browsers, issue a JWT or signed [token request](/docs/core/auth/token) with limited permissions.
 4. Client creates `QPub.Socket`, waits for `connected`, then `channels.get(name).subscribe(...)`.
 5. Servers publish with `QPub.Rest` or another Socket client.
 
@@ -78,7 +78,7 @@ await rest.queues.runWorker("emails", async (job) => {
 
 ## Next steps
 
-- [Quickstart](/getting-started/quickstart)
-- [Authentication](/core/auth)
-- [Publish](/core/pubsub/publish) / [Subscribe](/core/pubsub/subscribe)
-- [Queues](/core/queue)
+- [Quickstart](/docs/getting-started/quickstart)
+- [Authentication](/docs/core/auth)
+- [Publish](/docs/core/pubsub/publish) / [Subscribe](/docs/core/pubsub/subscribe)
+- [Queues](/docs/core/queue)
