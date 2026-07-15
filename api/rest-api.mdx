@@ -1,50 +1,113 @@
 ---
 title: "REST API"
-description: "Access QPub services through our RESTful API endpoints. HTTP-based access to all QPub services and features."
+description: "Public REST endpoints for tokens, publish, and queues."
 ---
 
-Access QPub services through our RESTful API endpoints.
+Base URL: `https://rest.qpub.io/v1`
 
-## Overview
-
-The QPub REST API provides HTTP-based access to all QPub services and features.
-
-## Base URL
-
-```
-https://api.qpub.com/v1
-```
+JSON fields use **snake_case**.
 
 ## Authentication
 
-All API requests require authentication using your API key:
+| Scheme | Header / query |
+|--------|----------------|
+| API key | `Authorization: Basic <base64(publicId:secret)>` or `api_key` |
+| JWT | `Authorization: Bearer <jwt>` or `access_token` |
 
-```bash
-curl -H "Authorization: Bearer YOUR_API_KEY" \
-     https://api.qpub.com/v1/channels
+Optional: `X-Alias: <alias>`.
+
+Token issue requires API key auth. Token request uses a signed body (no Basic header).
+
+## Tokens
+
+### Issue JWT
+
+```
+POST /v1/key/:keyID/token/issue
 ```
 
-## Core Endpoints
+Body (optional fields): `alias`, `permission`, `expiresIn` (seconds).
 
-### Channels
-- `GET /channels` - List channels
-- `POST /channels` - Create channel
-- `GET /channels/{id}` - Get channel details
-- `PUT /channels/{id}` - Update channel
-- `DELETE /channels/{id}` - Delete channel
+### Exchange token request
 
-### Messages
-- `POST /channels/{id}/messages` - Send message
-- `GET /channels/{id}/messages` - Get messages
+```
+POST /v1/key/:keyID/token/request
+```
 
-### Connections
-- `GET /connections` - List connections
-- `POST /connections` - Create connection
+Body: `aki`, `timestamp`, optional `alias` / `permission`, `signature`. Prefer SDK `createTokenRequest` / `requestToken`.
 
-## Response Format
+## Publish
 
-All responses are returned in JSON format with consistent structure.
+### One channel
 
----
+```
+POST /v1/channel/:channelName/messages
+```
 
-*This page is under construction. REST API documentation will be expanded soon.*
+```json
+{
+  "messages": [
+    { "event": "greeting", "data": { "text": "Hello" }, "alias": "api" }
+  ]
+}
+```
+
+**201** response shape:
+
+```json
+{
+  "published": [
+    {
+      "channel": "demo",
+      "message_id": "...",
+      "published_at": "2026-07-16T00:00:00Z",
+      "payload_count": 1
+    }
+  ]
+}
+```
+
+### Many channels
+
+```
+POST /v1/channels/messages
+```
+
+```json
+{
+  "channels": ["a", "b"],
+  "messages": [{ "data": { "ok": true } }]
+}
+```
+
+Partial failure may return **207** with an error envelope (`code`: `PARTIAL_CONTENT`) whose `details` include `published` and `failed_channels`. Rate limits return **429**.
+
+## Queues
+
+| Method | Path |
+|--------|------|
+| PUT | `/v1/queue/:queueName` |
+| GET | `/v1/queue/:queueName` |
+| POST | `/v1/queue/:queueName/jobs` |
+| GET | `/v1/queue/:queueName/jobs` |
+| GET | `/v1/queue/:queueName/jobs/:jobId` |
+| DELETE | `/v1/queue/:queueName/jobs/:jobId` |
+| POST | `/v1/queue/:queueName/jobs/:jobId/retry` |
+| POST | `/v1/queue/:queueName/pull` |
+| POST | `/v1/queue/:queueName/jobs/:jobId/ack` |
+| POST | `/v1/queue/:queueName/jobs/:jobId/nack` |
+| POST | `/v1/workers/register` |
+| POST | `/v1/workers/heartbeat` |
+
+See [Queue](/core/queue) for request bodies and SDK usage.
+
+## Health
+
+```
+GET /health
+→ { "status": "healthy" }
+```
+
+## Errors
+
+Error responses use HTTP status codes with a JSON body including a `code` and `message` (for example `UNAUTHORIZED`, `RATE_LIMITED`). TODO: expand with a full field catalog if a stable public error schema is published.

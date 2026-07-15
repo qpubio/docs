@@ -1,66 +1,56 @@
 ---
 title: "Subscribe"
-description: "Learn how to subscribe to channels and receive real-time messages. Subscription options and event handlers."
+description: "Subscribe to channel messages with the Socket SDK."
 ---
 
-Learn how to subscribe to channels and receive real-time messages.
+Subscribing requires a WebSocket connection (`QPub.Socket`) and `subscribe` permission on the channel.
 
-## Overview
+## Basic subscribe
 
-Subscribing to channels allows you to receive real-time messages and updates from QPub.
-
-## Basic Subscription
-
-### JavaScript SDK
 ```javascript
-// Subscribe to a channel
-client.subscribe('my-channel', (message) => {
-  console.log('Received:', message);
+import { QPub } from "@qpub/sdk";
+
+const socket = new QPub.Socket({ apiKey: process.env.QPUB_API_KEY });
+
+socket.connection.on("connected", async () => {
+  const channel = socket.channels.get("notifications");
+  await channel.subscribe((message) => {
+    console.log(message.data);
+  });
 });
 ```
 
-### REST API
-```bash
-curl -X POST \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  https://api.qpub.com/v1/subscriptions \
-  -d '{"channel": "my-channel"}'
+`subscribe` returns a Promise that resolves when the server acknowledges the subscription.
+
+## Event filter
+
+```javascript
+await channel.subscribe(
+  (message) => console.log(message.data),
+  { event: "order.created" }
+);
 ```
 
-## Subscription Options
+Only messages published with that `event` are delivered to this handler (as implemented by the SDK/server filter).
 
-### With Event Handlers
+## Unsubscribe
+
 ```javascript
-client.subscribe('my-channel', {
-  onMessage: (message) => {
-    console.log('New message:', message);
-  },
-  onError: (error) => {
-    console.error('Subscription error:', error);
-  }
+await channel.unsubscribe();
+```
+
+## Production clients
+
+Prefer a scoped JWT or token request so the browser never holds the API key secret:
+
+```javascript
+const socket = new QPub.Socket({
+  tokenRequest, // from your backend
 });
 ```
 
-### Channel Patterns
-```javascript
-// Subscribe to multiple channels
-client.subscribe(['channel-1', 'channel-2', 'channel-3']);
+See [Token Auth](/core/auth/token).
 
-// Subscribe with pattern matching
-client.subscribe('user-*'); // Matches user-123, user-456, etc.
-```
+## Protocol
 
-## Unsubscribing
-
-```javascript
-// Unsubscribe from a channel
-client.unsubscribe('my-channel');
-
-// Unsubscribe from multiple channels
-client.unsubscribe(['channel-1', 'channel-2']);
-```
-
----
-
-*This page is under construction. Subscribe documentation will be expanded soon.*
+Under the hood the client sends action `4` (subscribe) and receives `5` (subscribed) / `10` (message). See [Socket Protocol](/api/socket-protocol).

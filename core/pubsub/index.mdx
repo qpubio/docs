@@ -1,86 +1,37 @@
 ---
 title: "Pub/Sub"
-description: "Publish and subscribe messaging system for real-time communication. Publishers, subscribers, channels, and messages."
+description: "Publish and subscribe to QPub channels."
 ---
 
-Publish and subscribe messaging system for real-time communication.
+Pub/sub is the core real-time product: send messages to a **channel**, receive them on all active **subscribers**.
 
-## Overview
+## Operations
 
-QPub's publish/subscribe system enables real-time messaging between clients through channels, providing scalable and reliable message delivery.
+| Operation | Socket | REST |
+|-----------|--------|------|
+| Subscribe | Yes | No |
+| Publish | Yes | Yes |
+| Batch publish (many channels) | No | Yes |
 
-## Key Concepts
+## Message shape (SDK callback)
 
-### Publishers
-Applications or services that send messages to channels.
-
-### Subscribers
-Applications or services that receive messages from channels.
-
-### Channels
-Named message streams that organize and route messages.
-
-### Messages
-Data packets containing information to be communicated.
-
-## Basic Operations
-
-### Publishing Messages
-```javascript
-// Publish a message to a channel
-await client.publish('my-channel', {
-  text: 'Hello, World!',
-  author: 'user123',
-  timestamp: new Date().toISOString()
-});
+```typescript
+interface Message {
+  action: number;      // protocol action
+  id?: string;
+  timestamp?: string;
+  channel: string;
+  alias?: string;
+  event?: string;
+  data?: unknown;
+  error?: { /* ... */ };
+}
 ```
 
-### Subscribing to Channels
-```javascript
-// Subscribe to receive messages
-client.subscribe('my-channel', (message) => {
-  console.log('Received message:', message);
-});
-```
+## Patterns
 
-### Unsubscribing
-```javascript
-// Stop receiving messages from a channel
-client.unsubscribe('my-channel');
-```
+- **Fan-out** — one publisher, many subscribers on the same channel
+- **Server push** — REST publish from your backend, Socket subscribe in clients
+- **Event filtering** — subscribe with `{ event: "order.created" }`
 
-## Message Types
-
-### Text Messages
-```javascript
-client.publish('chat', {
-  type: 'text',
-  content: 'Hello everyone!'
-});
-```
-
-### JSON Data
-```javascript
-client.publish('sensor-data', {
-  temperature: 23.5,
-  humidity: 65.2,
-  location: 'room-101'
-});
-```
-
-### Binary Data
-```javascript
-const imageData = new Uint8Array([...]);
-client.publish('images', imageData);
-```
-
-## Advanced Features
-
-- **Message Persistence**: Store messages for offline subscribers
-- **Message Ordering**: Guarantee message delivery order
-- **Fan-out Distribution**: Efficient message broadcasting
-- **Selective Subscriptions**: Subscribe to specific message types
-
----
-
-*This page is under construction. Pub/Sub documentation will be expanded soon.*
+Continue with [Publish](/core/pubsub/publish) and [Subscribe](/core/pubsub/subscribe).

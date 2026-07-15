@@ -1,0 +1,46 @@
+---
+title: "Socket SDK Channels"
+description: "Channel manager and channel methods for QPub.Socket."
+---
+
+## Manager (`socket.channels`)
+
+| Method | Description |
+|--------|-------------|
+| `get(name)` | Channel handle for `name` |
+| `has(name)` | Whether a handle exists |
+| `release(name)` | Drop local handle (ref-count) |
+| `remove(name)` | Remove handle |
+
+## Channel methods
+
+```javascript
+const channel = socket.channels.get("demo");
+
+await channel.subscribe((message) => {
+  console.log(message.data, message.event);
+}, { event: "optional-filter" });
+
+await channel.publish({ hello: true }, { event: "ping", alias: "bot" });
+await channel.unsubscribe();
+
+channel.pause({ bufferMessages: true });
+channel.resume();
+```
+
+| Method | Description |
+|--------|-------------|
+| `subscribe(handler, options?)` | Subscribe; resolves on ack |
+| `unsubscribe()` | Unsubscribe |
+| `publish(data, options?)` | Publish over WebSocket |
+| `pause(options?)` | Pause delivery locally |
+| `resume()` | Resume |
+| `on(event, handler)` | Channel lifecycle events |
+
+## Message callback
+
+Fields commonly used by apps: `channel`, `event`, `data`, `alias`, `id`, `timestamp`.
+
+## Channel events
+
+`subscribing`, `subscribed`, `unsubscribing`, `unsubscribed`, `paused`, `resumed`, `failed`.

@@ -1,23 +1,33 @@
-Manage your QPub API keys for secure access to services.
-
-## Overview
-
-API keys provide secure authentication for accessing QPub services programmatically.
-
-## Managing API Keys
-
-- **Create**: Generate new API keys
-- **View**: List all your API keys
-- **Rotate**: Update existing keys
-- **Revoke**: Disable or delete keys
-
-## Security Best Practices
-
-- Keep your API keys secure
-- Rotate keys regularly
-- Use different keys for different environments
-- Monitor key usage
-
+---
+title: "API Keys"
+description: "Create and manage project API keys in the dashboard."
 ---
 
-*This page is under construction. API key management documentation will be expanded soon.*
+API keys authenticate Socket and REST clients. Format:
+
+```
+<publicId>:<secret>
+```
+
+The secret is shown when the key is created — store it securely. The public id is used in token routes (`/v1/key/:keyID/...`).
+
+## Tasks
+
+1. Open a project → **API Keys**.
+2. **Create** a key; optionally set a permission map.
+3. Copy the full key once and store it in your secret manager.
+4. **Update** permissions or metadata as needed.
+5. **Delete** compromised or unused keys.
+
+## Using the key
+
+```javascript
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+const socket = new QPub.Socket({ apiKey: process.env.QPUB_API_KEY });
+```
+
+For browsers, do not embed the secret. Issue a [JWT or token request](/core/auth/token) from your backend instead.
+
+## Permissions
+
+Keys can carry a permission map (`publish`, `subscribe`, `enqueue`, …). See [Permissions](/core/auth/permissions).

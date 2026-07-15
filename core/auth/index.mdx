@@ -1,36 +1,48 @@
 ---
 title: "Authentication"
-description: "Learn how to authenticate with QPub services and manage access control. Multiple authentication methods including basic, token, and identified client authentication."
+description: "How clients authenticate to QPub REST and WebSocket APIs."
 ---
 
-Learn how to authenticate with QPub services and manage access control.
+QPub messaging APIs authenticate **applications**, not end-user dashboard logins.
 
-## Overview
+## Methods
 
-QPub provides multiple authentication methods to secure your connections and data.
+| Method | Best for | Credential |
+|--------|----------|------------|
+| [API key](/core/auth/api-key) | Trusted servers | `publicId:secret` via Basic or `api_key` |
+| [JWT token](/core/auth/token) | Browsers and untrusted clients | `Bearer` / `access_token` |
+| [Token request](/core/auth/token#token-request) | Browsers without exposing the secret | Signed payload → JWT |
 
-## Authentication Methods
+Dashboard login (email/password, OAuth) is separate — see [Accounts](/dashboard/accounts).
 
-- **Basic Authentication**: Simple username/password authentication
-- **Token Authentication**: Use API tokens for programmatic access
-- **Identified Client**: Advanced client identification and verification
-- **Permissions**: Fine-grained access control and authorization
+## Recommended patterns
 
-## Getting Started
+**Server-to-server**
 
-Choose the authentication method that best fits your use case:
+```javascript
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+```
 
-1. For simple applications: Use Basic Authentication
-2. For API integrations: Use Token Authentication
-3. For advanced security: Use Identified Client authentication
+**Browser / mobile**
 
-## Security Best Practices
+1. Your backend holds the API key.
+2. Backend creates a JWT (`issueToken`) or a signed token request (`createTokenRequest`).
+3. Client uses the JWT or `tokenRequest` / `authUrl` with `QPub.Socket`.
 
-- Keep credentials secure
-- Use HTTPS for all connections
-- Rotate tokens regularly
-- Implement proper error handling
+Never ship the API key **secret** in public client code.
 
----
+## SDK options
 
-*This page is under construction. Authentication documentation will be expanded soon.*
+```javascript
+new QPub.Socket({
+  apiKey: "...",           // or
+  authUrl: "https://...",  // POST returns { token } or { tokenRequest }
+  tokenRequest: { /* ... */ },
+  alias: "user-42",        // optional
+});
+```
+
+## Related
+
+- [Permissions](/core/auth/permissions)
+- [Client alias](/core/auth/alias)

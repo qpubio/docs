@@ -1,32 +1,31 @@
 ---
-title: "Connections"
-description: "Establish and manage connections to QPub services. Real-time communication channels and connection management."
+title: "Connection"
+description: "WebSocket connections for real-time QPub clients."
 ---
 
-Establish and manage connections to QPub services.
+A **connection** is a WebSocket session to `wss://socket.qpub.io/v1`. Only the Socket client maintains one; the REST client is request/response.
 
-## Overview
+## Creating a connection
 
-Connections are the foundation of your interaction with QPub services, providing:
+```javascript
+import { QPub } from "@qpub/sdk";
 
-- Real-time communication channels
-- Persistent connection management
-- Automatic reconnection handling
-- Connection state monitoring
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+  // autoConnect: true (default)
+});
+```
 
-## Connection Types
+Auth is applied before the socket opens when `autoAuthenticate` is enabled (default).
 
-- **WebSocket**: Real-time bidirectional communication
-- **HTTP**: Request-response interactions
-- **Server-Sent Events**: Unidirectional real-time updates
+## What you get
 
-## Connection Lifecycle
+After connect, the SDK emits `connected` with connection metadata (including `connectionId`). You can then subscribe to channels and publish.
 
-1. **Establish**: Create a new connection
-2. **Authenticate**: Verify credentials and permissions
-3. **Maintain**: Monitor connection health
-4. **Reconnect**: Handle connection failures gracefully
+## Lifecycle
 
----
+See [Connection Lifecycle](/core/connection/lifecycle) for events, reconnect, and ping.
 
-*This page is under construction. Connection documentation will be expanded soon.*
+## Limits
+
+Plans limit concurrent connections and connection rates. See [Limits](/pricing/limits).

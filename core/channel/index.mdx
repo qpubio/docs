@@ -1,32 +1,34 @@
 ---
-title: "Channels"
-description: "Channels are the primary way to organize and route messages in QPub. Public, private, and presence channels."
+title: "Channel"
+description: "Named pub/sub topics in QPub."
 ---
 
-Channels are the primary way to organize and route messages in QPub.
+A **channel** is a named string topic. Publishers send messages to a channel; subscribers receive messages from channels they subscribe to.
 
-## Overview
+There is no public “create channel” API. Using a channel name in publish or subscribe is enough.
 
-Channels provide a structured way to:
+## Examples of names
 
-- Organize message streams
-- Control access and permissions
-- Manage message routing
-- Monitor channel activity
+```
+notifications
+chat.lobby
+orders.42.status
+```
 
-## Channel Types
+Use clear, hierarchical names. Keep them stable — clients must agree on the same string.
 
-- **Public Channels**: Accessible to all authorized users
-- **Private Channels**: Restricted access with specific permissions
-- **Presence Channels**: Track user presence and status
+## Access
 
-## Key Features
+Access is controlled by [permissions](/core/auth/permissions) on the API key or JWT, not by channel “types”.
 
-- **Lifecycle Management**: Create, configure, and manage channels
-- **Message Routing**: Automatic message distribution
-- **Access Control**: Fine-grained permissions
-- **Monitoring**: Real-time channel analytics
+## Clients
 
----
+```javascript
+// Socket (subscribe + publish)
+const channel = socket.channels.get("notifications");
 
-*This page is under construction. Channel documentation will be expanded soon.*
+// REST (publish only)
+const channel = rest.channels.get("notifications");
+```
+
+See [Using Channels](/core/channel/using) and [Pub/Sub](/core/pubsub).

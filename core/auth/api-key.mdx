@@ -1,0 +1,70 @@
+---
+title: "API Key Auth"
+description: "Authenticate to REST and WebSocket with a project API key."
+---
+
+API keys are project credentials in the form:
+
+```
+<publicId>:<secret>
+```
+
+Create and rotate keys in the [dashboard](/dashboard/api-keys).
+
+## REST
+
+Send the key as HTTP Basic (recommended):
+
+```bash
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/channel/demo/messages" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"data":{"text":"Hello"}}]}'
+```
+
+Or as a query parameter (less preferred — may appear in logs):
+
+```
+?api_key=<url-encoded publicId:secret>
+```
+
+Optional client identity:
+
+```
+X-Alias: my-server
+```
+
+## WebSocket
+
+Connect to `wss://socket.qpub.io/v1` with:
+
+```
+?api_key=<url-encoded publicId:secret>
+```
+
+Optional: `&alias=my-client`.
+
+## SDK
+
+```javascript
+import { QPub } from "@qpub/sdk";
+
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+  alias: "server-worker-1", // optional
+});
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
+});
+```
+
+The SDK sends Basic auth on REST and `api_key` on the WebSocket URL when no JWT is active.
+
+## Security
+
+- Use API keys only on trusted servers.
+- For browsers, use [Token Auth](/core/auth/token).
+- Scope keys with [permissions](/core/auth/permissions) when creating them in the dashboard.
+- Rotate keys if a secret leaks.

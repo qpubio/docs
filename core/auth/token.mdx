@@ -1,109 +1,116 @@
 ---
-title: "Token Authentication"
-description: "Use API tokens for secure programmatic access to QPub. Create, manage, and use tokens for authentication."
+title: "Token Auth"
+description: "Issue and use short-lived JWTs for QPub clients."
 ---
 
-Learn how to use API tokens for secure programmatic access to QPub.
+JWTs give clients temporary access without exposing the API key secret. Tokens are issued from an API key and can carry an **alias** and **permission** scope.
 
-## Overview
+## Using a token
 
-Token authentication provides a secure way to authenticate API requests and SDK connections using bearer tokens.
+**REST**
 
-## Token Types
-
-### API Tokens
-- **Permanent Tokens**: Long-lived tokens for applications
-- **Temporary Tokens**: Short-lived tokens for specific operations
-- **Scoped Tokens**: Tokens with limited permissions
-
-### JWT Tokens
-- **Signed Tokens**: Cryptographically signed tokens
-- **Self-Contained**: Include all necessary information
-- **Expirable**: Built-in expiration handling
-
-## Creating Tokens
-
-### API Token Creation
-```javascript
-// Create a new API token
-const token = await client.createToken({
-  name: 'My App Token',
-  permissions: [
-    'read:channels',
-    'write:messages',
-    'subscribe:*'
-  ],
-  expiresIn: 86400 // 24 hours
-});
-```
-
-### JWT Token Generation
-```javascript
-// Generate JWT token
-const jwtToken = await client.generateJWT({
-  subject: 'user123',
-  permissions: ['read:channels'],
-  expiresIn: 3600 // 1 hour
-});
-```
-
-## Using Tokens
-
-### SDK Authentication
-```javascript
-// Initialize client with token
-const client = new QPubSocket({
-  token: 'your-api-token'
-});
-
-// Or with JWT
-const client = new QPubSocket({
-  jwtToken: 'your-jwt-token'
-});
-```
-
-### REST API Authentication
 ```bash
-# Using API token
-curl -H "Authorization: Bearer YOUR_API_TOKEN" \
-     https://api.qpub.com/v1/channels
-
-# Using JWT token
-curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-     https://api.qpub.com/v1/channels
+curl -X POST "https://rest.qpub.io/v1/channel/demo/messages" \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"data":{"text":"Hello"}}]}'
 ```
 
-## Token Management
+**WebSocket**
 
-### Listing Tokens
+```
+wss://socket.qpub.io/v1?access_token=<jwt>
+```
+
+**SDK**
+
 ```javascript
-// List all tokens
-const tokens = await client.listTokens();
+const socket = new QPub.Socket({
+  authUrl: "https://your-app.example/api/qpub-token",
+});
+// Your authUrl should return { token: "<jwt>" }
 ```
 
-### Revoking Tokens
+## Issue a token (server)
+
+### REST endpoint
+
+```
+POST /v1/key/:keyID/token/issue
+Authorization: Basic <base64(publicId:secret)>
+```
+
+`:keyID` is the API key **public** id.
+
+Body (all optional):
+
+```json
+{
+  "alias": "web-client-1",
+  "permission": {
+    "notifications": ["subscribe"],
+    "*": ["subscribe"]
+  },
+  "expiresIn": 3600
+}
+```
+
+`expiresIn` is seconds. Permission keys are channel resource names; see [Permissions](/core/auth/permissions).
+
+### SDK
+
 ```javascript
-// Revoke a specific token
-await client.revokeToken('token-id');
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
 
-// Revoke all tokens for a user
-await client.revokeAllTokens('user123');
+const token = await rest.auth.issueToken({
+  alias: "web-client-1",
+  permission: { notifications: ["subscribe"] },
+  expiresIn: 3600,
+});
 ```
 
-### Token Refresh
+`generateToken` signs a JWT locally with the API key secret (convenient for trusted servers). Prefer `issueToken` when you want the platform to mint the token.
+
+## Token request {#token-request}
+
+For untrusted clients, create a **signed token request** on your server, send it to the client, and let the client exchange it for a JWT. The secret never leaves your server.
+
+### Server
+
 ```javascript
-// Refresh an expiring token
-const newToken = await client.refreshToken('old-token');
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+
+const tokenRequest = await rest.auth.createTokenRequest({
+  alias: "Alice",
+  permission: { "chat.lobby": ["subscribe", "publish"] },
+});
+// Return tokenRequest to the client
 ```
 
-## Security Best Practices
+### Client
 
-1. **Store tokens securely** - Use secure storage mechanisms
-2. **Rotate tokens regularly** - Implement token rotation policies
-3. **Use minimal permissions** - Grant only necessary permissions
-4. **Monitor token usage** - Track token access patterns
-5. **Implement expiration** - Set appropriate token lifetimes
+```javascript
+const socket = new QPub.Socket({
+  tokenRequest, // auto-requests a token on init when provided
+});
+```
 
----
+Or call `socket.auth.requestToken(tokenRequest)` yourself.
 
-*This page is under construction. Token authentication documentation will be expanded soon.*
+### REST exchange
+
+```
+POST /v1/key/:keyID/token/request
+Content-Type: application/json
+```
+
+Body includes `aki`, `timestamp`, optional `alias` / `permission`, and `signature` (HMAC-SHA256 over a canonical string). Prefer the SDK helpers instead of signing by hand.
+
+## Auth events (SDK)
+
+Listen on `socket.auth`:
+
+- `token_updated`
+- `token_expired`
+- `token_error`
+- `auth_error`

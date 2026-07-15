@@ -1,33 +1,26 @@
 ---
 title: "Accounts"
-description: "Manage your QPub account and billing information. Update profile, security settings, and view usage analytics."
+description: "Dashboard accounts, sign-in, and team invitations."
 ---
 
-Manage your QPub account and billing information.
+An **account** is the organization and billing context in the dashboard. Users sign in with email/password or OAuth (for example Google/GitHub).
 
-## Account Overview
+## Sign-in
 
-Your account dashboard provides access to:
+- Email and password signup/signin
+- OAuth providers configured for the product
+- Session refresh and sign-out from the dashboard UI
 
-- Account settings and profile
-- Billing and subscription information
-- Usage and limits
-- Support and help resources
+This authentication is **not** used for Socket/REST messaging. Messaging uses [API keys and JWTs](/core/auth).
 
-## Account Settings
+## Invitations
 
-- **Profile**: Update personal information
-- **Security**: Manage authentication settings
-- **Notifications**: Configure alert preferences
-- **Preferences**: Customize your experience
+Account members can invite others from the dashboard. Invitees accept or reject invitations while signed in.
 
-## Billing
+## What to configure
 
-- View current plan and usage
-- Manage payment methods
-- Download invoices
-- Update billing information
+- Profile details for your user
+- Members and invitations for collaboration
+- Billing / plan for the account (see [Plans](/pricing/plans))
 
----
-
-*This page is under construction. Account management documentation will be expanded soon.*
+TODO: Document 2FA and exact OAuth provider list once confirmed for production.

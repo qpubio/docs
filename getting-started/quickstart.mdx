@@ -1,99 +1,100 @@
 ---
 title: "Quickstart"
-description: "Get started with QPub in minutes using our quickstart guide. Install SDK, create connection, and send your first message."
+description: "Connect with the JavaScript SDK, subscribe to a channel, and publish a message."
 ---
 
-Get started with QPub in minutes using our quickstart guide.
+Get a working pub/sub loop with `@qpub/sdk` in a few minutes.
 
 ## Prerequisites
 
-- QPub account (sign up at [qpub.com](https://qpub.com))
-- Basic knowledge of JavaScript/TypeScript
+- A QPub account and project
+- An API key from the [dashboard](/dashboard/api-keys)
+- Node.js, Bun, or a browser environment
 
-## Step 1: Get Your API Key
-
-1. Sign up for a QPub account
-2. Navigate to your dashboard
-3. Generate an API key from the API Keys section
-4. Copy your API key for use in your application
-
-## Step 2: Install the SDK
+## 1. Install
 
 ```bash
 npm install @qpub/sdk
 ```
 
-## Step 3: Create Your First Connection
+## 2. Subscribe (Socket)
 
 ```javascript
-import { QPubSocket } from '@qpub/sdk';
+import { QPub } from "@qpub/sdk";
 
-const client = new QPubSocket({
-  apiKey: 'your-api-key-here'
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
 });
 
-// Connect to QPub
-await client.connect();
-```
-
-## Step 4: Subscribe to a Channel
-
-```javascript
-// Subscribe to receive messages
-client.subscribe('my-channel', (message) => {
-  console.log('Received message:', message);
+socket.connection.on("connected", async () => {
+  const channel = socket.channels.get("demo");
+  await channel.subscribe((message) => {
+    console.log("received", message.data, message.event);
+  });
 });
 ```
 
-## Step 5: Publish Your First Message
+By default the Socket client connects automatically (`autoConnect: true`) to `wss://socket.qpub.io/v1`.
+
+> Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token) instead.
+
+## 3. Publish (REST)
+
+In another process (or tab), publish with the REST client:
 
 ```javascript
-// Publish a message to the channel
-await client.publish('my-channel', {
-  text: 'Hello, QPub!',
-  timestamp: new Date().toISOString()
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
+});
+
+await rest.channels.get("demo").publish(
+  { text: "Hello, QPub!" },
+  { event: "greeting" }
+);
+```
+
+Or publish from the same Socket after you are connected:
+
+```javascript
+await socket.channels.get("demo").publish(
+  { text: "Hello from socket" },
+  { event: "greeting" }
+);
+```
+
+## 4. Optional: event filter
+
+```javascript
+await channel.subscribe(
+  (message) => console.log(message.data),
+  { event: "greeting" }
+);
+```
+
+## Local development
+
+Override hosts when pointing at a local QPub stack:
+
+```javascript
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+  wsHost: "localhost",
+  wsPort: 8131,
+  isSecure: false,
+});
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
+  httpHost: "localhost",
+  httpPort: 8111,
+  isSecure: false,
 });
 ```
 
-## Complete Example
+## Next steps
 
-```javascript
-import { QPubSocket } from '@qpub/sdk';
-
-async function main() {
-  // Initialize client
-  const client = new QPubSocket({
-    apiKey: 'your-api-key-here'
-  });
-
-  // Connect
-  await client.connect();
-  console.log('Connected to QPub!');
-
-  // Subscribe to channel
-  client.subscribe('demo-channel', (message) => {
-    console.log('Received:', message);
-  });
-
-  // Publish message
-  await client.publish('demo-channel', {
-    text: 'Hello from my QPub app!',
-    author: 'quickstart-user'
-  });
-
-  console.log('Message sent!');
-}
-
-main().catch(console.error);
-```
-
-## Next Steps
-
-- Explore the [APIs documentation](./apis.mdx)
-- Learn about [SDKs](./sdks.mdx)
-- Check out [Channel usage](../core/channel/using.mdx)
-- Read about [Authentication](../core/auth/index.mdx)
-
----
-
-*This page is under construction. Quickstart guide will be expanded soon.*
+- [API key vs token auth](/core/auth)
+- [Connection lifecycle](/core/connection/lifecycle)
+- [Queues](/core/queue)

@@ -1,60 +1,42 @@
 ---
 title: "REST SDK Constructor"
-description: "Initialize and configure the QPub REST SDK. Constructor options and configuration examples."
+description: "QPub.Rest options and instance surface."
 ---
 
-Initialize and configure the QPub REST SDK.
-
-## Overview
-
-The REST SDK constructor creates a new instance of the QPub client for HTTP-based API interactions.
-
-## Basic Usage
-
 ```javascript
-import { QPubREST } from '@qpub/rest-sdk';
+import { QPub } from "@qpub/sdk";
 
-const client = new QPubREST({
-  apiKey: 'your-api-key',
-  baseURL: 'https://api.qpub.com'
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
 });
 ```
 
-## Constructor Options
+## Options
 
-### Required Parameters
+Shares the same options type as Socket for auth/hosts/logging. REST-relevant defaults:
 
-- **apiKey**: Your QPub API key for authentication
+| Option | Default | Description |
+|--------|---------|-------------|
+| `apiKey` | — | API key |
+| `authUrl` / `tokenRequest` | — | Alternate auth |
+| `alias` | — | Sent as `X-Alias` when set |
+| `httpHost` | `rest.qpub.io` | REST host |
+| `httpPort` | `null` | Optional port |
+| `isSecure` | `true` | `https` vs `http` |
+| `debug` / `logLevel` / `logger` | — | Logging |
 
-### Optional Parameters
+Socket-only options (`autoConnect`, reconnect, …) are ignored for REST behavior.
 
-- **baseURL**: API base URL (defaults to production)
-- **timeout**: Request timeout in milliseconds
-- **retries**: Number of retry attempts for failed requests
-- **headers**: Additional HTTP headers
+Base URL: `{https|http}://{httpHost}[:port]/v1`
 
-## Configuration Examples
+## Instance
 
-### Basic Configuration
-```javascript
-const client = new QPubREST({
-  apiKey: 'your-api-key'
-});
-```
+| Property / method | Description |
+|-------------------|-------------|
+| `rest.channels` | Publish API — [Channels](/api/rest-sdk/channels) |
+| `rest.queues` | Queue API — [Queues](/api/rest-sdk/queues) |
+| `rest.auth` | Same token helpers as Socket |
+| `rest.reset()` | Reset instance |
+| `rest.getInstanceId()` | Instance id |
 
-### Advanced Configuration
-```javascript
-const client = new QPubREST({
-  apiKey: 'your-api-key',
-  baseURL: 'https://api.qpub.com',
-  timeout: 10000,
-  retries: 3,
-  headers: {
-    'User-Agent': 'MyApp/1.0'
-  }
-});
-```
-
----
-
-*This page is under construction. REST SDK constructor documentation will be expanded soon.*
+REST does **not** subscribe to channels.

@@ -1,0 +1,33 @@
+---
+title: "REST SDK Channels"
+description: "Publish and batch-publish with QPub.Rest."
+---
+
+## Single channel
+
+```javascript
+const result = await rest.channels.get("notifications").publish(
+  { text: "Hello" },
+  { event: "greeting", alias: "api" }
+);
+```
+
+Maps to `POST /v1/channel/notifications/messages`.
+
+## Batch
+
+```javascript
+await rest.channels.publishBatch(
+  ["notifications", "ops"],
+  [
+    { data: { text: "Hello" }, event: "greeting" },
+    { data: { text: "Again" }, event: "greeting" },
+  ]
+);
+```
+
+Maps to `POST /v1/channels/messages` with a `channels` array.
+
+## Auth
+
+Uses `rest.auth.getAuthHeaders()` (Bearer JWT if present, otherwise Basic API key).

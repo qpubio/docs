@@ -1,87 +1,50 @@
 ---
 title: "About QPub"
-description: "Enterprise real-time messaging platform with WebSocket APIs and pub/sub channels. Build chat apps, IoT dashboards, and live notifications with millisecond latency."
+description: "QPub is a multi-tenant pub/sub and queue platform with WebSocket and REST APIs."
 ---
 
 ## What is QPub?
 
-QPub is a high-performance real-time messaging platform that empowers developers to build instant digital experiences. It's a cloud-based publish/subscribe service that delivers messages with millisecond latency, handling scaling, reliability, and security automatically.
+QPub is a cloud messaging platform for real-time publish/subscribe and durable job queues. You create a project, issue API keys, then connect clients over WebSocket or call the REST API.
 
-At its core, QPub eliminates the complexity of building real-time applications by providing a robust infrastructure that handles message delivery, connection management, and system scaling. Whether you're building a chat application, live dashboard, or IoT monitoring system, QPub provides the foundation for seamless real-time communication.
+Use QPub when you need:
 
-## Key Features
+- Live updates to browsers or devices (notifications, dashboards, chat)
+- Server-side publish without maintaining a WebSocket connection
+- Background jobs with pull-based workers
 
-QPub offers enterprise-grade features designed for modern applications. The platform provides real-time messaging through both WebSocket and REST APIs, ensuring compatibility with any technology stack. Built with a multi-tenant architecture, each project is completely isolated for security and data privacy.
+## Products
 
-Key capabilities include:
+| Product | Transport | Typical use |
+|---------|-----------|-------------|
+| **Channels (pub/sub)** | WebSocket + REST publish | Real-time fan-out |
+| **Queues** | REST | Durable jobs, delayed/scheduled work |
 
-- **Real-time messaging** via WebSocket and REST APIs
-- **Multi-tenant architecture** with complete project isolation
-- **Built-in authentication** with API keys and JWT tokens
-- **Horizontal scaling** supporting millions of concurrent connections
-- **Comprehensive monitoring** with real-time stats and usage tracking
-- **Flexible deployment** - cloud-hosted or self-hosted options
+## How it fits together
 
-The platform includes detailed monitoring with real-time statistics and usage tracking, plus deployment flexibility that allows you to choose between cloud-hosted solutions or self-hosted infrastructure based on your specific requirements.
+1. A **user** signs into the dashboard and belongs to an **account**.
+2. The account owns **projects**. Each project is isolated.
+3. Projects have **API keys**. Keys authenticate client apps.
+4. Clients use a key (or a short-lived **JWT**) to:
+   - Connect to the **Socket** API and subscribe/publish on **channels**
+   - Call the **REST** API to publish, issue tokens, or manage **queues**
 
-## How It Works
+Default cloud hosts:
 
-QPub provides two primary integration methods for different use cases. WebSocket connections are recommended for real-time applications requiring bi-directional communication with persistent, low-latency connections. This approach is ideal for chat applications, live gaming, and real-time collaboration tools.
+- REST: `https://rest.qpub.io/v1`
+- WebSocket: `wss://socket.qpub.io/v1`
 
-For administrative operations, configuration management, and non-real-time tasks, the REST API provides simple HTTP-based integration. This allows easy authentication, project management, and integration with existing systems without requiring persistent connections.
+## Official SDK
 
-## Pub/Sub Channels
+The official JavaScript SDK is [`@qpub/sdk`](https://www.npmjs.com/package/@qpub/sdk):
 
-Channels are the fundamental building blocks of QPub's messaging system, organizing messages into logical topics or categories. Publishers send messages to specific channels, while subscribers receive only messages from channels they've subscribed to, ensuring efficient message routing and delivery.
+- `QPub.Socket` — WebSocket client (subscribe + publish)
+- `QPub.Rest` — HTTP client (publish, tokens, queues)
 
-The system supports three primary message patterns:
+See [Quickstart](/getting-started/quickstart) and [Choose an SDK](/getting-started/sdks).
 
-- **One-to-Many (Fan-out)**: Broadcasting to multiple subscribers - perfect for news updates, alerts, and live notifications
-- **Many-to-One**: Data collection from multiple sources to a central system - ideal for IoT sensor networks and monitoring applications
-- **Many-to-Many**: Collaboration between variable numbers of participants - commonly used in chat applications, multiplayer games, and collaborative editing tools
+## What QPub is not
 
-This flexible pattern system allows developers to implement any real-time communication scenario, from simple broadcasting to complex collaborative applications.
-
-## Use Cases
-
-QPub serves diverse industries and applications requiring real-time communication. Chat applications and messaging systems benefit from the platform's low-latency message delivery and presence tracking capabilities. Live dashboards and monitoring systems can push real-time data updates to connected clients instantly.
-
-Common applications include:
-
-- **Chat applications and messaging systems**
-- **Live dashboards and monitoring systems**
-- **IoT device communication**
-- **Real-time collaboration tools**
-- **Financial trading platforms**
-- **Multiplayer gaming**
-
-IoT device communication leverages QPub's ability to handle massive numbers of concurrent connections while maintaining low latency. Real-time collaboration tools, financial trading platforms, and multiplayer gaming applications all rely on QPub's reliable message delivery and horizontal scaling capabilities to support growing user bases.
-
-## Billing
-
-QPub offers flexible subscription plans designed to scale with your application's growth. Usage-based pricing covers connections, channels, messages, and bandwidth, ensuring you only pay for what you use. The platform integrates seamlessly with Stripe for professional billing management, providing detailed usage analytics and automated billing processes.
-
-Billing features include:
-
-- **Usage-based pricing** for connections, channels, messages, and bandwidth
-- **Stripe integration** for professional billing management
-- **Detailed usage analytics** and automated billing processes
-- **Subscription tiers** from free development plans to enterprise solutions
-- **Automatic overage protection** and comprehensive reporting
-
-Subscription tiers range from free development plans to enterprise solutions, with automatic overage protection and comprehensive reporting. This approach allows startups to begin with minimal costs while providing enterprise customers with the predictability and control they need for large-scale deployments.
-
-## Why QPub?
-
-QPub combines enterprise-grade reliability with developer-friendly simplicity, making it the ideal choice for building real-time applications. The platform's built-in security features, automatic scaling capabilities, and comprehensive monitoring tools eliminate the need to build and maintain complex messaging infrastructure.
-
-Key advantages:
-
-- **Enterprise-ready** with built-in security and automatic scaling
-- **Developer-friendly** with simple APIs and official SDKs for all major platforms
-- **Cost-effective** - reduces development time and infrastructure complexity
-- **Scalable** - grows from prototype to production seamlessly
-- **Flexible** - multi-tenant architecture and deployment options
-- **Reliable** - professional billing integration and global scale support
-
-With simple APIs and official SDKs for all major platforms, QPub reduces development time while ensuring your application can scale from prototype to production. The platform's multi-tenant architecture, flexible deployment options, and professional billing integration make it suitable for everything from individual projects to large enterprise applications requiring global scale and reliability.
+- Not a full application backend (auth for your end users is your responsibility; QPub authenticates *your apps* to the messaging APIs)
+- Not a channel CRUD product — channels are named topics you publish/subscribe to by string
+- TODO: self-hosted deployment options are not documented here

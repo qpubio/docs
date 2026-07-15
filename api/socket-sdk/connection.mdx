@@ -1,0 +1,35 @@
+---
+title: "Socket SDK Connection"
+description: "Connection methods and events for QPub.Socket."
+---
+
+Access via `socket.connection`.
+
+## Methods
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `connect()` | Promise | Open the WebSocket |
+| `disconnect()` | void | Close the connection |
+| `ping()` | Promise\<number\> | RTT in milliseconds |
+| `isConnected()` | boolean | Current state |
+| `on(event, handler)` | void | Subscribe to events |
+
+## Events
+
+| Event | Payload highlights |
+|-------|-------------------|
+| `initialized` | — |
+| `connecting` | `attempt` |
+| `connected` | `connectionId`, `connectionDetails` |
+| `disconnected` | — |
+| `closed` | `code`, `reason` |
+| `failed` | `error`, `context` |
+
+```javascript
+socket.connection.on("connected", ({ connectionId }) => {
+  console.log(connectionId);
+});
+```
+
+Conceptual guide: [Connection Lifecycle](/core/connection/lifecycle).

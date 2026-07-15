@@ -1,0 +1,38 @@
+---
+title: "REST SDK Queues"
+description: "Queue methods on QPub.Rest (`rest.queues`)."
+---
+
+Access via `rest.queues` (`IRestQueueManager`). Wire JSON uses snake_case; the SDK exposes camelCase.
+
+## Jobs
+
+| Method | Description |
+|--------|-------------|
+| `enqueue(name, payload, opts?)` | Create a job |
+| `getJob(name, jobId)` | Fetch one job |
+| `listJobs(name, opts?)` | List jobs (`status` filter) |
+| `cancelJob(name, jobId)` | Cancel |
+| `retryJob(name, jobId)` | Retry |
+
+`EnqueueOptions`: `delay`, `idempotencyKey`, `scheduleAt`, `metadata`.
+
+## Config
+
+| Method | Description |
+|--------|-------------|
+| `getConfig(name)` | Read queue config |
+| `updateConfig(name, opts)` | Upsert config |
+
+## Workers
+
+| Method | Description |
+|--------|-------------|
+| `registerWorker({ name, queues })` | Register worker metadata |
+| `heartbeat(workerId)` | Heartbeat |
+| `runWorker(name, handler, opts?)` | Long-poll loop (blocks until stop) |
+| `stopWorker()` | Stop the loop |
+
+`RunWorkerOptions`: `workerId`, `batchSize`, `pollIntervalMs`, `wait`.
+
+Conceptual guide: [Queue](/core/queue).

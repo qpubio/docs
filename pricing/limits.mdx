@@ -1,35 +1,56 @@
 ---
-title: "Usage Limits"
-description: "Understand the usage limits and quotas for different QPub plans. Free, Starter, and Pro plan limits."
+title: "Limits"
+description: "Plan limits for connections, messages, channels, and bandwidth."
 ---
 
-Understand the usage limits and quotas for different QPub plans.
+Values below match the seeded production plan catalog. Dashboard billing shows your active plan.
 
-## Free Plan Limits
+## Connections
 
-- **API Requests**: Up to 10,000 requests per month
-- **Connections**: Up to 100 concurrent connections
-- **Data Transfer**: Up to 1GB per month
-- **Channels**: Up to 10 channels
+| Limit | Free | Starter | Pro |
+|-------|------|---------|-----|
+| Concurrent connections | 256 | 16,000 | 64,000 |
+| New connections / sec | 48 | 256 | 512 |
+| Inbound message rate / sec | 48 | 64 | 64 |
+| Outbound message rate / sec | 48 | 64 | 64 |
+| Channels per connection | 256 | 256 | 256 |
 
-## Paid Plan Limits
+## Channels
 
-### Starter Plan
-- **API Requests**: Up to 100,000 requests per month
-- **Connections**: Up to 1,000 concurrent connections
-- **Data Transfer**: Up to 10GB per month
-- **Channels**: Up to 100 channels
+| Limit | Free | Starter | Pro |
+|-------|------|---------|-----|
+| Concurrent channels | 256 | 16,000 | 64,000 |
+| Publish rate / channel / sec | 48 | 64 | 64 |
+| Channel create rate / sec | 48 | 256 | 512 |
+| Presence members / channel | 256 | 256 | 256 |
 
-### Pro Plan
-- **API Requests**: Up to 1,000,000 requests per month
-- **Connections**: Up to 10,000 concurrent connections
-- **Data Transfer**: Up to 100GB per month
-- **Channels**: Unlimited channels
+Presence members is a platform cap. TODO: customer presence APIs are not documented because they are not verified as publicly available.
 
-## Rate Limits
+## Messages
 
-All plans are subject to rate limits to ensure fair usage and service stability.
+| Limit | Free | Starter | Pro |
+|-------|------|---------|-----|
+| Message rate / sec | 512 | 2,000 | 12,000 |
+| Messages / hour | 256,000 | 5,256,000 | 24,000,000 |
+| Messages / month | 4,000,000 | Unlimited | Unlimited |
+| Max message size | 32 KiB | 64 KiB | 512 KiB |
+| Default history TTL | 1 day | 3 days | 3 days |
+| Max history TTL | 1 day | 30 days | 365 days |
 
----
+TODO: Document how history TTL is configured/consumed once the customer-facing history API is verified.
 
-*This page is under construction. Detailed limits documentation will be added soon.*
+## Bandwidth
+
+| Limit | Free | Starter | Pro |
+|-------|------|---------|-----|
+| Bandwidth / sec | 2.5 MiB | 12 MiB | 48 MiB |
+| Bandwidth / hour | 1.5 GiB | 24 GiB | 100 GiB |
+| Bandwidth / month | 32 GiB | 1.5 TiB | 5 TiB |
+
+## Support
+
+| Plan | Support level |
+|------|---------------|
+| Free | Basic |
+| Starter | Basic |
+| Pro | Standard |

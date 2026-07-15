@@ -1,90 +1,70 @@
 ---
 title: "Permissions"
-description: "Configure and manage fine-grained permissions in QPub. Channel permissions, role-based access, and security controls."
+description: "Channel and queue permission maps for API keys and tokens."
 ---
 
-Learn how to configure and manage fine-grained permissions in QPub.
+Permissions control which actions a credential may perform on which resources (usually channel or queue names).
 
-## Overview
+## Shape
 
-QPub provides a comprehensive permissions system to control access to channels, messages, and administrative functions.
+A permission is a JSON object: **resource key → list of actions**.
 
-## Permission Types
-
-### Channel Permissions
-- **read**: Subscribe to channel and receive messages
-- **write**: Publish messages to channel
-- **admin**: Manage channel settings and permissions
-- **moderate**: Remove messages and manage subscribers
-
-### System Permissions
-- **create_channels**: Create new channels
-- **delete_channels**: Delete existing channels
-- **manage_users**: Add/remove users and permissions
-- **view_analytics**: Access usage analytics and metrics
-
-## Permission Configuration
-
-### User-Level Permissions
-```javascript
-// Grant permissions to a user
-await client.grantPermissions('user123', [
-  'read:channel-general',
-  'write:channel-general',
-  'create_channels'
-]);
-```
-
-### Role-Based Permissions
-```javascript
-// Create a role with permissions
-const moderatorRole = await client.createRole({
-  name: 'moderator',
-  permissions: [
-    'read:*',
-    'write:*',
-    'moderate:*'
-  ]
-});
-
-// Assign role to user
-await client.assignRole('user123', 'moderator');
-```
-
-### Channel-Specific Permissions
-```javascript
-// Set channel permissions
-await client.setChannelPermissions('private-channel', {
-  'user:123': ['read', 'write'],
-  'role:admin': ['read', 'write', 'admin'],
-  'role:guest': ['read']
-});
-```
-
-## Permission Inheritance
-
-Permissions can be inherited through:
-- **User roles**: Users inherit permissions from their assigned roles
-- **Channel hierarchies**: Sub-channels inherit permissions from parent channels
-- **Group memberships**: Users inherit permissions from their groups
-
-## Permission Checking
-
-### Server-Side Validation
-All permissions are validated server-side before allowing operations.
-
-### Client-Side Checking
-```javascript
-// Check if user has permission
-const canPublish = await client.hasPermission('write:my-channel');
-
-if (canPublish) {
-  await client.publish('my-channel', message);
-} else {
-  console.log('Insufficient permissions');
+```json
+{
+  "notifications": ["subscribe"],
+  "chat.lobby": ["subscribe", "publish"],
+  "*": ["subscribe"]
 }
 ```
 
----
+| Action | Meaning |
+|--------|---------|
+| `publish` | Publish to a channel (also allows enqueue when `enqueue` is absent) |
+| `subscribe` | Subscribe to a channel (also allows dequeue when `dequeue` is absent) |
+| `enqueue` | Enqueue jobs on a queue resource |
+| `dequeue` | Pull/ack/nack jobs on a queue resource |
+| `stats` | Stats-related access |
+| `*` | All actions on that resource |
 
-*This page is under construction. Permissions documentation will be expanded soon.*
+## Matching (current behavior)
+
+Permission checks match:
+
+1. The exact resource string (channel or queue name), or
+2. The resource key `"*"` (all resources)
+
+TODO: Document pattern wildcards (for example `flights.*`) only after they are verified in the permission matcher. Prefer exact names or `"*"` today.
+
+## Where permissions are set
+
+1. **API key** — configured in the [dashboard](/dashboard/api-keys) when the key is created/updated.
+2. **JWT / token request** — optional narrower scope when issuing a token:
+
+```javascript
+await rest.auth.issueToken({
+  permission: {
+    "user-42.inbox": ["subscribe"],
+  },
+});
+```
+
+If a token omits `permission`, the API key’s permissions apply (subject to platform rules).
+
+## Examples
+
+**Read-only notifications client**
+
+```json
+{ "notifications": ["subscribe"] }
+```
+
+**Server that can publish anywhere and enqueue on `emails`**
+
+```json
+{
+  "*": ["publish"],
+  "emails": ["enqueue"]
+}
+```
+
+**Denied publish** returns HTTP `403` on REST, or a protocol error on WebSocket.

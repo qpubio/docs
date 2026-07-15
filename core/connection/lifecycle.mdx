@@ -1,99 +1,68 @@
 ---
 title: "Connection Lifecycle"
-description: "Understand how QPub connections are established, maintained, and managed. Connection states and event handling."
+description: "Socket connection events, reconnect, and ping."
 ---
 
-Understand how QPub connections are established, maintained, and managed.
+## Events
 
-## Overview
+Listen on `socket.connection`:
 
-QPub connections go through several phases from initial establishment to final termination, each with specific behaviors and event handling.
+| Event | When |
+|-------|------|
+| `initialized` | Client constructed |
+| `connecting` | Dial in progress (`attempt` in payload) |
+| `connected` | WebSocket open and ready (`connectionId`, `connectionDetails`) |
+| `disconnected` | Transport dropped |
+| `closed` | Closed (`code`, `reason`) |
+| `failed` | Unrecoverable failure (`error`, `context`) |
 
-## Connection States
-
-### 1. Disconnected
-- No active connection to QPub
-- All operations are queued
-- Automatic reconnection may be attempted
-
-### 2. Connecting
-- Attempting to establish connection
-- Authentication in progress
-- Connection parameters being negotiated
-
-### 3. Connected
-- Active connection established
-- Ready to send and receive messages
-- All features available
-
-### 4. Reconnecting
-- Connection lost, attempting to reconnect
-- Queuing outgoing messages
-- Maintaining subscription state
-
-### 5. Failed
-- Connection permanently failed
-- Manual intervention required
-- Error details available
-
-## Connection Events
-
-### JavaScript SDK
 ```javascript
-client.on('connecting', () => {
-  console.log('Connecting to QPub...');
+socket.connection.on("connected", ({ connectionId }) => {
+  console.log("connected", connectionId);
 });
 
-client.on('connected', () => {
-  console.log('Connected successfully');
-});
-
-client.on('disconnected', () => {
-  console.log('Disconnected from QPub');
-});
-
-client.on('reconnecting', () => {
-  console.log('Reconnecting...');
-});
-
-client.on('error', (error) => {
-  console.error('Connection error:', error);
+socket.connection.on("failed", ({ error }) => {
+  console.error(error);
 });
 ```
 
-## Connection Management
+## Manual connect / disconnect
 
-### Manual Connection
 ```javascript
-// Connect manually
-await client.connect();
-
-// Disconnect manually
-await client.disconnect();
-```
-
-### Automatic Reconnection
-```javascript
-const client = new QPubSocket({
-  apiKey: 'your-api-key',
-  reconnect: true,
-  reconnectDelay: 1000,
-  maxReconnectAttempts: 5
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+  autoConnect: false,
 });
+
+await socket.connection.connect();
+socket.connection.disconnect();
 ```
 
-## Connection Health Monitoring
+## Reconnect
+
+Defaults:
+
+| Option | Default |
+|--------|---------|
+| `autoReconnect` | `true` |
+| `autoResubscribe` | `true` |
+| `maxReconnectAttempts` | `10` |
+| `initialReconnectDelayMs` | `1000` |
+| `maxReconnectDelayMs` | `30000` |
+| `reconnectBackoffMultiplier` | `1.5` |
+
+After reconnect, the SDK resubscribes to active channels when `autoResubscribe` is true.
+
+## Ping
 
 ```javascript
-// Check connection status
-const isConnected = client.isConnected();
-
-// Get connection info
-const connectionInfo = client.getConnectionInfo();
-console.log('Connected to:', connectionInfo.endpoint);
-console.log('Uptime:', connectionInfo.uptime);
+const rttMs = await socket.connection.ping();
 ```
 
----
+Uses protocol ping/pong. `pingTimeoutMs` defaults to `10000`.
 
-*This page is under construction. Connection lifecycle documentation will be expanded soon.*
+## Helpers
+
+```javascript
+socket.connection.isConnected();
+```

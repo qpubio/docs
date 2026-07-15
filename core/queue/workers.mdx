@@ -1,0 +1,84 @@
+---
+title: "Workers"
+description: "Pull, ack, and nack jobs with external workers."
+---
+
+External workers are processes you run. Registration is optional metadata; pull authorization uses your API key or JWT permissions.
+
+## High-level SDK loop
+
+```javascript
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+
+const worker = await rest.queues.registerWorker({
+  name: "email-worker",
+  queues: ["emails"],
+});
+
+await rest.queues.runWorker(
+  "emails",
+  async (job) => {
+    // process job.payload
+    return { ok: true }; // sent as ack result
+  },
+  {
+    workerId: worker.id,
+    batchSize: 1,
+    pollIntervalMs: 1000,
+    wait: "20s",
+  }
+);
+
+// Elsewhere:
+// rest.queues.stopWorker();
+```
+
+`runWorker` blocks until `stopWorker()` is called.
+
+## Low-level pull / ack / nack
+
+```
+POST /v1/queue/:queueName/pull
+POST /v1/queue/:queueName/jobs/:jobId/ack
+POST /v1/queue/:queueName/jobs/:jobId/nack
+```
+
+Pull body:
+
+```json
+{
+  "worker_id": "01J...",
+  "batch_size": 1,
+  "wait": "5s"
+}
+```
+
+Ack:
+
+```json
+{ "worker_id": "01J...", "result": { "ok": true } }
+```
+
+Nack:
+
+```json
+{
+  "worker_id": "01J...",
+  "reason": "temporary failure",
+  "retry_delay": "30s"
+}
+```
+
+## Register and heartbeat
+
+```
+POST /v1/workers/register
+POST /v1/workers/heartbeat
+```
+
+```javascript
+await rest.queues.registerWorker({ name: "email-worker", queues: ["emails"] });
+await rest.queues.heartbeat(workerId);
+```
+
+The `queues` array on registration is declarative metadata. It does not replace permission checks on pull.

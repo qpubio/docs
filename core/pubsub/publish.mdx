@@ -1,71 +1,87 @@
 ---
 title: "Publish"
-description: "Learn how to publish messages to channels using QPub. Send real-time data to subscribers with different message types."
+description: "Publish messages to channels over WebSocket or REST."
 ---
 
-Learn how to publish messages to channels using QPub.
+## Socket
 
-## Overview
-
-Publishing messages allows you to send real-time data to subscribers on specific channels.
-
-## Basic Publishing
-
-### JavaScript SDK
 ```javascript
-// Publish a simple message
-client.publish('my-channel', {
-  text: 'Hello, World!',
-  timestamp: new Date().toISOString()
-});
+const channel = socket.channels.get("notifications");
+await channel.publish(
+  { title: "New order", orderId: "ord_1" },
+  { event: "order.created", alias: "api" }
+);
 ```
 
-### REST API
+Requires `publish` permission on that channel.
+
+## REST (single channel)
+
+```javascript
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+await rest.channels.get("notifications").publish(
+  { title: "New order" },
+  { event: "order.created" }
+);
+```
+
+HTTP:
+
+```
+POST /v1/channel/:channelName/messages
+```
+
+```json
+{
+  "messages": [
+    {
+      "event": "order.created",
+      "data": { "title": "New order" }
+    }
+  ]
+}
+```
+
+Successful publishes return **201** with a `published` array (`channel`, `message_id`, `published_at`, `payload_count`). Partial multi-channel failures may return **207** (`PARTIAL_CONTENT`) with those fields under `details`.
+
+## REST (multiple channels)
+
+```javascript
+await rest.channels.publishBatch(
+  ["notifications", "ops"],
+  [
+    { data: { title: "New order" }, event: "order.created" },
+  ]
+);
+```
+
+HTTP:
+
+```
+POST /v1/channels/messages
+```
+
+```json
+{
+  "channels": ["notifications", "ops"],
+  "messages": [
+    { "event": "order.created", "data": { "title": "New order" } }
+  ]
+}
+```
+
+## curl
+
 ```bash
-curl -X POST \
-  -H "Authorization: Bearer YOUR_API_KEY" \
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/channel/notifications/messages" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
   -H "Content-Type: application/json" \
-  https://api.qpub.com/v1/channels/my-channel/messages \
-  -d '{"text": "Hello, World!", "timestamp": "2024-01-01T00:00:00Z"}'
+  -d '{"messages":[{"event":"ping","data":{"ok":true}}]}'
 ```
 
-## Message Types
+## Notes
 
-### Text Messages
-```javascript
-client.publish('chat-room', {
-  type: 'text',
-  content: 'Hello everyone!',
-  author: 'user123'
-});
-```
-
-### JSON Data
-```javascript
-client.publish('data-stream', {
-  type: 'sensor-data',
-  temperature: 23.5,
-  humidity: 65.2,
-  location: { lat: 40.7128, lng: -74.0060 }
-});
-```
-
-### Binary Data
-```javascript
-const binaryData = new Uint8Array([1, 2, 3, 4, 5]);
-client.publish('binary-channel', binaryData);
-```
-
-## Publishing Options
-
-```javascript
-client.publish('my-channel', message, {
-  persistent: true,    // Store message for offline subscribers
-  priority: 'high',    // Message priority
-  ttl: 3600           // Time to live in seconds
-});
-```
-
----
-
-*This page is under construction. Publish documentation will be expanded soon.*
+- At least one message is required in the REST body.
+- Message size and rate limits depend on your [plan](/pricing/limits).
+- Socket publish does not return the REST `published` payload.

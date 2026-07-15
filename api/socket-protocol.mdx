@@ -1,64 +1,114 @@
 ---
 title: "Socket Protocol"
-description: "Understand the QPub WebSocket protocol for real-time communication. Connection, authentication, and message format."
+description: "WebSocket message actions and envelopes for QPub."
 ---
-
-Understand the QPub WebSocket protocol for real-time communication.
-
-## Overview
-
-The QPub Socket Protocol provides real-time, bidirectional communication using WebSocket connections.
 
 ## Connection
 
-### WebSocket URL
 ```
-wss://api.qpub.com/v1/socket
+GET wss://socket.qpub.io/v1?api_key=... 
+GET wss://socket.qpub.io/v1?access_token=...
 ```
 
-### Authentication
-Send authentication message upon connection:
+Optional: `alias` query parameter.
+
+Auth is validated on the HTTP upgrade. Messages are JSON objects with a numeric `action` field.
+
+## Actions
+
+| Code | Name | Direction |
+|------|------|-----------|
+| 0 | connect | client → server |
+| 1 | connected | server → client |
+| 2 | disconnect | client → server |
+| 3 | disconnected | server → client |
+| 4 | subscribe | client → server |
+| 5 | subscribed | server → client |
+| 6 | unsubscribe | client → server |
+| 7 | unsubscribed | server → client |
+| 8 | publish | client → server |
+| 9 | published | server → client |
+| 10 | message | server → client |
+| 11 | error | server → client |
+| 12 | ping | either |
+| 13 | pong | either |
+
+Prefer the SDK unless you are implementing a custom client.
+
+## Example: subscribe
+
+```json
+{ "action": 4, "channel": "chat.lobby" }
+```
+
+Ack:
+
 ```json
 {
-  "type": "auth",
-  "apiKey": "your-api-key"
+  "action": 5,
+  "channel": "chat.lobby",
+  "subscription_id": "..."
 }
 ```
 
-## Message Format
-
-All messages follow a consistent JSON structure:
+## Example: publish
 
 ```json
 {
-  "type": "message_type",
-  "data": { ... },
-  "timestamp": "2024-01-01T00:00:00Z"
+  "action": 8,
+  "channel": "chat.lobby",
+  "messages": [
+    { "event": "chat", "data": { "text": "hi" }, "alias": "Alice" }
+  ]
 }
 ```
 
-## Message Types
+## Example: inbound message
 
-### Client to Server
-- **auth**: Authenticate connection
-- **subscribe**: Subscribe to channel
-- **unsubscribe**: Unsubscribe from channel
-- **publish**: Publish message to channel
+Broadcast messages use action `10` with `channel`, `id`, `timestamp`, and a `messages` payload array (event/data/alias).
 
-### Server to Client
-- **connected**: Connection established
-- **message**: Received message
-- **error**: Error notification
-- **status**: Connection status update
+## Connected
 
-## Connection Lifecycle
+```json
+{
+  "action": 1,
+  "connection_id": "...",
+  "connection_details": {
+    "alias": "Alice",
+    "client_id": "...",
+    "server_id": "..."
+  }
+}
+```
 
-1. **Connect**: Establish WebSocket connection
-2. **Authenticate**: Send authentication message
-3. **Subscribe**: Subscribe to channels
-4. **Communicate**: Send and receive messages
-5. **Disconnect**: Close connection
+## Ping / pong
 
----
+```json
+{ "action": 12, "id": 1 }
+{ "action": 13, "id": 1 }
+```
 
-*This page is under construction. Socket protocol documentation will be expanded soon.*
+## Errors
+
+Error frames use `action: 11` and an `error` object. Public error codes include:
+
+| Code | Meaning |
+|------|---------|
+| 40000 | Bad request |
+| 40001 | Invalid message |
+| 40002 | Invalid action |
+| 40003 | Invalid channel |
+| 40100 | Unauthorized |
+| 40300 | Forbidden |
+| 40400 | Not found |
+| 40401 | Subscription closed |
+| 42900 | Rate limited |
+| 50000 | Internal error |
+| 50001 | Broker unavailable |
+| 50002 | Publish failed |
+| 50003 | Subscribe failed |
+| 50004 | Unsubscribe failed |
+| 50005 | Connection closed |
+| 50400 | Timeout |
+
+Short links use the form `https://qpb.li/err{code}` (for example `https://qpb.li/err40300`).

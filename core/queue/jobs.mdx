@@ -1,0 +1,80 @@
+---
+title: "Jobs"
+description: "Enqueue, inspect, cancel, and retry queue jobs."
+---
+
+## Enqueue
+
+```javascript
+const { jobId, status } = await rest.queues.enqueue(
+  "emails",
+  { to: "user@example.com" },
+  {
+    delay: "30s",
+    idempotencyKey: "welcome-user-42",
+    scheduleAt: "2026-07-16T12:00:00Z",
+    metadata: { source: "signup" },
+  }
+);
+```
+
+HTTP:
+
+```
+POST /v1/queue/:queueName/jobs
+```
+
+```json
+{
+  "payload": { "to": "user@example.com" },
+  "idempotency_key": "welcome-user-42",
+  "delay": "30s",
+  "schedule_at": null,
+  "metadata": {}
+}
+```
+
+Response:
+
+```json
+{ "job_id": "01J...", "status": "pending" }
+```
+
+### Idempotency
+
+When `idempotency_key` is set, repeating the same key for the same project and queue returns the existing job instead of creating a duplicate.
+
+## Inspect
+
+```javascript
+const job = await rest.queues.getJob("emails", jobId);
+const jobs = await rest.queues.listJobs("emails", { status: "pending" });
+```
+
+## Cancel / retry
+
+```javascript
+await rest.queues.cancelJob("emails", jobId);
+await rest.queues.retryJob("emails", jobId);
+```
+
+HTTP:
+
+- `DELETE /v1/queue/:queueName/jobs/:jobId`
+- `POST /v1/queue/:queueName/jobs/:jobId/retry`
+
+## Queue config
+
+```javascript
+await rest.queues.updateConfig("emails", {
+  executionProfile: "external",
+  visibilityTimeout: "30s",
+  maxAttempts: 25,
+  webhookUrl: "https://example.com/hooks/qpub",
+  webhookSecret: "whsec_...",
+});
+
+const config = await rest.queues.getConfig("emails");
+```
+
+Durations use Go-style strings such as `"30s"` or `"168h0m0s"`.

@@ -1,21 +1,20 @@
-Access and manage your QPub services through the web console.
-
-## Overview
-
-The QPub console provides a user-friendly interface to:
-
-- Monitor your services
-- Manage configurations
-- View analytics and metrics
-- Configure integrations
-
-## Getting Started
-
-1. Log in to your QPub account
-2. Navigate to the console
-3. Select your project
-4. Start managing your services
-
+---
+title: "Console"
+description: "Interactive project console for testing connections and messages."
 ---
 
-*This page is under construction. Console documentation will be expanded soon.*
+The **console** is a dashboard tool for experimenting with a project: simulate clients, publish/subscribe during development, and inspect activity.
+
+## When to use it
+
+- Verify an API key and project wiring
+- Watch live messages while building an integration
+- Debug subscription or publish behavior without writing a full app
+
+## Notes
+
+- The console is for development and debugging, not production traffic.
+- Production apps should use `@qpub/sdk` or the public REST/Socket APIs with proper secrets handling.
+- Prefer scoped tokens for any browser-based testing that leaves your machine.
+
+Open a project in the dashboard and navigate to **Console**.

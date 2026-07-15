@@ -41,16 +41,16 @@
                         "path": "core/auth/index.mdx"
                     },
                     {
-                        "title": "Basic Auth",
-                        "path": "core/auth/basic.mdx"
+                        "title": "API Key Auth",
+                        "path": "core/auth/api-key.mdx"
                     },
                     {
                         "title": "Token Auth",
                         "path": "core/auth/token.mdx"
                     },
                     {
-                        "title": "Identified Client",
-                        "path": "core/auth/identified-client.mdx"
+                        "title": "Client Alias",
+                        "path": "core/auth/alias.mdx"
                     },
                     {
                         "title": "Permissions",
@@ -81,7 +81,7 @@
                         "path": "core/channel/index.mdx"
                     },
                     {
-                        "title": "Using Channel",
+                        "title": "Using Channels",
                         "path": "core/channel/using.mdx"
                     },
                     {
@@ -107,6 +107,24 @@
                         "path": "core/pubsub/subscribe.mdx"
                     }
                 ]
+            },
+            {
+                "title": "Queue",
+                "path": "core/queue/index.mdx",
+                "items": [
+                    {
+                        "title": "Overview",
+                        "path": "core/queue/index.mdx"
+                    },
+                    {
+                        "title": "Jobs",
+                        "path": "core/queue/jobs.mdx"
+                    },
+                    {
+                        "title": "Workers",
+                        "path": "core/queue/workers.mdx"
+                    }
+                ]
             }
         ]
     },
@@ -120,6 +138,14 @@
                     {
                         "title": "Constructor",
                         "path": "api/socket-sdk/constructor.mdx"
+                    },
+                    {
+                        "title": "Connection",
+                        "path": "api/socket-sdk/connection.mdx"
+                    },
+                    {
+                        "title": "Channels",
+                        "path": "api/socket-sdk/channels.mdx"
                     }
                 ]
             },
@@ -130,6 +156,14 @@
                     {
                         "title": "Constructor",
                         "path": "api/rest-sdk/constructor.mdx"
+                    },
+                    {
+                        "title": "Channels",
+                        "path": "api/rest-sdk/channels.mdx"
+                    },
+                    {
+                        "title": "Queues",
+                        "path": "api/rest-sdk/queues.mdx"
                     }
                 ]
             },

@@ -1,82 +1,41 @@
 ---
 title: "Channel Lifecycle"
-description: "Understand the complete lifecycle of channels in QPub. From creation to deletion with specific behaviors and capabilities."
+description: "Subscription states and channel events in the Socket SDK."
 ---
 
-Understand the complete lifecycle of channels in QPub.
+Channels are ephemeral topics. The meaningful lifecycle for clients is the **subscription** on a Socket channel.
 
-## Overview
+## Channel events (SDK)
 
-Channels in QPub go through several stages from creation to deletion, each with specific behaviors and capabilities.
+Listen on the channel object:
 
-## Channel States
+| Event | Meaning |
+|-------|---------|
+| `subscribing` | Subscribe in flight |
+| `subscribed` | Server acknowledged subscribe |
+| `unsubscribing` | Unsubscribe in flight |
+| `unsubscribed` | Server acknowledged unsubscribe |
+| `paused` / `resumed` | Local pause state |
+| `failed` | Subscription failure |
 
-### 1. Created
-- Channel is created but not yet active
-- No subscribers or messages
-- Configuration can be modified
-
-### 2. Active
-- Channel is ready for publishing and subscribing
-- Accepting new subscribers
-- Processing messages
-
-### 3. Paused
-- Channel is temporarily disabled
-- Existing subscribers remain connected
-- No new messages are processed
-
-### 4. Archived
-- Channel is read-only
-- Historical messages remain accessible
-- No new publishing or subscribing allowed
-
-### 5. Deleted
-- Channel is permanently removed
-- All data is purged
-- Cannot be recovered
-
-## Lifecycle Operations
-
-### Creating Channels
 ```javascript
-// Create a new channel
-const channel = await client.createChannel({
-  name: 'my-channel',
-  type: 'public',
-  description: 'My custom channel'
-});
+const channel = socket.channels.get("demo");
+
+channel.on("subscribed", () => console.log("ready"));
+channel.on("failed", (payload) => console.error(payload));
+
+await channel.subscribe((msg) => console.log(msg.data));
 ```
 
-### Updating Channels
-```javascript
-// Update channel configuration
-await client.updateChannel('my-channel', {
-  description: 'Updated description',
-  settings: { maxSubscribers: 1000 }
-});
-```
+## After reconnect
 
-### Pausing Channels
-```javascript
-// Pause channel activity
-await client.pauseChannel('my-channel');
-```
+With `autoResubscribe: true` (default), the SDK resubscribes to channels that were active before disconnect. Wait for `connected` (or channel `subscribed`) before assuming delivery has resumed.
 
-### Deleting Channels
-```javascript
-// Delete channel permanently
-await client.deleteChannel('my-channel');
-```
+## Server-side cleanup
 
-## Automatic Lifecycle Management
+Unused channels are managed by the platform. You do not archive or delete channels via the public API.
 
-QPub automatically manages channel lifecycle based on:
-- Usage patterns
-- Subscription activity
-- Resource consumption
-- Configuration policies
+## Related
 
----
-
-*This page is under construction. Channel lifecycle documentation will be expanded soon.*
+- [Connection Lifecycle](/core/connection/lifecycle)
+- [Subscribe](/core/pubsub/subscribe)

@@ -1,97 +1,58 @@
 ---
-title: "APIs"
-description: "Learn about QPub's REST and WebSocket APIs for building real-time applications. Authentication and SDKs."
+title: "API Overview"
+description: "REST and WebSocket APIs, hosts, and when to use each."
 ---
 
-Learn about QPub's REST and WebSocket APIs for building real-time applications.
+QPub exposes two public messaging surfaces plus a dashboard API for account management.
 
-## Overview
+## Hosts
 
-QPub provides two main APIs for different use cases:
+| API | Base URL |
+|-----|----------|
+| REST | `https://rest.qpub.io/v1` |
+| WebSocket | `wss://socket.qpub.io/v1` |
 
-- **REST API**: HTTP-based API for standard request/response operations
-- **WebSocket API**: Real-time bidirectional communication
+SDK defaults match these hosts (`httpHost: "rest.qpub.io"`, `wsHost: "socket.qpub.io"`).
 
-## REST API
+## When to use which
 
-### Base URL
-```
-https://api.qpub.com/v1
-```
+| Need | Use |
+|------|-----|
+| Subscribe to messages | WebSocket |
+| Publish from a connected client | WebSocket or REST |
+| Publish from a server / cron | REST |
+| Batch publish to many channels | REST |
+| Issue JWTs / token requests | REST |
+| Queues and workers | REST |
+| Manage projects and keys | Dashboard (UI) |
 
-### Authentication
-```bash
-curl -H "Authorization: Bearer YOUR_API_KEY" \
-     https://api.qpub.com/v1/channels
-```
+## Authentication (messaging APIs)
 
-### Common Endpoints
-- `GET /channels` - List channels
-- `POST /channels` - Create channel
-- `POST /channels/{id}/messages` - Send message
-- `GET /channels/{id}/messages` - Get messages
+Both REST and WebSocket accept:
 
-## WebSocket API
+1. **API key** — `Authorization: Basic <base64(publicId:secret)>` or `api_key` query param
+2. **JWT** — `Authorization: Bearer <token>` or `access_token` query param
 
-### Connection URL
-```
-wss://api.qpub.com/v1/socket
-```
+Optional **alias** can be sent as `X-Alias` (REST) or `alias` query param (Socket).
 
-### Authentication
-```javascript
-// Send auth message after connection
-{
-  "type": "auth",
-  "apiKey": "your-api-key"
-}
-```
+Details: [Authentication](/core/auth).
 
-### Message Format
-```javascript
-// Client to server
-{
-  "type": "publish",
-  "channel": "my-channel",
-  "data": { "text": "Hello!" }
-}
+## REST capabilities
 
-// Server to client
-{
-  "type": "message",
-  "channel": "my-channel",
-  "data": { "text": "Hello!" },
-  "timestamp": "2024-01-01T00:00:00Z"
-}
-```
+Public REST routes under `/v1`:
 
-## SDKs
+- Token issue and token request
+- Publish to one or many channels
+- Queue config, jobs, pull/ack/nack, workers
 
-### JavaScript SDK
-```javascript
-import { QPubSocket } from '@qpub/sdk';
+Full list: [REST API](/api/rest-api).
 
-const client = new QPubSocket({
-  apiKey: 'your-api-key'
-});
-```
+## WebSocket capabilities
 
-### REST SDK
-```javascript
-import { QPubREST } from '@qpub/rest-sdk';
+Connect to `GET /v1` with auth credentials, then exchange JSON messages with numeric `action` codes (subscribe, publish, ping, …).
 
-const client = new QPubREST({
-  apiKey: 'your-api-key'
-});
-```
+Full protocol: [Socket Protocol](/api/socket-protocol).
 
-## Getting Started
+## Dashboard API
 
-1. **Get API Key**: Sign up and obtain your API key
-2. **Choose API**: Select REST or WebSocket based on your needs
-3. **Make First Request**: Send your first API request
-4. **Build Application**: Integrate QPub into your application
-
----
-
-*This page is under construction. API documentation will be expanded soon.*
+The dashboard uses a separate user-auth API (email/password or OAuth) for accounts, projects, API keys, usage, and billing. It is not used by Socket/REST messaging clients. See [Dashboard](/dashboard).

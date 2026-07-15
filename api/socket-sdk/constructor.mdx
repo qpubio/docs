@@ -1,58 +1,74 @@
 ---
 title: "Socket SDK Constructor"
-description: "Initialize and configure the QPub Socket SDK. Constructor options and configuration examples."
+description: "QPub.Socket options and instance surface."
 ---
 
-Initialize and configure the QPub Socket SDK.
-
-## Overview
-
-The Socket SDK constructor creates a new instance of the QPub client for real-time communication.
-
-## Basic Usage
-
 ```javascript
-import { QPubSocket } from '@qpub/sdk';
+import { QPub } from "@qpub/sdk";
 
-const client = new QPubSocket({
-  apiKey: 'your-api-key',
-  endpoint: 'wss://api.qpub.com'
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
 });
 ```
 
-## Constructor Options
+## Options
 
-### Required Parameters
+Pass a partial options object. Important fields:
 
-- **apiKey**: Your QPub API key for authentication
+| Option | Default | Description |
+|--------|---------|-------------|
+| `apiKey` | — | API key `publicId:secret` |
+| `authUrl` | — | POST URL that returns `{ token }` or `{ tokenRequest }` |
+| `authOptions` | — | `{ headers?, body? }` for `authUrl` |
+| `tokenRequest` | — | Pre-signed token request; fetches JWT on init |
+| `alias` | — | Client alias |
+| `httpHost` | `rest.qpub.io` | Host for token/HTTP auth helpers |
+| `httpPort` | `null` | Optional port |
+| `wsHost` | `socket.qpub.io` | WebSocket host |
+| `wsPort` | `null` | Optional port |
+| `isSecure` | `true` | `wss`/`https` vs `ws`/`http` |
+| `autoConnect` | `true` | Connect on construct |
+| `autoReconnect` | `true` | Reconnect with backoff |
+| `autoResubscribe` | `true` | Resubscribe after reconnect |
+| `autoAuthenticate` | `true` | Authenticate before connect |
+| `connectTimeoutMs` | `10000` | Connect timeout |
+| `maxReconnectAttempts` | `10` | Reconnect limit |
+| `initialReconnectDelayMs` | `1000` | Backoff start |
+| `maxReconnectDelayMs` | `30000` | Backoff cap |
+| `reconnectBackoffMultiplier` | `1.5` | Backoff factor |
+| `authenticateRetries` | `3` | Auth retry count |
+| `authenticateRetryIntervalMs` | `1000` | Auth retry delay |
+| `pingTimeoutMs` | `10000` | Ping timeout |
+| `debug` | `false` | Debug logging |
+| `logLevel` | `"error"` | `error` \| `warn` \| `info` \| `debug` \| `trace` |
+| `logger` | — | Custom logger function |
 
-### Optional Parameters
+`resubscribeIntervalMs` exists on the options type but is not used yet.
 
-- **endpoint**: WebSocket endpoint URL (defaults to production)
-- **autoConnect**: Automatically connect on initialization
-- **reconnect**: Enable automatic reconnection
-- **timeout**: Connection timeout in milliseconds
+Provide one of `apiKey`, `authUrl`, or `tokenRequest` (depending on your auth flow).
 
-## Configuration Examples
+## Instance
 
-### Basic Configuration
-```javascript
-const client = new QPubSocket({
-  apiKey: 'your-api-key'
-});
-```
+| Property / method | Description |
+|-------------------|-------------|
+| `socket.connection` | Connection API and events — [Connection](/api/socket-sdk/connection) |
+| `socket.channels` | Channel manager — [Channels](/api/socket-sdk/channels) |
+| `socket.auth` | Auth manager (authenticate, tokens) |
+| `socket.optionManager` | Runtime options |
+| `socket.reset()` | Reset instance state |
+| `socket.getInstanceId()` | Instance id string |
+| `socket.getAbortSignal()` | AbortSignal for in-flight work |
 
-### Advanced Configuration
-```javascript
-const client = new QPubSocket({
-  apiKey: 'your-api-key',
-  endpoint: 'wss://api.qpub.com',
-  autoConnect: true,
-  reconnect: true,
-  timeout: 30000
-});
-```
+## Auth helpers (on `socket.auth`)
 
----
+| Method | Typical use |
+|--------|-------------|
+| `authenticate()` | Run configured auth flow |
+| `requestToken(tokenRequest)` | Exchange signed request for JWT |
+| `generateToken(opts?)` | Local JWT (server / trusted) |
+| `issueToken(opts?)` | Platform-issued JWT |
+| `createTokenRequest(opts?)` | Signed token request for clients |
+| `clearToken()` | Drop active token |
+| `getAuthHeaders()` | Header map for HTTP |
 
-*This page is under construction. Socket SDK constructor documentation will be expanded soon.*
+Also see `@qpub/sdk/react` for `SocketProvider`, `useConnection`, `useChannel`, `useAuth`.

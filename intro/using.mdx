@@ -1,85 +1,81 @@
 ---
 title: "Using QPub"
-description: "Learn how to effectively use QPub in your applications and workflows. Core concepts, use cases, and best practices."
+description: "Mental model for accounts, projects, API keys, channels, and queues."
 ---
 
-Learn how to effectively use QPub in your applications and workflows.
+## Mental model
 
-## Overview
+```
+Account
+  └── Project
+        ├── API keys
+        ├── Channels (pub/sub topics)
+        └── Queues (durable jobs)
+```
 
-QPub is a real-time messaging platform that enables instant communication between applications, services, and users through a simple yet powerful publish/subscribe model.
+| Concept | Role |
+|---------|------|
+| **Account** | Org/billing context in the dashboard |
+| **Project** | Isolation boundary for traffic and keys |
+| **API key** | `publicId:secret` credential for REST and Socket |
+| **Channel** | Named topic string for pub/sub |
+| **Queue** | Named durable job stream (REST) |
+| **Alias** | Optional client identity attached to a connection or message |
 
-## Core Concepts
+## Two client types
 
-### Channels
-Channels are named streams where messages are published and subscribed to. Think of them as topics or rooms where communication happens.
+### Socket (`QPub.Socket`)
 
-### Messages
-Messages are the data packets that flow through channels. They can contain any JSON data, text, or binary content.
+Persistent WebSocket connection. Use for:
 
-### Publishers and Subscribers
-- **Publishers**: Send messages to channels
-- **Subscribers**: Receive messages from channels
+- Subscribing to channels
+- Publishing from clients that already hold a connection
+- Connection lifecycle (reconnect, ping)
 
-## Common Use Cases
+### REST (`QPub.Rest`)
 
-### Real-time Chat
+HTTP-only. Use for:
+
+- Publishing from servers and cron jobs
+- Batch publish to multiple channels
+- Issuing JWTs / creating token requests
+- Queue enqueue and workers
+
+REST does **not** subscribe to channels.
+
+## Typical workflows
+
+### Real-time app
+
+1. Create a project and API key in the [dashboard](/dashboard).
+2. On your server, keep the API key secret.
+3. For browsers, issue a JWT or signed [token request](/core/auth/token) with limited permissions.
+4. Client creates `QPub.Socket`, waits for `connected`, then `channels.get(name).subscribe(...)`.
+5. Servers publish with `QPub.Rest` or another Socket client.
+
+### Server publish only
+
 ```javascript
-// Subscribe to chat messages
-client.subscribe('chat-room', (message) => {
-  displayMessage(message);
-});
+import { QPub } from "@qpub/sdk";
 
-// Send chat message
-client.publish('chat-room', {
-  text: 'Hello everyone!',
-  author: 'user123'
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+await rest.channels.get("notifications").publish({ text: "Hello" });
+```
+
+### Background jobs
+
+```javascript
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+await rest.queues.enqueue("emails", { to: "user@example.com" });
+await rest.queues.runWorker("emails", async (job) => {
+  // process job.payload
+  return { ok: true };
 });
 ```
 
-### Live Notifications
-```javascript
-// Subscribe to user notifications
-client.subscribe('user-123-notifications', (notification) => {
-  showNotification(notification);
-});
-```
+## Next steps
 
-### Data Streaming
-```javascript
-// Stream sensor data
-client.subscribe('sensor-data', (data) => {
-  updateDashboard(data);
-});
-```
-
-### Collaborative Features
-```javascript
-// Real-time document collaboration
-client.subscribe('document-456-changes', (change) => {
-  applyDocumentChange(change);
-});
-```
-
-## Best Practices
-
-1. **Use descriptive channel names** that clearly indicate their purpose
-2. **Implement proper error handling** for connection issues
-3. **Consider message size** and frequency for optimal performance
-4. **Use appropriate authentication** for sensitive channels
-5. **Monitor usage** to stay within your plan limits
-
-## Integration Patterns
-
-### Web Applications
-Integrate QPub into web apps for real-time features like live updates, notifications, and collaborative editing.
-
-### Mobile Applications
-Use QPub in mobile apps for push notifications, real-time messaging, and live data synchronization.
-
-### Backend Services
-Connect backend services through QPub for microservice communication, event-driven architectures, and data streaming.
-
----
-
-*This page is under construction. Usage documentation will be expanded soon.*
+- [Quickstart](/getting-started/quickstart)
+- [Authentication](/core/auth)
+- [Publish](/core/pubsub/publish) / [Subscribe](/core/pubsub/subscribe)
+- [Queues](/core/queue)

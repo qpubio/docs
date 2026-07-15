@@ -1,127 +1,73 @@
 ---
 title: "SDKs"
-description: "Use QPub's official SDKs to quickly integrate real-time features. JavaScript, Python, Go, and Java SDKs."
+description: "Official QPub JavaScript SDK installation and usage."
 ---
 
-Use QPub's official SDKs to quickly integrate real-time features into your applications.
+## JavaScript / TypeScript
 
-## Available SDKs
+**Package:** [`@qpub/sdk`](https://www.npmjs.com/package/@qpub/sdk)
 
-### JavaScript/TypeScript
 ```bash
-npm install @qpub/sdk @qpub/rest-sdk
+npm install @qpub/sdk
+# or
+bun add @qpub/sdk
 ```
 
-### Python
-```bash
-pip install qpub-sdk
-```
+### Entry points
 
-### Go
-```bash
-go get github.com/qpub/go-sdk
-```
+| Import | Use |
+|--------|-----|
+| `@qpub/sdk` | `QPub.Socket`, `QPub.Rest`, types |
+| `@qpub/sdk/react` | React providers and hooks |
+| CDN UMD | Global `QPub` (browser) |
 
-### Java
-```xml
-<dependency>
-  <groupId>com.qpub</groupId>
-  <artifactId>qpub-java-sdk</artifactId>
-  <version>1.0.0</version>
-</dependency>
-```
+### Socket client
 
-## JavaScript SDK
-
-### Socket SDK
 ```javascript
-import { QPubSocket } from '@qpub/sdk';
+import { QPub } from "@qpub/sdk";
 
-const client = new QPubSocket({
-  apiKey: 'your-api-key'
-});
+const socket = new QPub.Socket({ apiKey: process.env.QPUB_API_KEY });
 
-// Subscribe to channel
-client.subscribe('my-channel', (message) => {
-  console.log('Received:', message);
-});
-
-// Publish message
-client.publish('my-channel', {
-  text: 'Hello, World!'
+socket.connection.on("connected", async () => {
+  const ch = socket.channels.get("news");
+  await ch.subscribe((msg) => console.log(msg.data));
 });
 ```
 
-### REST SDK
+### REST client
+
 ```javascript
-import { QPubREST } from '@qpub/rest-sdk';
+import { QPub } from "@qpub/sdk";
 
-const client = new QPubREST({
-  apiKey: 'your-api-key'
-});
-
-// Create channel
-const channel = await client.createChannel({
-  name: 'my-channel'
-});
-
-// Send message
-await client.publish('my-channel', {
-  text: 'Hello, World!'
-});
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+await rest.channels.get("news").publish({ headline: "Ship it" });
 ```
 
-## Python SDK
+### React
 
-```python
-from qpub import QPubSocket
+```tsx
+import { SocketProvider, useChannel, useConnection } from "@qpub/sdk/react";
 
-client = QPubSocket(api_key='your-api-key')
+function App() {
+  return (
+    <SocketProvider options={{ apiKey: process.env.NEXT_PUBLIC_QPUB_TOKEN_OR_KEY }}>
+      <Chat />
+    </SocketProvider>
+  );
+}
 
-# Subscribe to channel
-def on_message(message):
-    print(f"Received: {message}")
+function Chat() {
+  const { status } = useConnection();
+  const { publish, subscribe, unsubscribe, ready } = useChannel("chat");
 
-client.subscribe('my-channel', on_message)
-
-# Publish message
-client.publish('my-channel', {
-    'text': 'Hello, World!'
-})
-```
-
-## Go SDK
-
-```go
-package main
-
-import (
-    "github.com/qpub/go-sdk"
-)
-
-func main() {
-    client := qpub.NewSocketClient("your-api-key")
-    
-    // Subscribe to channel
-    client.Subscribe("my-channel", func(message qpub.Message) {
-        fmt.Printf("Received: %v\n", message)
-    })
-    
-    // Publish message
-    client.Publish("my-channel", map[string]interface{}{
-        "text": "Hello, World!",
-    })
+  // Subscribe when ready; clean up on unmount
+  // ...
+  return <div>Status: {status}</div>;
 }
 ```
 
-## SDK Features
+Prefer issuing a JWT or token request for browser apps — see [Token Auth](/core/auth/token).
 
-- **Automatic Reconnection**: Handle connection failures gracefully
-- **Message Queuing**: Queue messages when offline
-- **Type Safety**: Full TypeScript support for JavaScript SDK
-- **Error Handling**: Comprehensive error handling and reporting
-- **Documentation**: Extensive documentation and examples
+## Other languages
 
----
-
-*This page is under construction. SDK documentation will be expanded soon.*
+TODO: Official Python, Go, and Java SDKs are not verified for documentation yet. Use the [REST API](/api/rest-api) and [Socket Protocol](/api/socket-protocol) directly, or the JavaScript SDK.
