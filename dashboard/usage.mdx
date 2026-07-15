@@ -1,26 +1,53 @@
 ---
 title: "Usage"
-description: "Monitor project usage against plan limits."
+description: "View project usage charts and summary metrics in the dashboard."
 ---
 
-The dashboard shows **usage** for a project so you can compare consumption to your [plan limits](/docs/pricing/limits).
+The **Usage** page shows how a project consumes connections, messages, channels, and bandwidth over a time range. Use it to compare traffic against your [plan limits](/docs/pricing/limits).
 
-## What to watch
+Open a project in the dashboard, then select the **Usage** tab.
 
-Typical metrics tied to plan limits include:
+## Choose a time range
 
-- Concurrent connections
-- Message volume (hourly / monthly)
-- Bandwidth
-- Concurrent channels
-- Message size
+Use the clock control in the page header.
 
-Exact charts and labels are defined in the dashboard UI.
+**Quick ranges** include **Last 5 minutes** through **Last 5 years** (for example **Last 1 hour**, **Last 24 hours**, **Last 7 days**). The default is **Last 1 hour**.
 
-## Workflow
+You can also pick a **custom** start and end date in the calendar, then **Apply**. Future dates are disabled.
 
-1. Open a project.
-2. Open **Usage** (summary and history where available).
-3. If you are approaching limits, reduce traffic or [upgrade your plan](/docs/pricing/plans).
+The header button shows the active quick-range name, or a formatted start–end range for custom selections.
 
-Usage data is also available to signed-in dashboard users via the dashboard API; messaging clients do not call those endpoints.
+## Charts
+
+Six live charts (history for the selected range):
+
+| Chart | Series |
+|-------|--------|
+| **Connections** | Peak Connections, Average Connections, Total Connection Time |
+| **Messages** | Sent Messages, Received Messages, Total Messages |
+| **Channels** | Peak Channels, Average Channels, Total Channel Time |
+| **Subscribers** | Peak Subscribers, Average Subscribers |
+| **Message Size** | Total Message Size, Average Message Size |
+| **Bandwidth** | Total Bandwidth, Average Bandwidth |
+
+Charts support horizontal zoom along the time axis.
+
+## Summary table
+
+Below the charts, **Summary** lists aggregated metrics for a date window shown in the card subtitle.
+
+Columns: **Metric** | **Usage**.
+
+Rows include peak/average connections and channels, connection and channel time (minutes), peak/average subscribers, messages sent/received/total, message size totals/averages, and bandwidth totals/averages.
+
+When you use a **quick range**, the summary window matches the charts. For a **custom** range, confirm the Summary subtitle if it differs from the header picker.
+
+## If data fails to load
+
+The page may show **Unable to load usage data**. Refresh the page or pick a different time range.
+
+## Related
+
+- Messaging clients do not call Usage APIs—only the dashboard (signed-in users).
+- Live chart updates can relate to API key **Statistics** permission (configured under [API Keys](/docs/dashboard/api-keys)).
+- Approaching limits? [Upgrade your plan](/docs/pricing/plans).

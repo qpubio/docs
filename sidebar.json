@@ -208,6 +208,7 @@
     },
     {
         "title": "Enterprise (soon)",
+        "path": "enterprise/index.mdx",
         "items": []
     },
     {

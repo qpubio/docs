@@ -1,20 +1,62 @@
 ---
 title: "Console"
-description: "Interactive project console for testing connections and messages."
+description: "Use the project console to publish, inspect logs, and simulate clients."
 ---
 
-The **console** is a dashboard tool for experimenting with a project: simulate clients, publish/subscribe during development, and inspect activity.
+The **Console** is an interactive playground inside a project. Use it to verify API keys, publish test messages, watch connection logs, and simulate additional subscribers—without writing an app.
 
-## When to use it
+Open a project in the dashboard, then select the **Console** tab.
 
-- Verify an API key and project wiring
-- Watch live messages while building an integration
-- Debug subscription or publish behavior without writing a full app
+You need at least one [API key](/docs/dashboard/api-keys) in the project before the console can connect.
 
-## Notes
+## Layout
 
-- The console is for development and debugging, not production traffic.
-- Production apps should use `@qpub/sdk` or the public REST/Socket APIs with proper secrets handling.
-- Prefer scoped tokens for any browser-based testing that leaves your machine.
+Three panels:
 
-Open a project in the dashboard and navigate to **Console**.
+| Panel | Purpose |
+|-------|---------|
+| **Controls** | Main connection: pick an API key, choose a channel, publish |
+| **Logs** | Live connection and subscription activity for the project |
+| **Clients** | Simulated clients that can connect, subscribe, and publish |
+
+The header shows connection status (for example **Connected**, **Connecting**, **Failed**) and **Ping** latency.
+
+## Publish a test message
+
+1. In **Controls**, select an **API Key**.
+2. Enter a **Channel name** (default `my-channel`) and click **Use** (it shows **Using ✓** when active).
+3. Optionally set **Event name** and **Alias** for the message.
+4. Write the **Message** body (string, JSON, or other text).
+5. Click the send control (↑). Send stays disabled until the channel is active, the message is non-empty, and the connection is ready.
+
+This uses the selected project API key for the console’s main Socket connection.
+
+## Watch logs
+
+The **Logs** panel streams events such as **opened**, **connected**, **created**, **closed**, **disconnected**, and **error**.
+
+- **Pause** / **Resume** the stream
+- **Clear** clears the on-screen list only (not server history)
+- Expand an entry for details such as **Connection ID**, **API Key**, **Client ID**, **Channel**, and related metadata
+- Copy the full log entry as JSON when needed
+
+## Simulate clients
+
+Use **Clients** to open extra Socket sessions (for example one publisher and several subscribers).
+
+1. Click **Add Client**.
+2. Choose an **API Key**, **Subscribe Channel name**, **Event name**, and optional **Client Alias**.
+3. Click **Add New Client**.
+4. On the client card, click **Connect client**.
+5. Use **Subscribe** / **Unsubscribe** (available after connect). Incoming messages appear in the client panel.
+6. Publish from that client using the **To:** line (channel and event) and the message field.
+
+You can **Edit client** (separate subscribe vs publish channel/event, API key, alias) or **Delete client**.
+
+Simulated clients are session-only: leaving the Console clears them.
+
+## Tips
+
+- Use separate API keys with scoped [permissions](/docs/core/auth/permissions) when testing access control.
+- Prefer the console for development and debugging—not for production traffic.
+- For production apps, use [`@qpub/sdk`](/docs/getting-started/sdks) or the [REST](/docs/api/rest-api) / [Socket](/docs/api/socket-protocol) APIs.
