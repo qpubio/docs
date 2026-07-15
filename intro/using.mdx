@@ -67,10 +67,13 @@ await rest.channels.get("notifications").publish({ text: "Hello" });
 ```javascript
 const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
 await rest.queues.enqueue("emails", { to: "user@example.com" });
+
+// Blocks until stopWorker() is called
 await rest.queues.runWorker("emails", async (job) => {
   // process job.payload
   return { ok: true };
 });
+// rest.queues.stopWorker();
 ```
 
 ## Next steps

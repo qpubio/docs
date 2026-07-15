@@ -3,6 +3,8 @@ title: "Connection Lifecycle"
 description: "Socket connection events, reconnect, and ping."
 ---
 
+A Socket connection moves through a small set of SDK events from construction to ready, then reconnects automatically when the transport drops.
+
 ## Events
 
 Listen on `socket.connection`:
@@ -11,8 +13,10 @@ Listen on `socket.connection`:
 |-------|------|
 | `initialized` | Client constructed |
 | `connecting` | Dial in progress (`attempt` in payload) |
-| `connected` | WebSocket open and ready (`connectionId`, `connectionDetails`) |
+| `opened` | WebSocket transport open (before protocol ready) |
+| `connected` | Server ready (`connectionId`, `connectionDetails`) |
 | `disconnected` | Transport dropped |
+| `closing` | Intentional close in progress |
 | `closed` | Closed (`code`, `reason`) |
 | `failed` | Unrecoverable failure (`error`, `context`) |
 
@@ -25,6 +29,8 @@ socket.connection.on("failed", ({ error }) => {
   console.error(error);
 });
 ```
+
+Subscribe to channels after `connected` (or rely on `autoResubscribe` after reconnect).
 
 ## Manual connect / disconnect
 

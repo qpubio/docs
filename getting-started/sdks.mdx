@@ -3,9 +3,9 @@ title: "SDKs"
 description: "Official QPub JavaScript SDK installation and usage."
 ---
 
-## JavaScript / TypeScript
+QPub’s official client library is `@qpub/sdk` for JavaScript and TypeScript (browsers, Node.js, Bun, and React).
 
-**Package:** [`@qpub/sdk`](https://www.npmjs.com/package/@qpub/sdk)
+## Install
 
 ```bash
 npm install @qpub/sdk
@@ -13,15 +13,15 @@ npm install @qpub/sdk
 bun add @qpub/sdk
 ```
 
-### Entry points
-
 | Import | Use |
 |--------|-----|
 | `@qpub/sdk` | `QPub.Socket`, `QPub.Rest`, types |
 | `@qpub/sdk/react` | React providers and hooks |
-| CDN UMD | Global `QPub` (browser) |
+| CDN UMD | Global `QPub` in the browser |
 
-### Socket client
+## Socket client
+
+Use for real-time subscribe and publish:
 
 ```javascript
 import { QPub } from "@qpub/sdk";
@@ -34,7 +34,9 @@ socket.connection.on("connected", async () => {
 });
 ```
 
-### REST client
+## REST client
+
+Use for server publish, tokens, and queues:
 
 ```javascript
 import { QPub } from "@qpub/sdk";
@@ -43,14 +45,22 @@ const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
 await rest.channels.get("news").publish({ headline: "Ship it" });
 ```
 
-### React
+## React
+
+For browsers, pass a JWT or token request from your backend — not a secret API key in a public env var.
 
 ```tsx
-import { SocketProvider, useChannel, useConnection } from "@qpub/sdk/react";
+import { useEffect, useCallback } from "react";
+import {
+  SocketProvider,
+  useChannel,
+  useConnection,
+  type Message,
+} from "@qpub/sdk/react";
 
-function App() {
+function App({ tokenRequest }) {
   return (
-    <SocketProvider options={{ apiKey: process.env.NEXT_PUBLIC_QPUB_TOKEN_OR_KEY }}>
+    <SocketProvider options={{ tokenRequest }}>
       <Chat />
     </SocketProvider>
   );
@@ -60,14 +70,34 @@ function Chat() {
   const { status } = useConnection();
   const { publish, subscribe, unsubscribe, ready } = useChannel("chat");
 
-  // Subscribe when ready; clean up on unmount
-  // ...
-  return <div>Status: {status}</div>;
+  const onMessage = useCallback((message: Message) => {
+    console.log(message.data);
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    subscribe(onMessage);
+    return () => {
+      unsubscribe(onMessage);
+    };
+  }, [ready, subscribe, unsubscribe, onMessage]);
+
+  return (
+    <div>
+      <p>Status: {status}</p>
+      <button
+        disabled={!ready}
+        onClick={() => publish({ text: "Hello" }, { event: "chat" })}
+      >
+        Send
+      </button>
+    </div>
+  );
 }
 ```
 
-Prefer issuing a JWT or token request for browser apps — see [Token Auth](/core/auth/token).
+See [Token Auth](/core/auth/token) for issuing `tokenRequest` on the server.
 
 ## Other languages
 
-TODO: Official Python, Go, and Java SDKs are not verified for documentation yet. Use the [REST API](/api/rest-api) and [Socket Protocol](/api/socket-protocol) directly, or the JavaScript SDK.
+Use the [REST API](/api/rest-api) and [Socket Protocol](/api/socket-protocol) directly. Official SDKs for other languages are not documented yet.

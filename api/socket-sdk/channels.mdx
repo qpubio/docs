@@ -3,6 +3,8 @@ title: "Socket SDK Channels"
 description: "Channel manager and channel methods for QPub.Socket."
 ---
 
+Channel handles are how Socket clients subscribe and publish.
+
 ## Manager (`socket.channels`)
 
 | Method | Description |
@@ -19,10 +21,12 @@ const channel = socket.channels.get("demo");
 
 await channel.subscribe((message) => {
   console.log(message.data, message.event);
-}, { event: "optional-filter" });
+}, { event: "optional-filter", timeout: 10000 });
 
 await channel.publish({ hello: true }, { event: "ping", alias: "bot" });
-await channel.unsubscribe();
+
+await channel.unsubscribe(); // whole channel
+await channel.unsubscribe(handler, { event: "optional-filter" });
 
 channel.pause({ bufferMessages: true });
 channel.resume();
@@ -30,12 +34,14 @@ channel.resume();
 
 | Method | Description |
 |--------|-------------|
-| `subscribe(handler, options?)` | Subscribe; resolves on ack |
-| `unsubscribe()` | Unsubscribe |
+| `subscribe(handler, options?)` | Subscribe; resolves on ack. Options: `event`, `timeout` (default 10s) |
+| `unsubscribe(handler?, options?)` | Unsubscribe all or one event handler |
 | `publish(data, options?)` | Publish over WebSocket |
 | `pause(options?)` | Pause delivery locally |
 | `resume()` | Resume |
 | `on(event, handler)` | Channel lifecycle events |
+
+Event filters are applied in the SDK after a full-channel subscription.
 
 ## Message callback
 
@@ -43,4 +49,4 @@ Fields commonly used by apps: `channel`, `event`, `data`, `alias`, `id`, `timest
 
 ## Channel events
 
-`subscribing`, `subscribed`, `unsubscribing`, `unsubscribed`, `paused`, `resumed`, `failed`.
+`initialized`, `subscribing`, `subscribed`, `unsubscribing`, `unsubscribed`, `paused`, `resumed`, `failed`.

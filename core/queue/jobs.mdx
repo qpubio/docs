@@ -3,6 +3,8 @@ title: "Jobs"
 description: "Enqueue, inspect, cancel, and retry queue jobs."
 ---
 
+A **job** is one unit of work on a named queue: a payload plus status, attempts, and optional scheduling metadata.
+
 ## Enqueue
 
 ```javascript
@@ -58,17 +60,19 @@ await rest.queues.cancelJob("emails", jobId);
 await rest.queues.retryJob("emails", jobId);
 ```
 
-HTTP:
-
 - `DELETE /v1/queue/:queueName/jobs/:jobId`
 - `POST /v1/queue/:queueName/jobs/:jobId/retry`
 
 ## Queue config
 
+Create a queue (if it does not exist) with:
+
+```
+PUT /v1/queue/:queueName
+```
+
 ```javascript
 await rest.queues.updateConfig("emails", {
-  executionProfile: "external",
-  visibilityTimeout: "30s",
   maxAttempts: 25,
   webhookUrl: "https://example.com/hooks/qpub",
   webhookSecret: "whsec_...",
@@ -77,4 +81,10 @@ await rest.queues.updateConfig("emails", {
 const config = await rest.queues.getConfig("emails");
 ```
 
-Durations use Go-style strings such as `"30s"` or `"168h0m0s"`.
+Body fields applied on **create**: `max_attempts`, `webhook_url`, `webhook_secret`.
+
+If the queue already exists, `Ensure` returns the current config — those request fields are not applied as updates today.
+
+Read the full config (including platform defaults such as visibility timeout) with `GET /v1/queue/:queueName` or `getConfig`.
+
+Durations in responses use Go-style strings such as `"30s"`.

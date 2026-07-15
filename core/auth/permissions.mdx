@@ -3,7 +3,7 @@ title: "Permissions"
 description: "Channel and queue permission maps for API keys and tokens."
 ---
 
-Permissions control which actions a credential may perform on which resources (usually channel or queue names).
+Permissions decide which actions a credential may perform on which resources (usually channel or queue names).
 
 ## Shape
 
@@ -26,14 +26,14 @@ A permission is a JSON object: **resource key → list of actions**.
 | `stats` | Stats-related access |
 | `*` | All actions on that resource |
 
-## Matching (current behavior)
+## Matching
 
 Permission checks match:
 
 1. The exact resource string (channel or queue name), or
 2. The resource key `"*"` (all resources)
 
-TODO: Document pattern wildcards (for example `flights.*`) only after they are verified in the permission matcher. Prefer exact names or `"*"` today.
+Use exact names or `"*"` in production credentials.
 
 ## Where permissions are set
 
@@ -67,4 +67,4 @@ If a token omits `permission`, the API key’s permissions apply (subject to pla
 }
 ```
 
-**Denied publish** returns HTTP `403` on REST, or a protocol error on WebSocket.
+Denied publish returns HTTP `403` on REST, or a protocol error on WebSocket.

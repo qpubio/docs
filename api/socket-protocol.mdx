@@ -3,39 +3,61 @@ title: "Socket Protocol"
 description: "WebSocket message actions and envelopes for QPub."
 ---
 
-## Connection
+The Socket protocol is a JSON message format over a WebSocket. Prefer `@qpub/sdk` unless you are writing a custom client.
+
+## Connect
+
+Authenticate on the HTTP upgrade. There is no client `connect` message.
 
 ```
-GET wss://socket.qpub.io/v1?api_key=... 
-GET wss://socket.qpub.io/v1?access_token=...
+GET wss://socket.qpub.io/v1?api_key=<url-encoded publicId:secret>
+GET wss://socket.qpub.io/v1?access_token=<jwt>
 ```
 
-Optional: `alias` query parameter.
+Optional: `&alias=my-client`.
 
-Auth is validated on the HTTP upgrade. Messages are JSON objects with a numeric `action` field.
+After the upgrade succeeds, the server sends action `1` (`connected`):
 
-## Actions
+```json
+{
+  "action": 1,
+  "connection_id": "...",
+  "connection_details": {
+    "alias": "Alice",
+    "client_id": "...",
+    "server_id": "..."
+  }
+}
+```
 
-| Code | Name | Direction |
-|------|------|-----------|
-| 0 | connect | client → server |
-| 1 | connected | server → client |
-| 2 | disconnect | client → server |
-| 3 | disconnected | server → client |
-| 4 | subscribe | client → server |
-| 5 | subscribed | server → client |
-| 6 | unsubscribe | client → server |
-| 7 | unsubscribed | server → client |
-| 8 | publish | client → server |
-| 9 | published | server → client |
-| 10 | message | server → client |
-| 11 | error | server → client |
-| 12 | ping | either |
-| 13 | pong | either |
+Close the socket with a normal WebSocket close. Do not send action `0` or `2` — the server rejects unsupported actions with `40002`.
 
-Prefer the SDK unless you are implementing a custom client.
+## Client → server actions
 
-## Example: subscribe
+| Code | Name | Purpose |
+|------|------|---------|
+| 4 | subscribe | Subscribe to a channel |
+| 6 | unsubscribe | Unsubscribe |
+| 8 | publish | Publish messages |
+| 12 | ping | Keepalive |
+| 13 | pong | Reply to server ping |
+
+## Server → client actions
+
+| Code | Name | Purpose |
+|------|------|---------|
+| 1 | connected | Connection ready |
+| 5 | subscribed | Subscribe ack |
+| 7 | unsubscribed | Unsubscribe ack |
+| 9 | published | Publish ack (SDK does not await this) |
+| 10 | message | Broadcast to subscribers |
+| 11 | error | Error frame |
+| 12 | ping | Keepalive |
+| 13 | pong | Reply to client ping |
+
+Action codes `0`–`3` exist in the protocol enum but are not used for normal client messaging. Prefer the table above.
+
+## Subscribe
 
 ```json
 { "action": 4, "channel": "chat.lobby" }
@@ -51,7 +73,7 @@ Ack:
 }
 ```
 
-## Example: publish
+## Publish
 
 ```json
 {
@@ -63,23 +85,11 @@ Ack:
 }
 ```
 
-## Example: inbound message
+The server may reply with action `9` (`published`). Custom clients can ignore it; the JavaScript SDK treats publish as fire-and-forget.
 
-Broadcast messages use action `10` with `channel`, `id`, `timestamp`, and a `messages` payload array (event/data/alias).
+## Inbound message
 
-## Connected
-
-```json
-{
-  "action": 1,
-  "connection_id": "...",
-  "connection_details": {
-    "alias": "Alice",
-    "client_id": "...",
-    "server_id": "..."
-  }
-}
-```
+Action `10` delivers channel data: `channel`, `id`, `timestamp`, and a `messages` array of `{ event, data, alias }`.
 
 ## Ping / pong
 
@@ -90,13 +100,13 @@ Broadcast messages use action `10` with `channel`, `id`, `timestamp`, and a `mes
 
 ## Errors
 
-Error frames use `action: 11` and an `error` object. Public error codes include:
+Error frames use `action: 11` and an `error` object:
 
 | Code | Meaning |
 |------|---------|
 | 40000 | Bad request |
 | 40001 | Invalid message |
-| 40002 | Invalid action |
+| 40002 | Invalid or unsupported action |
 | 40003 | Invalid channel |
 | 40100 | Unauthorized |
 | 40300 | Forbidden |
@@ -104,11 +114,11 @@ Error frames use `action: 11` and an `error` object. Public error codes include:
 | 40401 | Subscription closed |
 | 42900 | Rate limited |
 | 50000 | Internal error |
-| 50001 | Broker unavailable |
+| 50001 | Service temporarily unavailable |
 | 50002 | Publish failed |
 | 50003 | Subscribe failed |
 | 50004 | Unsubscribe failed |
 | 50005 | Connection closed |
 | 50400 | Timeout |
 
-Short links use the form `https://qpb.li/err{code}` (for example `https://qpb.li/err40300`).
+Short links: `https://qpb.li/err{code}` (for example `https://qpb.li/err40300`).

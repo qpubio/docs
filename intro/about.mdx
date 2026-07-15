@@ -3,8 +3,6 @@ title: "About QPub"
 description: "QPub is a multi-tenant pub/sub and queue platform with WebSocket and REST APIs."
 ---
 
-## What is QPub?
-
 QPub is a cloud messaging platform for real-time publish/subscribe and durable job queues. You create a project, issue API keys, then connect clients over WebSocket or call the REST API.
 
 Use QPub when you need:
@@ -43,8 +41,8 @@ The official JavaScript SDK is [`@qpub/sdk`](https://www.npmjs.com/package/@qpub
 
 See [Quickstart](/getting-started/quickstart) and [Choose an SDK](/getting-started/sdks).
 
-## What QPub is not
+## Scope
 
-- Not a full application backend (auth for your end users is your responsibility; QPub authenticates *your apps* to the messaging APIs)
-- Not a channel CRUD product — channels are named topics you publish/subscribe to by string
-- TODO: self-hosted deployment options are not documented here
+- QPub authenticates **your apps** to messaging APIs. End-user login for your product is your responsibility.
+- Channels are named topics — there is no separate create-channel step.
+- Dashboard login (email/password or OAuth) is separate from API key / JWT auth.

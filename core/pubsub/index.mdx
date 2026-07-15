@@ -3,7 +3,7 @@ title: "Pub/Sub"
 description: "Publish and subscribe to QPub channels."
 ---
 
-Pub/sub is the core real-time product: send messages to a **channel**, receive them on all active **subscribers**.
+Pub/sub is how QPub delivers real-time messages: publishers send to a **channel**, and every active **subscriber** on that channel receives the message.
 
 ## Operations
 
@@ -17,7 +17,7 @@ Pub/sub is the core real-time product: send messages to a **channel**, receive t
 
 ```typescript
 interface Message {
-  action: number;      // protocol action
+  action: number;
   id?: string;
   timestamp?: string;
   channel: string;
@@ -28,10 +28,10 @@ interface Message {
 }
 ```
 
-## Patterns
+## Common patterns
 
 - **Fan-out** — one publisher, many subscribers on the same channel
 - **Server push** — REST publish from your backend, Socket subscribe in clients
-- **Event filtering** — subscribe with `{ event: "order.created" }`
+- **Event-named messages** — set `event` on publish; filter in the SDK on subscribe
 
 Continue with [Publish](/core/pubsub/publish) and [Subscribe](/core/pubsub/subscribe).

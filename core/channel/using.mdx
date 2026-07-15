@@ -3,13 +3,15 @@ title: "Using Channels"
 description: "Get, subscribe, publish, and manage channels with the SDK."
 ---
 
+Channels are named topics. You do not create them ahead of time — publish or subscribe with a string name.
+
 ## Get a channel handle
 
 ```javascript
 const channel = socket.channels.get("chat.lobby");
 ```
 
-`get` returns a channel object for that name. It does not call the network by itself.
+`get` returns a local handle. It does not call the network by itself.
 
 ## Subscribe (Socket only)
 
@@ -18,7 +20,7 @@ await channel.subscribe((message) => {
   console.log(message.channel, message.event, message.data);
 });
 
-// Optional event filter
+// Optional SDK event filter
 await channel.subscribe(handler, { event: "message.created" });
 ```
 
@@ -30,7 +32,7 @@ await channel.subscribe(handler, { event: "message.created" });
 await channel.publish({ text: "hi" }, { event: "chat", alias: "Alice" });
 ```
 
-WebSocket publish is fire-and-forget from the client’s perspective (no HTTP response body).
+WebSocket publish is fire-and-forget from the client’s perspective.
 
 **REST**
 
@@ -61,9 +63,6 @@ channel.resume();
 - Avoid spaces and ambiguous short names
 - Coordinate names across publishers and subscribers in your app
 
-## What is not supported
+## Access control
 
-- Channel types such as “public / private / presence” as first-class APIs
-- REST list/create/delete channel CRUD
-
-TODO: Presence APIs — plan limits mention presence members, but there is no verified customer presence API to document yet.
+Who can publish or subscribe is controlled by [permissions](/core/auth/permissions) on the API key or JWT — not by channel “types”.

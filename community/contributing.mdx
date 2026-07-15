@@ -5,24 +5,16 @@ description: "How to contribute to QPub open-source projects and documentation."
 
 ## Documentation
 
-This site’s content lives in the public `docs` repository (MDX + `sidebar.json`).
+Content lives in the public `docs` repository (MDX + `sidebar.json`).
 
 1. Edit or add an MDX page under the correct folder.
-2. Update `sidebar.json` if you add or rename a page.
-3. Follow terminology and hosts in the docs `README.md`.
-4. Do not invent APIs — verify against `qpub-backend` and `@qpub/sdk`.
+2. Update `sidebar.json` (and the website copy under `qpub-website/data/sidebar.json` if you maintain both).
+3. Follow terminology in the docs `README.md`.
+4. Verify APIs against `qpub-backend` public routes and `@qpub/sdk` before documenting them.
 
 ## JavaScript SDK
 
-The official SDK is open source: [`qpub-js`](https://github.com/qpubio/qpub-js) (`@qpub/sdk`).
+Open source: [`qpubio/qpub-js`](https://github.com/qpubio/qpub-js) (`@qpub/sdk`).
 
-- Open issues for bugs and feature requests.
-- Prefer pull requests with tests for SDK changes.
-
-## Backend
-
-TODO: Clarify which backend repositories accept external contributions and the preferred issue process.
-
-## Code of conduct
-
-TODO: Link to the project code of conduct when published.
+- File bugs and feature requests as GitHub issues.
+- Prefer pull requests that include tests for SDK changes.

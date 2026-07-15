@@ -55,7 +55,13 @@ Body (all optional):
 }
 ```
 
-`expiresIn` is seconds. Permission keys are channel resource names; see [Permissions](/core/auth/permissions).
+`expiresIn` is seconds (camelCase in the JSON body). Permission keys are channel resource names; see [Permissions](/core/auth/permissions).
+
+**200** response:
+
+```json
+{ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }
+```
 
 ### SDK
 
@@ -105,6 +111,12 @@ Content-Type: application/json
 ```
 
 Body includes `aki`, `timestamp`, optional `alias` / `permission`, and `signature` (HMAC-SHA256 over a canonical string). Prefer the SDK helpers instead of signing by hand.
+
+**200** response (same shape as issue):
+
+```json
+{ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }
+```
 
 ## Auth events (SDK)
 

@@ -3,7 +3,7 @@ title: "Limits"
 description: "Plan limits for connections, messages, channels, and bandwidth."
 ---
 
-Values below match the seeded production plan catalog. Dashboard billing shows your active plan.
+Each plan caps how much traffic a project can send and receive. Values below match the seeded production catalog. Your active plan is shown in the dashboard.
 
 ## Connections
 
@@ -22,9 +22,6 @@ Values below match the seeded production plan catalog. Dashboard billing shows y
 | Concurrent channels | 256 | 16,000 | 64,000 |
 | Publish rate / channel / sec | 48 | 64 | 64 |
 | Channel create rate / sec | 48 | 256 | 512 |
-| Presence members / channel | 256 | 256 | 256 |
-
-Presence members is a platform cap. TODO: customer presence APIs are not documented because they are not verified as publicly available.
 
 ## Messages
 
@@ -34,10 +31,6 @@ Presence members is a platform cap. TODO: customer presence APIs are not documen
 | Messages / hour | 256,000 | 5,256,000 | 24,000,000 |
 | Messages / month | 4,000,000 | Unlimited | Unlimited |
 | Max message size | 32 KiB | 64 KiB | 512 KiB |
-| Default history TTL | 1 day | 3 days | 3 days |
-| Max history TTL | 1 day | 30 days | 365 days |
-
-TODO: Document how history TTL is configured/consumed once the customer-facing history API is verified.
 
 ## Bandwidth
 
@@ -54,3 +47,7 @@ TODO: Document how history TTL is configured/consumed once the customer-facing h
 | Free | Basic |
 | Starter | Basic |
 | Pro | Standard |
+
+## Platform caps (not customer APIs)
+
+The plan catalog also stores history TTL and presence-member caps. Those values are not exposed as documented public APIs yet, so they are omitted from the tables above.

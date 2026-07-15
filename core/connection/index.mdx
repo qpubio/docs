@@ -3,7 +3,7 @@ title: "Connection"
 description: "WebSocket connections for real-time QPub clients."
 ---
 
-A **connection** is a WebSocket session to `wss://socket.qpub.io/v1`. Only the Socket client maintains one; the REST client is request/response.
+A **connection** is a WebSocket session to `wss://socket.qpub.io/v1`. Only the Socket client maintains one. The REST client is request/response and has no persistent connection.
 
 ## Creating a connection
 
@@ -16,7 +16,7 @@ const socket = new QPub.Socket({
 });
 ```
 
-Auth is applied before the socket opens when `autoAuthenticate` is enabled (default).
+Auth runs before the socket opens when `autoAuthenticate` is enabled (default).
 
 ## What you get
 

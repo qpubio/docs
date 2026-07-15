@@ -3,25 +3,19 @@ title: "Queue"
 description: "Durable job queues over the QPub REST API."
 ---
 
-Queues are a REST product for durable background work. They are project-scoped named streams of **jobs**. Workers pull jobs, process them, then **ack** or **nack**.
+Queues let you run background work reliably: enqueue a job with a payload, then have a worker pull it, process it, and ack or nack the result.
 
-Queues are **not** available on the WebSocket API. Use `QPub.Rest` or raw HTTP.
+Queues are **REST-only**. Use `QPub.Rest` (or raw HTTP). The Socket client does not enqueue or pull jobs.
 
 ## Concepts
 
 | Concept | Description |
 |---------|-------------|
-| **Queue** | Named stream with config (visibility timeout, max attempts, webhook, …) |
-| **Job** | Work item with payload, status, attempts |
+| **Queue** | Named stream of jobs for a project |
+| **Job** | One work item (payload, status, attempts) |
 | **Worker** | Your process that pulls and completes jobs |
 
-Job statuses include: `pending`, `scheduled`, `running`, `completed`, `failed`, `cancelled`, `dlq` (and related transitions as returned by the API).
-
-## Execution profile
-
-Queues use `execution_profile: "external"` — your workers pull via REST (or receive webhooks when configured).
-
-TODO: Document managed execution if/when it ships.
+Typical job statuses you will see: `pending`, `scheduled`, `running`, `completed`, `failed`, `cancelled`, `dlq`.
 
 ## Quick example
 
@@ -31,7 +25,6 @@ import { QPub } from "@qpub/sdk";
 const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
 
 await rest.queues.updateConfig("emails", {
-  visibilityTimeout: "30s",
   maxAttempts: 5,
 });
 
@@ -40,21 +33,19 @@ await rest.queues.enqueue("emails", {
   subject: "Welcome",
 });
 
+// Blocks until stopWorker() is called
 await rest.queues.runWorker("emails", async (job) => {
   // send email from job.payload
   return { sent: true };
 });
 ```
 
-`runWorker` long-polls until you call `rest.queues.stopWorker()`.
-
 ## Permissions
 
-Workers need `dequeue` (or `subscribe`) on the queue resource; producers need `enqueue` (or `publish`). See [Permissions](/core/auth/permissions).
+Producers need `enqueue` (or `publish`) on the queue name. Workers need `dequeue` (or `subscribe`). See [Permissions](/core/auth/permissions).
 
 ## Next
 
 - [Jobs](/core/queue/jobs)
 - [Workers](/core/queue/workers)
 - [REST SDK Queues](/api/rest-sdk/queues)
-- [REST API](/api/rest-api)

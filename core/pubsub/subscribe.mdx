@@ -22,7 +22,7 @@ socket.connection.on("connected", async () => {
 
 `subscribe` returns a Promise that resolves when the server acknowledges the subscription.
 
-## Event filter
+## Event filter (SDK)
 
 ```javascript
 await channel.subscribe(
@@ -31,7 +31,7 @@ await channel.subscribe(
 );
 ```
 
-Only messages published with that `event` are delivered to this handler (as implemented by the SDK/server filter).
+The client still subscribes to the whole channel on the server. The SDK delivers only matching `event` values to this handler.
 
 ## Unsubscribe
 

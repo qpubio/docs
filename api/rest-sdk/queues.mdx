@@ -22,7 +22,9 @@ Access via `rest.queues` (`IRestQueueManager`). Wire JSON uses snake_case; the S
 | Method | Description |
 |--------|-------------|
 | `getConfig(name)` | Read queue config |
-| `updateConfig(name, opts)` | Upsert config |
+| `updateConfig(name, opts)` | Create queue if missing (`maxAttempts`, webhooks); no field updates if it already exists |
+
+See [Jobs](/core/queue/jobs#queue-config) for current PUT behavior.
 
 ## Workers
 

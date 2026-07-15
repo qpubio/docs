@@ -26,7 +26,9 @@ Token issue requires API key auth. Token request uses a signed body (no Basic he
 POST /v1/key/:keyID/token/issue
 ```
 
-Body (optional fields): `alias`, `permission`, `expiresIn` (seconds).
+Body (optional, camelCase): `alias`, `permission`, `expiresIn` (seconds).
+
+**200:** `{ "token": "<jwt>" }`
 
 ### Exchange token request
 
@@ -35,6 +37,8 @@ POST /v1/key/:keyID/token/request
 ```
 
 Body: `aki`, `timestamp`, optional `alias` / `permission`, `signature`. Prefer SDK `createTokenRequest` / `requestToken`.
+
+**200:** `{ "token": "<jwt>" }`
 
 ## Publish
 
@@ -84,20 +88,20 @@ Partial failure may return **207** with an error envelope (`code`: `PARTIAL_CONT
 
 ## Queues
 
-| Method | Path |
-|--------|------|
-| PUT | `/v1/queue/:queueName` |
-| GET | `/v1/queue/:queueName` |
-| POST | `/v1/queue/:queueName/jobs` |
-| GET | `/v1/queue/:queueName/jobs` |
-| GET | `/v1/queue/:queueName/jobs/:jobId` |
-| DELETE | `/v1/queue/:queueName/jobs/:jobId` |
-| POST | `/v1/queue/:queueName/jobs/:jobId/retry` |
-| POST | `/v1/queue/:queueName/pull` |
-| POST | `/v1/queue/:queueName/jobs/:jobId/ack` |
-| POST | `/v1/queue/:queueName/jobs/:jobId/nack` |
-| POST | `/v1/workers/register` |
-| POST | `/v1/workers/heartbeat` |
+| Method | Path | Notes |
+|--------|------|-------|
+| PUT | `/v1/queue/:queueName` | Create if missing (`max_attempts`, webhooks); existing queues returned unchanged |
+| GET | `/v1/queue/:queueName` | Read config |
+| POST | `/v1/queue/:queueName/jobs` | Enqueue |
+| GET | `/v1/queue/:queueName/jobs` | List (`?status=`) |
+| GET | `/v1/queue/:queueName/jobs/:jobId` | Get job |
+| DELETE | `/v1/queue/:queueName/jobs/:jobId` | Cancel |
+| POST | `/v1/queue/:queueName/jobs/:jobId/retry` | Retry |
+| POST | `/v1/queue/:queueName/pull` | Pull jobs |
+| POST | `/v1/queue/:queueName/jobs/:jobId/ack` | Ack |
+| POST | `/v1/queue/:queueName/jobs/:jobId/nack` | Nack |
+| POST | `/v1/workers/register` | Register worker |
+| POST | `/v1/workers/heartbeat` | Heartbeat |
 
 See [Queue](/core/queue) for request bodies and SDK usage.
 
@@ -110,4 +114,4 @@ GET /health
 
 ## Errors
 
-Error responses use HTTP status codes with a JSON body including a `code` and `message` (for example `UNAUTHORIZED`, `RATE_LIMITED`). TODO: expand with a full field catalog if a stable public error schema is published.
+Error responses use an HTTP status and a JSON body with `code` and `message` (for example `UNAUTHORIZED`, `FORBIDDEN`, `RATE_LIMITED`, `BAD_REQUEST`). Some responses include a `details` field.
