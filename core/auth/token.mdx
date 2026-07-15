@@ -77,7 +77,7 @@ const token = await rest.auth.issueToken({
 
 `generateToken` signs a JWT locally with the API key secret (convenient for trusted servers). Prefer `issueToken` when you want the platform to mint the token.
 
-## Token request {#token-request}
+## Token request
 
 For untrusted clients, create a **signed token request** on your server, send it to the client, and let the client exchange it for a JWT. The secret never leaves your server.
 
