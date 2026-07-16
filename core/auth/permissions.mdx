@@ -20,10 +20,11 @@ A permission is a JSON object: **resource key → list of actions**.
 | Action | Meaning |
 |--------|---------|
 | `publish` | Publish to a channel (also allows enqueue when `enqueue` is absent) |
-| `subscribe` | Subscribe to a channel (also allows dequeue when `dequeue` is absent) |
+| `subscribe` | Subscribe to a channel (also allows dequeue when `dequeue` is absent). Does **not** grant platform channels `_stats` / `_logs`. |
 | `enqueue` | Enqueue jobs on a queue resource |
 | `dequeue` | Pull/ack/nack jobs on a queue resource |
-| `stats` | Stats-related access |
+| `stats` | Subscribe to the platform `_stats` channel |
+| `logs` | Subscribe to the platform `_logs` channel |
 | `*` | All actions on that resource |
 
 ## Matching
