@@ -9,11 +9,11 @@ QPub messaging APIs authenticate **applications**, not end-user dashboard logins
 
 | Method | Best for | Credential |
 |--------|----------|------------|
-| [API key](/core/auth/api-key) | Trusted servers | `publicId:secret` via Basic or `api_key` |
-| [JWT token](/core/auth/token) | Browsers and untrusted clients | `Bearer` / `access_token` |
-| [Token request](/core/auth/token#token-request) | Browsers without exposing the secret | Signed payload → JWT |
+| [API key](/core/auth/api-key.mdx) | Trusted servers | `publicId:secret` via Basic or `api_key` |
+| [JWT token](/core/auth/token.mdx) | Browsers and untrusted clients | `Bearer` / `access_token` |
+| [Token request](/core/auth/token.mdx#token-request) | Browsers without exposing the secret | Signed payload → JWT |
 
-Dashboard login (email/password, OAuth) is separate — see [Accounts](/dashboard/accounts).
+Dashboard login (email/password, OAuth) is separate — see [Accounts](/dashboard/accounts.mdx).
 
 ## Recommended patterns
 
@@ -44,5 +44,5 @@ new QPub.Socket({
 
 ## Related
 
-- [Permissions](/core/auth/permissions)
-- [Client alias](/core/auth/alias)
+- [Permissions](/core/auth/permissions.mdx)
+- [Client alias](/core/auth/alias.mdx)

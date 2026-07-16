@@ -67,11 +67,11 @@ function Inbox() {
 `subscribe` returns a Promise that resolves when the server acknowledges the subscription.
 
 <When lang="javascript">
-> Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token) instead.
+> Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token.mdx) instead.
 </When>
 
 <When lang="react">
-Prefer a JWT or [token request](/core/auth/token) in `SocketProvider` options instead of embedding a production API key secret.
+Prefer a JWT or [token request](/core/auth/token.mdx) in `SocketProvider` options instead of embedding a production API key secret.
 </When>
 
 ## Event filter (SDK)
@@ -135,10 +135,10 @@ Prefer a scoped JWT or token request so the browser never holds the API key secr
   }}
 />
 
-See [Token Auth](/core/auth/token).
+See [Token Auth](/core/auth/token.mdx).
 
 ## Protocol
 
-Under the hood the client sends action `4` (subscribe) and receives `5` (subscribed) / `10` (message). See [Socket Protocol](/api/socket-protocol).
+Under the hood the client sends action `4` (subscribe) and receives `5` (subscribed) / `10` (message). See [Socket Protocol](/api/socket-protocol.mdx).
 
 </ExampleScope>

@@ -63,7 +63,7 @@ function PublishButton() {
 Socket publish does not return the REST `published` payload.
 
 <When lang="react">
-Prefer a JWT or [token request](/core/auth/token) in `SocketProvider` for browsers instead of a production API key secret.
+Prefer a JWT or [token request](/core/auth/token.mdx) in `SocketProvider` for browsers instead of a production API key secret.
 </When>
 
 </When>
@@ -208,7 +208,7 @@ curl -X POST "https://rest.qpub.io/v1/channel/notifications/messages" \
 ## Notes
 
 - At least one message is required in the REST body.
-- Message size and rate limits depend on your [plan](/pricing/limits).
-- Subscribers need a [Socket subscription](/core/pubsub/subscribe) to receive messages in realtime.
+- Message size and rate limits depend on your [plan](/pricing/limits.mdx).
+- Subscribers need a [Socket subscription](/core/pubsub/subscribe.mdx) to receive messages in realtime.
 
 </ExampleScope>

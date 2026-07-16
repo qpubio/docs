@@ -24,7 +24,7 @@ Access via `rest.queues` (`IRestQueueManager`). Wire JSON uses snake_case; the S
 | `getConfig(name)` | Read queue config |
 | `updateConfig(name, opts)` | Create queue if missing (`maxAttempts`, webhooks); no field updates if it already exists |
 
-See [Jobs](/core/queue/jobs#queue-config) for current PUT behavior.
+See [Jobs](/core/queue/jobs.mdx#queue-config) for current PUT behavior.
 
 ## Workers
 
@@ -37,4 +37,4 @@ See [Jobs](/core/queue/jobs#queue-config) for current PUT behavior.
 
 `RunWorkerOptions`: `workerId`, `batchSize`, `pollIntervalMs`, `wait`.
 
-Conceptual guide: [Queue](/core/queue).
+Conceptual guide: [Queue](/core/queue/index.mdx).

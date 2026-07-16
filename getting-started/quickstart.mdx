@@ -10,7 +10,7 @@ Get a working pub/sub loop with `@qpub/sdk` in a few minutes. Use the **Examples
 ## Prerequisites
 
 - A QPub account and project
-- An API key from the [dashboard](/dashboard/api-keys)
+- An API key from the [dashboard](/dashboard/api-keys.mdx)
 - Node.js, Bun, or a browser environment
 
 ## 1. Install
@@ -83,11 +83,11 @@ function Demo() {
 />
 
 <When lang="javascript">
-> Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token) instead.
+> Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token.mdx) instead.
 </When>
 
 <When lang="react">
-Prefer a JWT or [token request](/core/auth/token) in `SocketProvider` options instead of embedding a production API key secret in the browser bundle.
+Prefer a JWT or [token request](/core/auth/token.mdx) in `SocketProvider` options instead of embedding a production API key secret in the browser bundle.
 </When>
 
 </When>
@@ -147,7 +147,7 @@ Run this from a trusted server or script that can hold the API key secret.
 </When>
 
 <When lang="react">
-Call REST from an event handler or server action. Keep secrets off the public client bundle — use a JWT / [token request](/core/auth/token) for browsers.
+Call REST from an event handler or server action. Keep secrets off the public client bundle — use a JWT / [token request](/core/auth/token.mdx) for browsers.
 </When>
 
 </When>
@@ -273,8 +273,8 @@ const rest = new QPub.Rest({
 
 ## Next steps
 
-- [API key vs token auth](/core/auth)
-- [Connection lifecycle](/core/connection/lifecycle)
-- [Queues](/core/queue)
+- [API key vs token auth](/core/auth/index.mdx)
+- [Connection lifecycle](/core/connection/lifecycle.mdx)
+- [Queues](/core/queue/index.mdx)
 
 </ExampleScope>

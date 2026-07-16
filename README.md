@@ -54,7 +54,7 @@ Use `QPub.Socket` and `QPub.Rest` — not `QPubSocket` / `QPubREST`.
 4. Keep pages short and practical. Prefer runnable examples.
 5. If something cannot be verified, mark it `TODO` instead of guessing.
 6. Avoid marketing language and internal architecture (NATS, DDD, cluster details).
-7. Internal cross-links use repo-root paths (GitHub-friendly): `[Quickstart](/getting-started/quickstart)`. Optional `.mdx` suffix is fine. The website rewrites these to `/docs/...` when rendering — do not hardcode `/docs` in content.
+7. Internal cross-links use repo-root paths with `.mdx` (GitHub file preview needs the extension): `[Quickstart](/getting-started/quickstart.mdx)`, indexes as `[Auth](/core/auth/index.mdx)`. The website rewrites these to `/docs/...` (strips `.mdx` / `/index`) — do not hardcode `/docs` in content.
 8. MDX treats `{...}` as JavaScript. Do not use Pandoc-style heading IDs like `## Title {#id}`; rely on auto-generated slugs instead.
 9. Multi-example pages: wrap in `<ExampleScope groups={["Socket","REST"]} languages={["javascript","react"]}>` (props are also parsed server-side so chrome SSR without a layout jump). Controls appear in docs chrome (right rail on desktop; top of the docs nav drawer on mobile), not in the MDX body. Use `<CodeExamples …>` for tabbed code and `<When group lang>` for variant prose — inactive `When` branches stay in the HTML (hidden) so Socket and REST are both indexable without query params. See `getting-started/quickstart.mdx`.
 10. The website loads MDX from this repo locally in development (`DOCS_CONTENT_PATH` or `../docs`). Production fetches GitHub `main` — push docs before expecting live site updates.
