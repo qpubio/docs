@@ -31,10 +31,10 @@ Import providers and hooks from `@qpub/sdk/react` (same package).
 
 Use the Socket client for realtime subscribe and publish:
 
-<CodeExamples
-  codeSnippets={{
-    Socket: {
-      javascript: `import { QPub } from "@qpub/sdk";
+<CodeExamples group="Socket">
+
+```javascript
+import { QPub } from "@qpub/sdk";
 
 const socket = new QPub.Socket({
   apiKey: process.env.QPUB_API_KEY,
@@ -43,8 +43,11 @@ const socket = new QPub.Socket({
 socket.connection.on("connected", async () => {
   const ch = socket.channels.get("news");
   await ch.subscribe((msg) => console.log(msg.data));
-});`,
-      react: `import { useCallback, useEffect } from "react";
+});
+```
+
+```react
+import { useCallback, useEffect } from "react";
 import {
   SocketProvider,
   useChannel,
@@ -87,10 +90,10 @@ function Chat() {
       </button>
     </div>
   );
-}`,
-    },
-  }}
-/>
+}
+```
+
+</CodeExamples>
 
 <When lang="javascript">
 > Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token.mdx) instead.
@@ -106,17 +109,20 @@ For browsers, pass a JWT or [token request](/core/auth/token.mdx) into `SocketPr
 
 Use the REST client for server publish, tokens, and queues:
 
-<CodeExamples
-  codeSnippets={{
-    REST: {
-      javascript: `import { QPub } from "@qpub/sdk";
+<CodeExamples group="REST">
+
+```javascript
+import { QPub } from "@qpub/sdk";
 
 const rest = new QPub.Rest({
   apiKey: process.env.QPUB_API_KEY,
 });
 
-await rest.channels.get("news").publish({ headline: "Ship it" });`,
-      react: `import { useState } from "react";
+await rest.channels.get("news").publish({ headline: "Ship it" });
+```
+
+```react
+import { useState } from "react";
 import { QPub } from "@qpub/sdk";
 
 const rest = new QPub.Rest({
@@ -141,10 +147,10 @@ export function PublishButton() {
       Publish
     </button>
   );
-}`,
-    },
-  }}
-/>
+}
+```
+
+</CodeExamples>
 
 <When lang="javascript">
 Keep the API key on a trusted server. Use [queues](/core/queue/index.mdx) and [token issue](/core/auth/token.mdx) from the same client.

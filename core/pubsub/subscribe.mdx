@@ -11,10 +11,10 @@ REST cannot open a realtime subscription — publish with REST, receive with Soc
 
 ## Basic subscribe
 
-<CodeExamples
-  codeSnippets={{
-    Socket: {
-      javascript: `import { QPub } from "@qpub/sdk";
+<CodeExamples group="Socket">
+
+```javascript
+import { QPub } from "@qpub/sdk";
 
 const socket = new QPub.Socket({
   apiKey: process.env.QPUB_API_KEY,
@@ -25,8 +25,11 @@ socket.connection.on("connected", async () => {
   await channel.subscribe((message) => {
     console.log(message.data);
   });
-});`,
-      react: `import { useCallback, useEffect } from "react";
+});
+```
+
+```react
+import { useCallback, useEffect } from "react";
 import {
   SocketProvider,
   useChannel,
@@ -59,10 +62,10 @@ function Inbox() {
   }, [ready, subscribe, unsubscribe, onMessage]);
 
   return <p>Status: {status}</p>;
-}`,
-    },
-  }}
-/>
+}
+```
+
+</CodeExamples>
 
 `subscribe` returns a Promise that resolves when the server acknowledges the subscription.
 
@@ -78,62 +81,71 @@ Prefer a JWT or [token request](/core/auth/token.mdx) in `SocketProvider` option
 
 The client still subscribes to the whole channel on the server. The SDK delivers only matching `event` values to this handler.
 
-<CodeExamples
-  codeSnippets={{
-    Socket: {
-      javascript: `await channel.subscribe(
+<CodeExamples group="Socket">
+
+```javascript
+await channel.subscribe(
   (message) => console.log(message.data),
   { event: "order.created" }
-);`,
-      react: `const { subscribe, unsubscribe, ready } = useChannel("notifications");
+);
+```
+
+```react
+const { subscribe, unsubscribe, ready } = useChannel("notifications");
 
 useEffect(() => {
   if (!ready) return;
   const onMessage = (message) => console.log(message.data);
   subscribe(onMessage, { event: "order.created" });
   return () => unsubscribe(onMessage);
-}, [ready, subscribe, unsubscribe]);`,
-    },
-  }}
-/>
+}, [ready, subscribe, unsubscribe]);
+```
+
+</CodeExamples>
 
 ## Unsubscribe
 
-<CodeExamples
-  codeSnippets={{
-    Socket: {
-      javascript: `await channel.unsubscribe();`,
-      react: `const { unsubscribe } = useChannel("notifications");
+<CodeExamples group="Socket">
+
+```javascript
+await channel.unsubscribe();
+```
+
+```react
+const { unsubscribe } = useChannel("notifications");
 
 // Remove a specific handler:
 await unsubscribe(onMessage);
 
 // Or omit the callback to clear handlers for this channel (SDK behavior).
-await unsubscribe();`,
-    },
-  }}
-/>
+await unsubscribe();
+```
+
+</CodeExamples>
 
 ## Production clients
 
 Prefer a scoped JWT or token request so the browser never holds the API key secret:
 
-<CodeExamples
-  codeSnippets={{
-    Socket: {
-      javascript: `const socket = new QPub.Socket({
+<CodeExamples group="Socket">
+
+```javascript
+const socket = new QPub.Socket({
   tokenRequest, // from your backend
-});`,
-      react: `function App({ tokenRequest }) {
+});
+```
+
+```react
+function App({ tokenRequest }) {
   return (
     <SocketProvider options={{ tokenRequest }}>
       <Inbox />
     </SocketProvider>
   );
-}`,
-    },
-  }}
-/>
+}
+```
+
+</CodeExamples>
 
 See [Token Auth](/core/auth/token.mdx).
 

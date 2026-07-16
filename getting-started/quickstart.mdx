@@ -29,10 +29,10 @@ Import providers and hooks from `@qpub/sdk/react` (same package).
 
 Subscribe over the WebSocket client. By default the Socket connects automatically (`autoConnect: true`) to `wss://socket.qpub.io/v1`.
 
-<CodeExamples
-  codeSnippets={{
-    Socket: {
-      javascript: `import { QPub } from "@qpub/sdk";
+<CodeExamples group="Socket">
+
+```javascript
+import { QPub } from "@qpub/sdk";
 
 const socket = new QPub.Socket({
   apiKey: process.env.QPUB_API_KEY,
@@ -43,8 +43,11 @@ socket.connection.on("connected", async () => {
   await channel.subscribe((message) => {
     console.log("received", message.data, message.event);
   });
-});`,
-      react: `import { useCallback, useEffect } from "react";
+});
+```
+
+```react
+import { useCallback, useEffect } from "react";
 import {
   SocketProvider,
   useChannel,
@@ -77,10 +80,10 @@ function Demo() {
   }, [ready, subscribe, unsubscribe, onMessage]);
 
   return <p>Status: {status}</p>;
-}`,
-    },
-  }}
-/>
+}
+```
+
+</CodeExamples>
 
 <When lang="javascript">
 > Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token.mdx) instead.
@@ -96,10 +99,10 @@ Prefer a JWT or [token request](/core/auth/token.mdx) in `SocketProvider` option
 
 Publish over HTTP with the REST client (`https://rest.qpub.io/v1`). REST does not open a realtime subscription — switch to **Socket** above to receive messages.
 
-<CodeExamples
-  codeSnippets={{
-    REST: {
-      javascript: `import { QPub } from "@qpub/sdk";
+<CodeExamples group="REST">
+
+```javascript
+import { QPub } from "@qpub/sdk";
 
 const rest = new QPub.Rest({
   apiKey: process.env.QPUB_API_KEY,
@@ -108,8 +111,11 @@ const rest = new QPub.Rest({
 await rest.channels.get("demo").publish(
   { text: "Hello, QPub!" },
   { event: "greeting" }
-);`,
-      react: `import { useState } from "react";
+);
+```
+
+```react
+import { useState } from "react";
 import { QPub } from "@qpub/sdk";
 
 const rest = new QPub.Rest({
@@ -137,10 +143,10 @@ export function PublishButton() {
       Publish
     </button>
   );
-}`,
-    },
-  }}
-/>
+}
+```
+
+</CodeExamples>
 
 <When lang="javascript">
 Run this from a trusted server or script that can hold the API key secret.
@@ -173,14 +179,17 @@ await rest.channels.get("demo").publish(
 
 Or publish from the same Socket after you are connected:
 
-<CodeExamples
-  codeSnippets={{
-    Socket: {
-      javascript: `await socket.channels.get("demo").publish(
+<CodeExamples group="Socket">
+
+```javascript
+await socket.channels.get("demo").publish(
   { text: "Hello from socket" },
   { event: "greeting" }
-);`,
-      react: `const { publish, ready } = useChannel("demo");
+);
+```
+
+```react
+const { publish, ready } = useChannel("demo");
 
 <button
   disabled={!ready}
@@ -189,10 +198,10 @@ Or publish from the same Socket after you are connected:
   }
 >
   Send
-</button>`,
-    },
-  }}
-/>
+</button>
+```
+
+</CodeExamples>
 
 </When>
 
@@ -206,24 +215,27 @@ Your publish call above is enough for the REST path. To see messages arrive in r
 
 <When group="Socket">
 
-<CodeExamples
-  codeSnippets={{
-    Socket: {
-      javascript: `await channel.subscribe(
+<CodeExamples group="Socket">
+
+```javascript
+await channel.subscribe(
   (message) => console.log(message.data),
   { event: "greeting" }
-);`,
-      react: `const { subscribe, unsubscribe, ready } = useChannel("demo");
+);
+```
+
+```react
+const { subscribe, unsubscribe, ready } = useChannel("demo");
 
 useEffect(() => {
   if (!ready) return;
   const onMessage = (message) => console.log(message.data);
   subscribe(onMessage, { event: "greeting" });
   return () => unsubscribe(onMessage);
-}, [ready, subscribe, unsubscribe]);`,
-    },
-  }}
-/>
+}, [ready, subscribe, unsubscribe]);
+```
+
+</CodeExamples>
 
 </When>
 
@@ -237,9 +249,10 @@ Event filters apply on the **subscriber** (Socket). Pass `{ event: "greeting" }`
 
 Override hosts when pointing at a local QPub stack:
 
-<CodeExamples
-  codeSnippets={{
-    javascript: `const socket = new QPub.Socket({
+<CodeExamples>
+
+```javascript
+const socket = new QPub.Socket({
   apiKey: process.env.QPUB_API_KEY,
   wsHost: "localhost",
   wsPort: 8131,
@@ -251,8 +264,11 @@ const rest = new QPub.Rest({
   httpHost: "localhost",
   httpPort: 8111,
   isSecure: false,
-});`,
-    react: `const socketOptions = {
+});
+```
+
+```react
+const socketOptions = {
   apiKey: process.env.QPUB_API_KEY,
   wsHost: "localhost",
   wsPort: 8131,
@@ -267,9 +283,10 @@ const rest = new QPub.Rest({
 });
 
 // Socket path:
-<SocketProvider options={socketOptions}>{children}</SocketProvider>`,
-  }}
-/>
+<SocketProvider options={socketOptions}>{children}</SocketProvider>
+```
+
+</CodeExamples>
 
 ## Next steps
 

@@ -19,16 +19,19 @@ Connect with a JWT via query/`access_token`, or let the SDK fetch one:
 wss://socket.qpub.io/v1?access_token=<jwt>
 ```
 
-<CodeExamples
-  codeSnippets={{
-    Socket: {
-      javascript: `import { QPub } from "@qpub/sdk";
+<CodeExamples group="Socket">
+
+```javascript
+import { QPub } from "@qpub/sdk";
 
 const socket = new QPub.Socket({
   authUrl: "https://your-app.example/api/qpub-token",
 });
-// Your authUrl should return { token: "<jwt>" }`,
-      react: `import { SocketProvider } from "@qpub/sdk/react";
+// Your authUrl should return { token: "<jwt>" }
+```
+
+```react
+import { SocketProvider } from "@qpub/sdk/react";
 
 function App() {
   return (
@@ -40,10 +43,10 @@ function App() {
       {children}
     </SocketProvider>
   );
-}`,
-    },
-  }}
-/>
+}
+```
+
+</CodeExamples>
 
 </When>
 
@@ -134,24 +137,27 @@ const tokenRequest = await rest.auth.createTokenRequest({
 
 <When group="Socket">
 
-<CodeExamples
-  codeSnippets={{
-    Socket: {
-      javascript: `const socket = new QPub.Socket({
+<CodeExamples group="Socket">
+
+```javascript
+const socket = new QPub.Socket({
   tokenRequest, // auto-requests a token on init when provided
 });
 
-// Or: await socket.auth.requestToken(tokenRequest);`,
-      react: `function App({ tokenRequest }) {
+// Or: await socket.auth.requestToken(tokenRequest);
+```
+
+```react
+function App({ tokenRequest }) {
   return (
     <SocketProvider options={{ tokenRequest }}>
       {children}
     </SocketProvider>
   );
-}`,
-    },
-  }}
-/>
+}
+```
+
+</CodeExamples>
 
 </When>
 

@@ -13,10 +13,10 @@ Publish to a named channel with `publish` permission. Use the **Examples** contr
 
 Publish over the WebSocket client after you are connected.
 
-<CodeExamples
-  codeSnippets={{
-    Socket: {
-      javascript: `import { QPub } from "@qpub/sdk";
+<CodeExamples group="Socket">
+
+```javascript
+import { QPub } from "@qpub/sdk";
 
 const socket = new QPub.Socket({
   apiKey: process.env.QPUB_API_KEY,
@@ -28,8 +28,11 @@ socket.connection.on("connected", async () => {
     { title: "New order", orderId: "ord_1" },
     { event: "order.created", alias: "api" }
   );
-});`,
-      react: `import { SocketProvider, useChannel } from "@qpub/sdk/react";
+});
+```
+
+```react
+import { SocketProvider, useChannel } from "@qpub/sdk/react";
 
 function App() {
   return (
@@ -55,10 +58,10 @@ function PublishButton() {
       Publish
     </button>
   );
-}`,
-    },
-  }}
-/>
+}
+```
+
+</CodeExamples>
 
 Socket publish does not return the REST `published` payload.
 
@@ -72,10 +75,10 @@ Prefer a JWT or [token request](/core/auth/token.mdx) in `SocketProvider` for br
 
 Publish over HTTP with the REST client (`https://rest.qpub.io/v1`).
 
-<CodeExamples
-  codeSnippets={{
-    REST: {
-      javascript: `import { QPub } from "@qpub/sdk";
+<CodeExamples group="REST">
+
+```javascript
+import { QPub } from "@qpub/sdk";
 
 const rest = new QPub.Rest({
   apiKey: process.env.QPUB_API_KEY,
@@ -84,8 +87,11 @@ const rest = new QPub.Rest({
 await rest.channels.get("notifications").publish(
   { title: "New order" },
   { event: "order.created" }
-);`,
-      react: `import { useState } from "react";
+);
+```
+
+```react
+import { useState } from "react";
 import { QPub } from "@qpub/sdk";
 
 const rest = new QPub.Rest({
@@ -113,10 +119,10 @@ export function PublishButton() {
       Publish
     </button>
   );
-}`,
-    },
-  }}
-/>
+}
+```
+
+</CodeExamples>
 
 HTTP:
 
@@ -153,24 +159,27 @@ Call REST from an event handler or server action. Keep secrets off the public cl
 
 Publish the same messages to multiple channels:
 
-<CodeExamples
-  codeSnippets={{
-    REST: {
-      javascript: `await rest.channels.publishBatch(
+<CodeExamples group="REST">
+
+```javascript
+await rest.channels.publishBatch(
   ["notifications", "ops"],
   [
     { data: { title: "New order" }, event: "order.created" },
   ]
-);`,
-      react: `await rest.channels.publishBatch(
+);
+```
+
+```react
+await rest.channels.publishBatch(
   ["notifications", "ops"],
   [
     { data: { title: "New order" }, event: "order.created" },
   ]
-);`,
-    },
-  }}
-/>
+);
+```
+
+</CodeExamples>
 
 HTTP:
 
