@@ -83,7 +83,7 @@ const config = await rest.queues.getConfig("emails");
 
 Body fields applied on **create**: `max_attempts`, `webhook_url`, `webhook_secret`.
 
-If the queue already exists, `Ensure` returns the current config — those request fields are not applied as updates today.
+If the queue already exists, the **PUT** endpoint returns the current config — those request fields are not applied as updates today.
 
 Read the full config (including platform defaults such as visibility timeout) with `GET /v1/queue/:queueName` or `getConfig`.
 

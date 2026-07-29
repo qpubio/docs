@@ -19,6 +19,25 @@ The secret is shown when the key is created — store it securely. The public id
 4. **Update** permissions or metadata as needed.
 5. **Delete** compromised or unused keys.
 
+## Permissions
+
+When creating or editing a key, the dashboard shows checkboxes for each action:
+
+- **publish** — publish messages to channels
+- **subscribe** — subscribe to channels (does **not** grant `_stats` / `_logs`)
+- **enqueue** — enqueue jobs on queues
+- **dequeue** — pull, ack, and nack jobs
+- **stats** — subscribe to the `_stats` platform channel
+- **logs** — subscribe to the `_logs` platform channel
+
+### Resource restriction
+
+By default, a key has access to **all resources** (`*`). To restrict it, choose **Selected resources** and enter channel or queue names.
+
+Queue resources use the `queue:` prefix — for example `queue:emails` restricts enqueue/dequeue to the `emails` queue. Channel names are matched directly (for example `notifications`).
+
+See [Permissions](/core/auth/permissions.mdx) for the full reference.
+
 ## Using the key
 
 ```javascript
@@ -27,7 +46,3 @@ const socket = new QPub.Socket({ apiKey: process.env.QPUB_API_KEY });
 ```
 
 For browsers, do not embed the secret. Issue a [JWT or token request](/core/auth/token.mdx) from your backend instead.
-
-## Permissions
-
-Keys can carry a permission map (`publish`, `subscribe`, `enqueue`, …). See [Permissions](/core/auth/permissions.mdx).

@@ -61,14 +61,14 @@ Provide one of `apiKey`, `authUrl`, or `tokenRequest` (depending on your auth fl
 
 ## Auth helpers (on `socket.auth`)
 
-| Method | Typical use |
-|--------|-------------|
-| `authenticate()` | Run configured auth flow |
-| `requestToken(tokenRequest)` | Exchange signed request for JWT |
-| `generateToken(opts?)` | Local JWT (server / trusted) |
-| `issueToken(opts?)` | Platform-issued JWT |
-| `createTokenRequest(opts?)` | Signed token request for clients |
-| `clearToken()` | Drop active token |
-| `getAuthHeaders()` | Header map for HTTP |
+| Method | Typical use | Where to run |
+|--------|-------------|-------------|
+| `authenticate()` | Run configured auth flow | Client |
+| `requestToken(tokenRequest)` | Exchange signed request for JWT | Client |
+| `generateToken(opts?)` | Sign a JWT locally with the API key secret | **Server / trusted** |
+| `issueToken(opts?)` | Request a platform-issued JWT | **Server / trusted** |
+| `createTokenRequest(opts?)` | Create a signed token request for client-side exchange | **Server / trusted** |
+| `clearToken()` | Drop active token | Client |
+| `getAuthHeaders()` | Header map for HTTP | Client |
 
 Also see `@qpub/sdk/react` for `SocketProvider`, `useConnection`, `useChannel`, `useAuth`.

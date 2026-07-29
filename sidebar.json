@@ -105,6 +105,10 @@
                     {
                         "title": "Subscribe",
                         "path": "core/pubsub/subscribe.mdx"
+                    },
+                    {
+                        "title": "Platform Channels",
+                        "path": "core/pubsub/platform-channels.mdx"
                     }
                 ]
             },
@@ -199,6 +203,14 @@
             {
                 "title": "Usage",
                 "path": "dashboard/usage.mdx"
+            },
+            {
+                "title": "Queues",
+                "path": "dashboard/queues.mdx"
+            },
+            {
+                "title": "Billing",
+                "path": "dashboard/billing.mdx"
             },
             {
                 "title": "Console",

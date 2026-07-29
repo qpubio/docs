@@ -84,7 +84,7 @@ POST /v1/channels/messages
 }
 ```
 
-Partial failure may return **207** with an error envelope (`code`: `PARTIAL_CONTENT`) whose `details` include `published` and `failed_channels`. Rate limits return **429**.
+Partial failure returns **206** (`PARTIAL_CONTENT`) with `details` containing `published` and `failed_channels`. Rate limits return **429**.
 
 ## Queues
 
@@ -114,4 +114,25 @@ GET /health
 
 ## Errors
 
-Error responses use an HTTP status and a JSON body with `code` and `message` (for example `UNAUTHORIZED`, `FORBIDDEN`, `RATE_LIMITED`, `BAD_REQUEST`). Some responses include a `details` field.
+Error responses use an HTTP status and a JSON body:
+
+```json
+{
+  "code": "ERROR_CODE",
+  "message": "Human-readable description",
+  "details": {}
+}
+```
+
+| Code | HTTP Status |
+|------|-------------|
+| `BAD_REQUEST` | 400 |
+| `UNAUTHORIZED` | 401 |
+| `FORBIDDEN` | 403 |
+| `NOT_FOUND` | 404 |
+| `CONFLICT` | 409 |
+| `RATE_LIMITED` | 429 |
+| `PARTIAL_CONTENT` | 206 |
+| `INTERNAL_ERROR` | 500 |
+
+The `details` field is included on some errors (for example partial publish failures).

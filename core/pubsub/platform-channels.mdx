@@ -1,0 +1,60 @@
+---
+title: "Platform Channels"
+description: "Subscribe to _stats and _logs for live usage metrics and project events."
+---
+
+Two reserved channels deliver platform-level data when you have the corresponding permission.
+
+Subscribing to these channels requires a [Socket](/api/socket-sdk/constructor.mdx) connection. Use the `stats` and `logs` actions in your API key or token [permissions](/core/auth/permissions.mdx).
+
+## `_stats` channel
+
+Delivers periodic usage snapshots for the project.
+
+**Permission required:** `stats`
+
+**Schema:**
+
+```json
+{
+  "channel": "_stats",
+  "event": "metrics",
+  "data": {
+    "connections": { "current": 5, "peak": 10 },
+    "channels": { "current": 3, "peak": 8 },
+    "subscribers": { "current": 2, "peak": 6 },
+    "messages": { "published": 150, "delivered": 140, "dropped": 10 },
+    "bandwidth": { "total": 100000, "average": 667 }
+  }
+}
+```
+
+The dashboard uses `_stats` to power its live charts. You can build your own real-time monitoring with the same data.
+
+## `_logs` channel
+
+Streams connection and subscription events for the project.
+
+**Permission required:** `logs`
+
+Events include: `opened`, `connected`, `closed`, `disconnected`, `created`, `error`.
+
+```json
+{
+  "channel": "_logs",
+  "event": "connected",
+  "data": {
+    "connection_id": "01J...",
+    "client_id": "01J...",
+    "alias": "web-client-1",
+    "timestamp": "2026-07-16T12:00:00Z"
+  }
+}
+```
+
+The dashboard Console uses `_logs` to display live activity. Subscribe programmatically to build your own audit trail or monitoring dashboard.
+
+## Notes
+
+- Platform channels count toward your connection and channel limits.
+- `_stats` and `_logs` are **not** accessible with a plain `subscribe` action — the explicit `stats` or `logs` permission is required.

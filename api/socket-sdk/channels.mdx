@@ -39,6 +39,11 @@ channel.resume();
 | `publish(data, options?)` | Publish over WebSocket |
 | `pause(options?)` | Pause delivery locally |
 | `resume()` | Resume |
+| `resubscribe()` | Re-subscribe with existing callbacks (for reconnection) |
+| `isSubscribed()` | Whether channel is actively subscribed |
+| `isPaused()` | Whether delivery is paused |
+| `hasCallback()` | Whether a message callback is registered |
+| `clearBufferedMessages()` | Drop buffered messages without delivery |
 | `on(event, handler)` | Channel lifecycle events |
 
 Event filters are applied in the SDK after a full-channel subscription.

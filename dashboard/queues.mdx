@@ -1,0 +1,45 @@
+---
+title: "Queues"
+description: "Monitor queues, inspect jobs, and view workers in the dashboard."
+---
+
+The **Queues** page shows every queue in a project with its current job counts and lets you drill into individual jobs and workers.
+
+Open a project in the dashboard, then select the **Queues** tab.
+
+## Queue list
+
+A sidebar lists all queues with counts for each status:
+
+- **Pending** — waiting to be picked up
+- **Running** — claimed by a worker
+- **Failed** — exhausted retries
+- **DLQ** — dead-letter queue
+
+The header shows how many queues are active (at least one pending/running job) and idle.
+
+## Jobs
+
+Select a queue to see its jobs. Use the status filter to narrow results (all, pending, scheduled, running, completed, failed, cancelled, dlq).
+
+Each job row shows: id, status, attempt count, and age. Expand a row to inspect the full JSON — payload, result, metadata, and timestamps.
+
+**Cancel** a pending or running job. **Retry** a failed or dlq job.
+
+## Workers
+
+The workers panel lists every registered worker for the project:
+
+- **Name** — as registered
+- **Queues** — the queues the worker handles
+- **Last seen** — timestamp; red when the worker is stale
+
+## Live activity
+
+When the queue is active, a live-activity section shows sparkline charts (enqueued, claimed, completed, failed) over the last few seconds and a scrolling event log.
+
+## Related
+
+- [Jobs](/core/queue/jobs.mdx) conceptual guide
+- [Workers](/core/queue/workers.mdx) conceptual guide
+- [REST API: Queues](/api/rest-api.mdx#queues)

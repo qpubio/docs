@@ -35,6 +35,6 @@ See [Jobs](/core/queue/jobs.mdx#queue-config) for current PUT behavior.
 | `runWorker(name, handler, opts?)` | Long-poll loop (blocks until stop) |
 | `stopWorker()` | Stop the loop |
 
-`RunWorkerOptions`: `workerId`, `batchSize`, `pollIntervalMs`, `wait`.
+`RunWorkerOptions`: `workerId`, `batchSize`, `pollIntervalMs`, `wait`, `heartbeatIntervalMs` (default 20 000 ms).
 
 Conceptual guide: [Queue](/core/queue/index.mdx).

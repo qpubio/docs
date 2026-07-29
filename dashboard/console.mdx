@@ -15,13 +15,13 @@ Three panels:
 
 | Panel | Purpose |
 |-------|---------|
-| **Controls** | Main connection: pick an API key, choose a channel, publish |
+| **Controls** | Main connection: pick an API key, choose Channel or Queue mode, publish or enqueue |
 | **Logs** | Live connection and subscription activity for the project |
 | **Clients** | Simulated clients that can connect, subscribe, and publish |
 
 The header shows connection status (for example **Connected**, **Connecting**, **Failed**) and **Ping** latency.
 
-## Publish a test message
+## Publish a test message (Channel mode)
 
 1. In **Controls**, select an **API Key**.
 2. Enter a **Channel name** (default `my-channel`) and click **Use** (it shows **Using ✓** when active).
@@ -29,7 +29,18 @@ The header shows connection status (for example **Connected**, **Connecting**, *
 4. Write the **Message** body (string, JSON, or other text).
 5. Click the send control (↑). Send stays disabled until the channel is active, the message is non-empty, and the connection is ready.
 
-This uses the selected project API key for the console’s main Socket connection.
+This uses the selected project API key for the console's main Socket connection.
+
+## Enqueue a job (Queue mode)
+
+Switch the mode toggle to **Queue** to test queues without writing code.
+
+1. Select an **API Key** and enter a **Queue name**.
+2. Enter a **Payload** (JSON) in the code editor.
+3. Optionally set a **Delay** (Go duration like `30s`, `5m`) or **Run at** timestamp.
+4. Click the enqueue button (down-arrow).
+
+The job appears in the **Logs** panel and is available for workers to pull.
 
 ## Watch logs
 

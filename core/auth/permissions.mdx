@@ -21,10 +21,10 @@ A permission is a JSON object: **resource key → list of actions**.
 |--------|---------|
 | `publish` | Publish to a channel (also allows enqueue when `enqueue` is absent) |
 | `subscribe` | Subscribe to a channel (also allows dequeue when `dequeue` is absent). Does **not** grant platform channels `_stats` / `_logs`. |
-| `enqueue` | Enqueue jobs on a queue resource |
-| `dequeue` | Pull/ack/nack jobs on a queue resource |
-| `stats` | Subscribe to the platform `_stats` channel |
-| `logs` | Subscribe to the platform `_logs` channel |
+| `enqueue` | Enqueue jobs on a queue resource (`queue:<name>`) |
+| `dequeue` | Pull/ack/nack jobs on a queue resource (`queue:<name>`) |
+| `stats` | Subscribe to the platform [`_stats`](/core/pubsub/platform-channels.mdx) channel (usage metrics) |
+| `logs` | Subscribe to the platform [`_logs`](/core/pubsub/platform-channels.mdx) channel (event log) |
 | `*` | All actions on that resource |
 
 ## Matching
@@ -33,6 +33,8 @@ Permission checks match:
 
 1. The exact resource string (channel or queue name), or
 2. The resource key `"*"` (all resources)
+
+Queue permissions use the `queue:` prefix — for example `"queue:emails": ["enqueue"]` grants access to the `emails` queue. Channel names are matched directly (`"notifications"` for a channel named `notifications`).
 
 Use exact names or `"*"` in production credentials.
 
@@ -64,7 +66,7 @@ If a token omits `permission`, the API key’s permissions apply (subject to pla
 ```json
 {
   "*": ["publish"],
-  "emails": ["enqueue"]
+  "queue:emails": ["enqueue"]
 }
 ```
 
