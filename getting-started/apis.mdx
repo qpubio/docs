@@ -3,7 +3,7 @@ title: "API Overview"
 description: "REST and WebSocket APIs, hosts, and when to use each."
 ---
 
-QPub exposes two public messaging surfaces plus a dashboard API for account management.
+QPub exposes two public messaging surfaces plus a Cloud API for account management.
 
 ## Hosts
 
@@ -24,7 +24,7 @@ SDK defaults match these hosts (`httpHost: "rest.qpub.io"`, `wsHost: "socket.qpu
 | Batch publish to many channels | REST |
 | Issue JWTs / token requests | REST |
 | Queues and workers | REST |
-| Manage projects and keys | Dashboard (UI) |
+| Manage projects and keys | Cloud (UI) |
 
 ## Authentication (messaging APIs)
 
@@ -53,6 +53,6 @@ Connect to `GET /v1` with auth credentials, then exchange JSON messages with num
 
 Full protocol: [Socket Protocol](/api/socket-protocol.mdx).
 
-## Dashboard API
+## Cloud API
 
-The dashboard uses a separate user-auth API (email/password or OAuth) for accounts, projects, API keys, usage, and billing. It is not used by Socket/REST messaging clients. See [Dashboard](/dashboard/index.mdx).
+QPub Cloud uses a separate user-auth API (email/password or OAuth) for accounts, projects, API keys, usage, and billing. It is not used by Socket/REST messaging clients. See [Cloud](/cloud/index.mdx).

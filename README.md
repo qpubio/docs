@@ -10,7 +10,7 @@ docs/
 ├── getting-started/    # Quickstart, SDKs, API overview
 ├── core/               # Auth, connection, channel, pub/sub, queue
 ├── api/                # Socket/REST SDK and protocol reference
-├── dashboard/          # Dashboard product docs
+├── cloud/              # QPub Cloud product docs
 ├── pricing/            # Plans and limits
 ├── community/          # Contributing and support
 ├── changelog.mdx
@@ -21,7 +21,7 @@ docs/
 
 | Term                 | Meaning                                                          |
 | -------------------- | ---------------------------------------------------------------- |
-| Account              | Billing/org entity in the dashboard                              |
+| Account              | Billing/org entity in QPub Cloud                                 |
 | Project              | Isolation boundary for messaging and queues                      |
 | API key              | Credential `publicId:secret` (Basic auth), not username/password |
 | Token / JWT          | Short-lived client credential issued from an API key             |

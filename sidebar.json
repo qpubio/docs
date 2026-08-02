@@ -182,39 +182,39 @@
         ]
     },
     {
-        "title": "Dashboard",
+        "title": "Cloud",
         "items": [
             {
                 "title": "Overview",
-                "path": "dashboard/index.mdx"
+                "path": "cloud/index.mdx"
             },
             {
                 "title": "Accounts",
-                "path": "dashboard/accounts.mdx"
+                "path": "cloud/accounts.mdx"
             },
             {
                 "title": "Projects",
-                "path": "dashboard/projects.mdx"
+                "path": "cloud/projects.mdx"
             },
             {
                 "title": "API Keys",
-                "path": "dashboard/api-keys.mdx"
+                "path": "cloud/api-keys.mdx"
             },
             {
                 "title": "Usage",
-                "path": "dashboard/usage.mdx"
+                "path": "cloud/usage.mdx"
             },
             {
                 "title": "Queues",
-                "path": "dashboard/queues.mdx"
+                "path": "cloud/queues.mdx"
             },
             {
                 "title": "Billing",
-                "path": "dashboard/billing.mdx"
+                "path": "cloud/billing.mdx"
             },
             {
                 "title": "Console",
-                "path": "dashboard/console.mdx"
+                "path": "cloud/console.mdx"
             }
         ]
     },

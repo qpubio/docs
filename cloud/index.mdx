@@ -1,0 +1,28 @@
+---
+title: "Cloud"
+description: "Manage accounts, projects, API keys, usage, and the live console."
+---
+
+QPub Cloud is the web UI for account and project management. Messaging clients do not use Cloud login credentials; they use [API keys or tokens](/core/auth/index.mdx).
+
+## What you can do
+
+| Area | Purpose |
+|------|---------|
+| [Accounts](/cloud/accounts.mdx) | Profile, sign-in, invitations |
+| [Projects](/cloud/projects.mdx) | Create and manage projects |
+| [API Keys](/cloud/api-keys.mdx) | Create credentials for Socket/REST |
+| [Usage](/cloud/usage.mdx) | Inspect consumption against plan limits |
+| [Queues](/cloud/queues.mdx) | Monitor queues, jobs, and workers |
+| [Billing](/cloud/billing.mdx) | Plans, upgrades, and payment management |
+| [Console](/cloud/console.mdx) | Interactive project console for testing |
+
+## Sign-up flow
+
+1. Create a user account (email/password or OAuth).
+2. Create or join an account organization.
+3. Create a project.
+4. Create an API key.
+5. Use the key with `@qpub/sdk` or the REST/Socket APIs.
+
+Billing and plan changes are handled in QPub Cloud (Stripe checkout). See [Pricing](/pricing/plans/index.mdx).

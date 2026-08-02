@@ -15,7 +15,7 @@ Account
 
 | Concept | Role |
 |---------|------|
-| **Account** | Org/billing context in the dashboard |
+| **Account** | Org/billing context in QPub Cloud |
 | **Project** | Isolation boundary for traffic and keys |
 | **API key** | `publicId:secret` credential for REST and Socket |
 | **Channel** | Named topic string for pub/sub |
@@ -47,7 +47,7 @@ REST does **not** subscribe to channels.
 
 ### Real-time app
 
-1. Create a project and API key in the [dashboard](/dashboard/index.mdx).
+1. Create a project and API key in [QPub Cloud](/cloud/index.mdx).
 2. On your server, keep the API key secret.
 3. For browsers, issue a JWT or signed [token request](/core/auth/token.mdx) with limited permissions.
 4. Client creates `QPub.Socket`, waits for `connected`, then `channels.get(name).subscribe(...)`.

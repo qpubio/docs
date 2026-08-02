@@ -3,7 +3,7 @@ title: "Authentication"
 description: "How clients authenticate to QPub REST and WebSocket APIs."
 ---
 
-QPub messaging APIs authenticate **applications**, not end-user dashboard logins.
+QPub messaging APIs authenticate **applications**, not end-user Cloud logins.
 
 ## Methods
 
@@ -13,7 +13,7 @@ QPub messaging APIs authenticate **applications**, not end-user dashboard logins
 | [JWT token](/core/auth/token.mdx) | Browsers and untrusted clients | `Bearer` / `access_token` |
 | [Token request](/core/auth/token.mdx#token-request) | Browsers without exposing the secret | Signed payload → JWT |
 
-Dashboard login (email/password, OAuth) is separate — see [Accounts](/dashboard/accounts.mdx).
+Cloud login (email/password, OAuth) is separate — see [Accounts](/cloud/accounts.mdx).
 
 ## Recommended patterns
 
