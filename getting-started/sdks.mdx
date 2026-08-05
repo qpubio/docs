@@ -157,7 +157,7 @@ Keep the API key on a trusted server. Use [queues](/core/queue/index.mdx) and [t
 </When>
 
 <When lang="react">
-Call REST from a server action or trusted backend. For browser realtime, switch to **Socket** and use `@qpub/sdk/react`.
+QPub's React hooks/providers (`@qpub/sdk/react`) are Socket-only. REST is recommended for **server-side** use, so there's no dedicated React integration — but you can still call the plain `QPub.Rest` client from React (a server action or trusted backend). For browser realtime, switch to **Socket** and use `@qpub/sdk/react`.
 </When>
 
 </When>

@@ -148,7 +148,7 @@ Run REST publish from a trusted server or script that can hold the API key secre
 </When>
 
 <When lang="react">
-Call REST from an event handler or server action. Keep secrets off the public client bundle.
+QPub's React hooks/providers (`@qpub/sdk/react`) are Socket-only. REST is recommended for **server-side** use, so there's no dedicated React integration — but you can still call the plain `QPub.Rest` client from React (an event handler or server action). Keep secrets off the public client bundle.
 </When>
 
 </When>
@@ -180,6 +180,10 @@ await rest.channels.publishBatch(
 ```
 
 </CodeExamples>
+
+<When lang="react">
+Again, there is no React-specific REST API — `QPub.Rest` is a plain client you can call from React (server actions or event handlers).
+</When>
 
 HTTP:
 

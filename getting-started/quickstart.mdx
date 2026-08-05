@@ -153,7 +153,7 @@ Run this from a trusted server or script that can hold the API key secret.
 </When>
 
 <When lang="react">
-Call REST from an event handler or server action. Keep secrets off the public client bundle — use a JWT / [token request](/core/auth/token.mdx) for browsers.
+QPub's React hooks/providers (`@qpub/sdk/react`) are Socket-only. REST is recommended for **server-side** use, so there's no dedicated React integration — but you can still call the plain `QPub.Rest` client from React (an event handler or server action). Keep secrets off the public client bundle — use a JWT / [token request](/core/auth/token.mdx) for browsers.
 </When>
 
 </When>
