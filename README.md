@@ -22,7 +22,9 @@ docs/
 | Term                 | Meaning                                                          |
 | -------------------- | ---------------------------------------------------------------- |
 | Account              | Billing/org entity in QPub Cloud                                 |
-| Project              | Isolation boundary for messaging and queues                      |
+| Project              | Isolation boundary for Channels and Queues                       |
+| Channels (product)   | Real-time pub/sub product; primitive is a **channel** (topic name) |
+| Queues (product)     | Durable background jobs product                                    |
 | API key              | Credential `publicId:secret` (Basic auth), not username/password |
 | Token / JWT          | Short-lived client credential issued from an API key             |
 | Token request        | Signed payload exchanged for a JWT (safe for browsers)           |
