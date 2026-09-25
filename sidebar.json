@@ -20,8 +20,8 @@
                 "path": "getting-started/quickstart.mdx"
             },
             {
-                "title": "Choose an SDK",
-                "path": "getting-started/sdks.mdx"
+                "title": "SDKs",
+                "path": "getting-started/sdk.mdx"
             },
             {
                 "title": "API Overview",

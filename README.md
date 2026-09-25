@@ -62,7 +62,7 @@ Official SDKs: `@qpub/sdk` (JavaScript/TypeScript), `@qpub/sdk/react` (React), [
     - **Code:** `<CodeExamples group="Socket">` (or `REST`) with fenced `javascript`, `typescript`, `react`, `go`, and `curl` children. See `getting-started/quickstart.mdx`.
     - **Prose:** General copy uses product terms (Socket client, REST client, SDK) — not a specific language unless the section is lang-specific. Use `<When group lang>` for variant notes; `lang={["javascript","typescript"]}` when JS and TS share the same text. Hidden inactive branches stay in the DOM for SEO.
     - **Install:** `<InstallExamples>` with `npm` / `pnpm` / `yarn` / `bun` fences inside `<When lang={["javascript","typescript","react"]}>`. Go: `go get github.com/qpubio/qpub-go@v0.2.0` in `<When lang="go">`. Install tabs do not change the URL.
-    - **SDK import table:** `<SdkImport href="…" lang="javascript|react|go|curl|…">label</SdkImport>` for the Import column (primary code pill + lang icon; `curl` uses the terminal icon). See `getting-started/sdks.mdx`.
+    - **SDK import table:** `<SdkImport href="…" lang="javascript|react|go|curl|…">label</SdkImport>` for the Import column (primary code pill + lang icon; `curl` uses the terminal icon). See `getting-started/sdk.mdx`.
     - **Go:** [qpub-go](https://pkg.go.dev/github.com/qpubio/qpub-go) v0.2.0+ (`import "github.com/qpubio/qpub-go"`).
     - **Skip ExampleScope** on pure cloud/pricing prose and static REST reference tables when no runnable snippet is needed.
 11. The website loads MDX from this repo locally in development (`DOCS_CONTENT_PATH` or `../docs`). Production fetches GitHub `main` — push docs before expecting live site updates.
