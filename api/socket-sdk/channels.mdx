@@ -16,6 +16,10 @@ Channel handles are how Socket clients subscribe and publish.
 
 ## Channel methods
 
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "react", "go"]}>
+
+<CodeExamples group="Socket">
+
 ```javascript
 const channel = socket.channels.get("demo");
 
@@ -31,6 +35,65 @@ await channel.unsubscribe(handler, { event: "optional-filter" });
 channel.pause({ bufferMessages: true });
 channel.resume();
 ```
+
+```typescript
+const channel = socket.channels.get("demo");
+
+await channel.subscribe((message) => {
+  console.log(message.data, message.event);
+}, { event: "optional-filter", timeout: 10000 });
+
+await channel.publish({ hello: true }, { event: "ping", alias: "bot" });
+
+await channel.unsubscribe();
+```
+
+```react
+import { useEffect } from "react";
+import { useChannel } from "@qpub/sdk/react";
+
+function Demo() {
+  const { subscribe, publish, unsubscribe, ready } = useChannel("demo");
+
+  useEffect(() => {
+    if (!ready) return;
+    const onMessage = (message) => console.log(message.data);
+    subscribe(onMessage, { event: "optional-filter" });
+    return () => unsubscribe(onMessage);
+  }, [ready, subscribe, unsubscribe]);
+
+  return (
+    <button
+      disabled={!ready}
+      onClick={() => publish({ hello: true }, { event: "ping" })}
+    >
+      Publish
+    </button>
+  );
+}
+```
+
+```go
+import (
+	"context"
+
+	"github.com/qpubio/qpub-go/channel"
+)
+
+ch := socket.Channels.Get("demo")
+_ = ch.Subscribe(ctx, func(m qpub.Message) {
+	// handle message
+}, channel.SubscribeOptions{Event: "optional-filter"})
+
+_ = ch.Publish(ctx, map[string]bool{"hello": true}, channel.PublishOptions{
+	Event: "ping",
+	Alias: "bot",
+})
+```
+
+</CodeExamples>
+
+</ExampleScope>
 
 | Method | Description |
 |--------|-------------|

@@ -3,6 +3,10 @@ title: "Socket SDK Constructor"
 description: "QPub.Socket options and instance surface."
 ---
 
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "react", "go"]}>
+
+<CodeExamples group="Socket">
+
 ```javascript
 import { QPub } from "@qpub/sdk";
 
@@ -10,6 +14,39 @@ const socket = new QPub.Socket({
   apiKey: process.env.QPUB_API_KEY,
 });
 ```
+
+```typescript
+import { QPub } from "@qpub/sdk";
+
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+});
+```
+
+```react
+import { SocketProvider } from "@qpub/sdk/react";
+
+function App({ children }) {
+  return (
+    <SocketProvider options={{ apiKey: process.env.QPUB_API_KEY }}>
+      {children}
+    </SocketProvider>
+  );
+}
+```
+
+```go
+import (
+	"os"
+
+	"github.com/qpubio/qpub-go"
+)
+
+socket := qpub.NewSocket(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+defer socket.Reset()
+```
+
+</CodeExamples>
 
 ## Options
 
@@ -71,4 +108,8 @@ Provide one of `apiKey`, `authUrl`, or `tokenRequest` (depending on your auth fl
 | `clearToken()` | Drop active token | Client |
 | `getAuthHeaders()` | Header map for HTTP | Client |
 
-Also see `@qpub/sdk/react` for `SocketProvider`, `useConnection`, `useChannel`, `useAuth`.
+<When lang="react">
+See `@qpub/sdk/react` for `SocketProvider`, `useConnection`, `useChannel`, and `useAuth`.
+</When>
+
+</ExampleScope>

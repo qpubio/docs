@@ -20,6 +20,10 @@ Listen on `socket.connection`:
 | `closed` | Closed (`code`, `reason`) |
 | `failed` | Unrecoverable failure (`error`, `context`) |
 
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "react", "go"]}>
+
+<CodeExamples group="Socket">
+
 ```javascript
 socket.connection.on("connected", ({ connectionId }) => {
   console.log("connected", connectionId);
@@ -30,9 +34,40 @@ socket.connection.on("failed", ({ error }) => {
 });
 ```
 
+```typescript
+socket.connection.on("connected", ({ connectionId }) => {
+  console.log("connected", connectionId);
+});
+
+socket.connection.on("failed", ({ error }) => {
+  console.error(error);
+});
+```
+
+```react
+import { useConnection } from "@qpub/sdk/react";
+
+function Status() {
+  const { status } = useConnection();
+  return <p>{status}</p>;
+}
+```
+
+```go
+// Use socket.Connection callbacks (see qpub-go connection package)
+```
+
+</CodeExamples>
+
+</ExampleScope>
+
 Subscribe to channels after `connected` (or rely on `autoResubscribe` after reconnect).
 
 ## Manual connect / disconnect
+
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "go"]}>
+
+<CodeExamples group="Socket">
 
 ```javascript
 const socket = new QPub.Socket({
@@ -43,6 +78,29 @@ const socket = new QPub.Socket({
 await socket.connection.connect();
 socket.connection.disconnect();
 ```
+
+```typescript
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+  autoConnect: false,
+});
+
+await socket.connection.connect();
+socket.connection.disconnect();
+```
+
+```go
+socket := qpub.NewSocket(
+	qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")),
+	func(o *qpub.Option) { o.AutoConnect = false },
+)
+_ = socket.Connection.Connect(ctx)
+socket.Connection.Disconnect()
+```
+
+</CodeExamples>
+
+</ExampleScope>
 
 ## Reconnect
 
@@ -61,14 +119,46 @@ After reconnect, the SDK resubscribes to active channels when `autoResubscribe` 
 
 ## Ping
 
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "go"]}>
+
+<CodeExamples group="Socket">
+
 ```javascript
 const rttMs = await socket.connection.ping();
 ```
+
+```typescript
+const rttMs = await socket.connection.ping();
+```
+
+```go
+rttMs, err := socket.Connection.Ping(ctx)
+```
+
+</CodeExamples>
+
+</ExampleScope>
 
 Uses protocol ping/pong. `pingTimeoutMs` defaults to `10000`.
 
 ## Helpers
 
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "go"]}>
+
+<CodeExamples group="Socket">
+
 ```javascript
 socket.connection.isConnected();
 ```
+
+```typescript
+socket.connection.isConnected();
+```
+
+```go
+socket.Connection.IsConnected()
+```
+
+</CodeExamples>
+
+</ExampleScope>

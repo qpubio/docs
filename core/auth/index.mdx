@@ -17,30 +17,78 @@ Cloud login (email/password, OAuth) is separate — see [Accounts](/cloud/accoun
 
 ## Recommended patterns
 
+<ExampleScope defaultGroup="REST" groups={["Socket", "REST"]} languages={["javascript", "typescript", "react", "go"]}>
+
 **Server-to-server**
+
+<When group="REST">
+
+<CodeExamples group="REST">
 
 ```javascript
 const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
 ```
 
+```typescript
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+```
+
+```go
+rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+```
+
+</CodeExamples>
+
+</When>
+
 **Browser / mobile**
 
 1. Your backend holds the API key.
 2. Backend creates a JWT (`issueToken`) or a signed token request (`createTokenRequest`).
-3. Client uses the JWT or `tokenRequest` / `authUrl` with `QPub.Socket`.
+3. Client uses the JWT or `tokenRequest` / `authUrl` with the Socket client.
 
 Never ship the API key **secret** in public client code.
 
 ## SDK options
 
+<When group="Socket">
+
+<CodeExamples group="Socket">
+
 ```javascript
 new QPub.Socket({
-  apiKey: "...",           // or
-  authUrl: "https://...",  // POST returns { token } or { tokenRequest }
+  apiKey: "...",
+  authUrl: "https://...",
   tokenRequest: { /* ... */ },
-  alias: "user-42",        // optional
+  alias: "user-42",
 });
 ```
+
+```typescript
+new QPub.Socket({
+  apiKey: "...",
+  authUrl: "https://...",
+  tokenRequest: { /* ... */ },
+  alias: "user-42",
+});
+```
+
+```react
+<SocketProvider options={{ tokenRequest, alias: "user-42" }}>{children}</SocketProvider>
+```
+
+```go
+qpub.NewSocket(func(o *qpub.Option) {
+	o.TokenRequest = &tokenRequest
+	o.Alias = "user-42"
+})
+```
+
+</CodeExamples>
+
+</When>
+
+</ExampleScope>
 
 ## Related
 

@@ -23,12 +23,48 @@ Access is controlled by [permissions](/core/auth/permissions.mdx) on the API key
 
 ## Clients
 
-```javascript
-// Socket (subscribe + publish)
-const channel = socket.channels.get("notifications");
+<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "typescript", "go"]}>
 
-// REST (publish only)
+<When group="Socket">
+
+<CodeExamples group="Socket">
+
+```javascript
+const channel = socket.channels.get("notifications");
+```
+
+```typescript
+const channel = socket.channels.get("notifications");
+```
+
+```go
+ch := socket.Channels.Get("notifications")
+```
+
+</CodeExamples>
+
+</When>
+
+<When group="REST">
+
+<CodeExamples group="REST">
+
+```javascript
 const channel = rest.channels.get("notifications");
 ```
+
+```typescript
+const channel = rest.channels.get("notifications");
+```
+
+```go
+ch := rest.Channels.Get("notifications")
+```
+
+</CodeExamples>
+
+</When>
+
+</ExampleScope>
 
 See [Using Channels](/core/channel/using.mdx) and [Pub/Sub](/core/pubsub/index.mdx).

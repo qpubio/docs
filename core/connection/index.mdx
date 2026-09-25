@@ -7,6 +7,10 @@ A **connection** is a WebSocket session to `wss://socket.qpub.io/v1`. Only the S
 
 ## Creating a connection
 
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "react", "go"]}>
+
+<CodeExamples group="Socket">
+
 ```javascript
 import { QPub } from "@qpub/sdk";
 
@@ -15,6 +19,37 @@ const socket = new QPub.Socket({
   // autoConnect: true (default)
 });
 ```
+
+```typescript
+import { QPub } from "@qpub/sdk";
+
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+});
+```
+
+```react
+import { SocketProvider } from "@qpub/sdk/react";
+
+<SocketProvider options={{ apiKey: process.env.QPUB_API_KEY }}>
+  {children}
+</SocketProvider>
+```
+
+```go
+import (
+	"os"
+
+	"github.com/qpubio/qpub-go"
+)
+
+socket := qpub.NewSocket(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+defer socket.Reset()
+```
+
+</CodeExamples>
+
+</ExampleScope>
 
 Auth runs before the socket opens when `autoAuthenticate` is enabled (default).
 

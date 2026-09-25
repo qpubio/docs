@@ -55,6 +55,10 @@ REST does **not** subscribe to channels.
 
 ### Server publish only
 
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
+<CodeExamples group="REST">
+
 ```javascript
 import { QPub } from "@qpub/sdk";
 
@@ -62,19 +66,65 @@ const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
 await rest.channels.get("notifications").publish({ text: "Hello" });
 ```
 
+```typescript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+await rest.channels.get("notifications").publish({ text: "Hello" });
+```
+
+```go
+rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+_, _ = rest.Channels.Get("notifications").Publish(ctx, map[string]string{"text": "Hello"}, channel.PublishOptions{})
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/channel/notifications/messages" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"data":{"text":"Hello"}}]}'
+```
+
+</CodeExamples>
+
+</ExampleScope>
+
 ### Background jobs
+
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
+<CodeExamples group="REST">
 
 ```javascript
 const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
 await rest.queues.enqueue("emails", { to: "user@example.com" });
 
-// Blocks until stopWorker() is called
 await rest.queues.runWorker("emails", async (job) => {
-  // process job.payload
   return { ok: true };
 });
-// rest.queues.stopWorker();
 ```
+
+```typescript
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+await rest.queues.enqueue("emails", { to: "user@example.com" });
+```
+
+```go
+_, _ = rest.Queues.Enqueue(ctx, "emails", map[string]string{"to": "user@example.com"}, protocol.EnqueueOptions{})
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/queue/emails/jobs" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"payload":{"to":"user@example.com"}}'
+```
+
+</CodeExamples>
+
+</ExampleScope>
 
 ## Next steps
 

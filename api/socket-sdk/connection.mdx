@@ -28,10 +28,41 @@ Access via `socket.connection`.
 | `closed` | `code`, `reason` |
 | `failed` | `error`, `context` |
 
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "react", "go"]}>
+
+<CodeExamples group="Socket">
+
 ```javascript
 socket.connection.on("connected", ({ connectionId }) => {
   console.log(connectionId);
 });
 ```
+
+```typescript
+socket.connection.on("connected", ({ connectionId }) => {
+  console.log(connectionId);
+});
+```
+
+```react
+import { useConnection } from "@qpub/sdk/react";
+
+function Status() {
+  const { status, connectionId } = useConnection();
+  return (
+    <p>
+      {status} {connectionId}
+    </p>
+  );
+}
+```
+
+```go
+// Register connection callbacks on socket.Connection (see qpub-go connection package)
+```
+
+</CodeExamples>
+
+</ExampleScope>
 
 Conceptual guide: [Connection Lifecycle](/core/connection/lifecycle.mdx).

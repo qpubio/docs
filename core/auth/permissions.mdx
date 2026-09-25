@@ -43,6 +43,10 @@ Use exact names or `"*"` in production credentials.
 1. **API key** — configured in [QPub Cloud](/cloud/api-keys.mdx) when the key is created/updated.
 2. **JWT / token request** — optional narrower scope when issuing a token:
 
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
+<CodeExamples group="REST">
+
 ```javascript
 await rest.auth.issueToken({
   permission: {
@@ -50,6 +54,32 @@ await rest.auth.issueToken({
   },
 });
 ```
+
+```typescript
+await rest.auth.issueToken({
+  permission: {
+    "user-42.inbox": ["subscribe"],
+  },
+});
+```
+
+```go
+_, err := rest.Auth.IssueToken(ctx, qpub.TokenOptions{
+	Permission: qpub.Permission{"user-42.inbox": {"subscribe"}},
+})
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/key/<keyID>/token/issue" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"permission":{"user-42.inbox":["subscribe"]}}'
+```
+
+</CodeExamples>
+
+</ExampleScope>
 
 If a token omits `permission`, the API key’s permissions apply (subject to platform rules).
 

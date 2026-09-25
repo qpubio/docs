@@ -40,9 +40,48 @@ See [Permissions](/core/auth/permissions.mdx) for the full reference.
 
 ## Using the key
 
+<ExampleScope defaultGroup="REST" groups={["Socket", "REST"]} languages={["javascript", "typescript", "go"]}>
+
+<When group="REST">
+
+<CodeExamples group="REST">
+
 ```javascript
 const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+```
+
+```typescript
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+```
+
+```go
+rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+```
+
+</CodeExamples>
+
+</When>
+
+<When group="Socket">
+
+<CodeExamples group="Socket">
+
+```javascript
 const socket = new QPub.Socket({ apiKey: process.env.QPUB_API_KEY });
 ```
+
+```typescript
+const socket = new QPub.Socket({ apiKey: process.env.QPUB_API_KEY });
+```
+
+```go
+socket := qpub.NewSocket(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+```
+
+</CodeExamples>
+
+</When>
+
+</ExampleScope>
 
 For browsers, do not embed the secret. Issue a [JWT or token request](/core/auth/token.mdx) from your backend instead.

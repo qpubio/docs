@@ -5,9 +5,15 @@ description: "Optional client identity attached to connections and messages."
 
 An **alias** is an optional string that identifies a client (for example a user id or device name). It is not a separate authentication method.
 
+<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "typescript", "react", "go"]}>
+
 ## How to set it
 
 ### SDK constructor
+
+<When group="Socket">
+
+<CodeExamples group="Socket">
 
 ```javascript
 const socket = new QPub.Socket({
@@ -16,11 +22,48 @@ const socket = new QPub.Socket({
 });
 ```
 
+```typescript
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+  alias: "user-42",
+});
+```
+
+```react
+<SocketProvider options={{ apiKey: process.env.QPUB_API_KEY, alias: "user-42" }}>
+  {children}
+</SocketProvider>
+```
+
+```go
+qpub.NewSocket(func(o *qpub.Option) { o.Alias = "user-42" })
+```
+
+</CodeExamples>
+
+</When>
+
 ### Token claims
+
+<When group="REST">
+
+<CodeExamples group="REST">
 
 ```javascript
 await rest.auth.issueToken({ alias: "user-42" });
 ```
+
+```typescript
+await rest.auth.issueToken({ alias: "user-42" });
+```
+
+```go
+_, err := rest.Auth.IssueToken(ctx, qpub.TokenOptions{Alias: "user-42"})
+```
+
+</CodeExamples>
+
+</When>
 
 ### REST header / Socket query
 
@@ -32,9 +75,31 @@ await rest.auth.issueToken({ alias: "user-42" });
 - Connection metadata in the platform
 - Optional `alias` on published messages (you can also set `alias` per publish)
 
+<When group="Socket">
+
+<CodeExamples group="Socket">
+
 ```javascript
 await channel.publish({ text: "hi" }, { alias: "user-42", event: "chat" });
 ```
+
+```typescript
+await channel.publish({ text: "hi" }, { alias: "user-42", event: "chat" });
+```
+
+```react
+publish({ text: "hi" }, { alias: "user-42", event: "chat" });
+```
+
+```go
+_ = ch.Publish(ctx, payload, channel.PublishOptions{Alias: "user-42", Event: "chat"})
+```
+
+</CodeExamples>
+
+</When>
+
+</ExampleScope>
 
 ## Guidance
 

@@ -5,7 +5,11 @@ description: "Pull, ack, and nack jobs with external workers."
 
 External workers are processes you run. Registration is optional metadata; pull authorization uses your API key or JWT permissions.
 
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
 ## High-level SDK loop
+
+<CodeExamples group="REST">
 
 ```javascript
 const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
@@ -18,8 +22,7 @@ const worker = await rest.queues.registerWorker({
 await rest.queues.runWorker(
   "emails",
   async (job) => {
-    // process job.payload
-    return { ok: true }; // sent as ack result
+    return { ok: true };
   },
   {
     workerId: worker.id,
@@ -28,10 +31,55 @@ await rest.queues.runWorker(
     wait: "20s",
   }
 );
-
-// Elsewhere:
-// rest.queues.stopWorker();
 ```
+
+```typescript
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+
+const worker = await rest.queues.registerWorker({
+  name: "email-worker",
+  queues: ["emails"],
+});
+
+await rest.queues.runWorker(
+  "emails",
+  async (job) => {
+    return { ok: true };
+  },
+  {
+    workerId: worker.id,
+    batchSize: 1,
+    pollIntervalMs: 1000,
+    wait: "20s",
+  }
+);
+```
+
+```go
+import (
+	"context"
+
+	"github.com/qpubio/qpub-go/protocol"
+)
+
+worker, err := rest.Queues.RegisterWorker(ctx, protocol.RegisterWorkerOptions{
+	Name:   "email-worker",
+	Queues: []string{"emails"},
+})
+_ = rest.Queues.RunWorker(ctx, "emails", func(ctx context.Context, job protocol.QueueJob) (interface{}, error) {
+	return map[string]bool{"ok": true}, nil
+}, protocol.RunWorkerOptions{WorkerID: worker.ID})
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/queue/emails/pull" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"worker_id":"01J...","batch_size":1,"wait":"5s"}'
+```
+
+</CodeExamples>
 
 `runWorker` blocks until `stopWorker()` is called.
 
@@ -76,9 +124,35 @@ POST /v1/workers/register
 POST /v1/workers/heartbeat
 ```
 
+<CodeExamples group="REST">
+
 ```javascript
 await rest.queues.registerWorker({ name: "email-worker", queues: ["emails"] });
 await rest.queues.heartbeat(workerId);
 ```
 
+```typescript
+await rest.queues.registerWorker({ name: "email-worker", queues: ["emails"] });
+await rest.queues.heartbeat(workerId);
+```
+
+```go
+w, err := rest.Queues.RegisterWorker(ctx, protocol.RegisterWorkerOptions{
+	Name: "email-worker", Queues: []string{"emails"},
+})
+_ = rest.Queues.Heartbeat(ctx, w.ID)
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/workers/register" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"email-worker","queues":["emails"]}'
+```
+
+</CodeExamples>
+
 The `queues` array on registration is declarative metadata. It does not replace permission checks on pull.
+
+</ExampleScope>

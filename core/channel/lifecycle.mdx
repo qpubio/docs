@@ -18,6 +18,10 @@ Listen on the channel object:
 | `paused` / `resumed` | Local pause state |
 | `failed` | Subscription failure |
 
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "react", "go"]}>
+
+<CodeExamples group="Socket">
+
 ```javascript
 const channel = socket.channels.get("demo");
 
@@ -26,6 +30,31 @@ channel.on("failed", (payload) => console.error(payload));
 
 await channel.subscribe((msg) => console.log(msg.data));
 ```
+
+```typescript
+const channel = socket.channels.get("demo");
+
+channel.on("subscribed", () => console.log("ready"));
+channel.on("failed", (payload) => console.error(payload));
+
+await channel.subscribe((msg) => console.log(msg.data));
+```
+
+```react
+const { subscribe, ready } = useChannel("demo");
+// Hook manages subscribe lifecycle when ready
+```
+
+```go
+ch := socket.Channels.Get("demo")
+_ = ch.Subscribe(ctx, func(m qpub.Message) {
+	// ...
+}, channel.SubscribeOptions{})
+```
+
+</CodeExamples>
+
+</ExampleScope>
 
 ## After reconnect
 

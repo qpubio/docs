@@ -1,18 +1,18 @@
 ---
 title: "Quickstart"
-description: "Connect with the QPub SDK, subscribe to a channel, and publish a message (JavaScript, React, or Go)."
+description: "Connect with the QPub SDK, subscribe to a channel, and publish a message."
 ---
 
-Get a working pub/sub loop in a few minutes. Use the **API** and **Language** controls (right rail on large screens; on smaller screens, open the docs navigation drawer at the bottom of the page) to switch **Socket** vs **REST** and **JavaScript**, **React**, or **Go** — samples and notes update together.
+Get a working pub/sub loop in a few minutes. Use the **API** and **Language** controls (right rail on large screens; on smaller screens, open the docs navigation drawer at the bottom of the page) to switch **Socket** vs **REST** and the sample language — code and notes update together.
 
-<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "react", "go"]}>
+<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "typescript", "react", "go", "curl"]}>
 
 ## Prerequisites
 
 - A QPub account and project
 - An API key from [QPub Cloud](/cloud/api-keys.mdx)
 
-<When lang="javascript">
+<When lang={["javascript", "typescript"]}>
 - Node.js, Bun, or a browser environment
 </When>
 
@@ -27,16 +27,29 @@ Get a working pub/sub loop in a few minutes. Use the **API** and **Language** co
 
 ## 1. Install
 
-<When lang="javascript">
-```bash
+<When lang={["javascript", "typescript", "react"]}>
+<InstallExamples>
+
+```npm
 npm install @qpub/sdk
 ```
+
+```pnpm
+pnpm add @qpub/sdk
+```
+
+```yarn
+yarn add @qpub/sdk
+```
+
+```bun
+bun add @qpub/sdk
+```
+
+</InstallExamples>
 </When>
 
 <When lang="react">
-```bash
-npm install @qpub/sdk
-```
 Import providers and hooks from `@qpub/sdk/react` (same package).
 </When>
 
@@ -55,6 +68,21 @@ Subscribe over the WebSocket client. By default the Socket connects automaticall
 <CodeExamples group="Socket">
 
 ```javascript
+import { QPub } from "@qpub/sdk";
+
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+});
+
+socket.connection.on("connected", async () => {
+  const channel = socket.channels.get("demo");
+  await channel.subscribe((message) => {
+    console.log("received", message.data, message.event);
+  });
+});
+```
+
+```typescript
 import { QPub } from "@qpub/sdk";
 
 const socket = new QPub.Socket({
@@ -140,7 +168,7 @@ func main() {
 
 </CodeExamples>
 
-<When lang="javascript">
+<When lang={["javascript", "typescript"]}>
 > Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token.mdx) instead.
 </When>
 
@@ -161,6 +189,19 @@ Publish over HTTP with the REST client (`https://rest.qpub.io/v1`). REST does no
 <CodeExamples group="REST">
 
 ```javascript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
+});
+
+await rest.channels.get("demo").publish(
+  { text: "Hello, QPub!" },
+  { event: "greeting" }
+);
+```
+
+```typescript
 import { QPub } from "@qpub/sdk";
 
 const rest = new QPub.Rest({
@@ -231,9 +272,17 @@ func main() {
 }
 ```
 
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/channel/demo/messages" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"event":"greeting","data":{"text":"Hello, QPub!"}}]}'
+```
+
 </CodeExamples>
 
-<When lang="javascript">
+<When lang={["javascript", "typescript"]}>
 Run this from a trusted server or script that can hold the API key secret.
 </When>
 
@@ -268,6 +317,20 @@ await rest.channels.get("demo").publish(
 );
 ```
 
+```typescript
+await rest.channels.get("demo").publish(
+  { text: "Hello, QPub!" },
+  { event: "greeting" }
+);
+```
+
+```react
+await rest.channels.get("demo").publish(
+  { text: "Hello, QPub!" },
+  { event: "greeting" }
+);
+```
+
 ```go
 import (
 	"context"
@@ -290,6 +353,14 @@ if err != nil {
 }
 ```
 
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/channel/demo/messages" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"event":"greeting","data":{"text":"Hello, QPub!"}}]}'
+```
+
 </CodeExamples>
 
 Or publish from the same Socket after you are connected:
@@ -297,6 +368,13 @@ Or publish from the same Socket after you are connected:
 <CodeExamples group="Socket">
 
 ```javascript
+await socket.channels.get("demo").publish(
+  { text: "Hello from socket" },
+  { event: "greeting" }
+);
+```
+
+```typescript
 await socket.channels.get("demo").publish(
   { text: "Hello from socket" },
   { event: "greeting" }
@@ -354,6 +432,13 @@ await channel.subscribe(
 );
 ```
 
+```typescript
+await channel.subscribe(
+  (message) => console.log(message.data),
+  { event: "greeting" }
+);
+```
+
 ```react
 const { subscribe, unsubscribe, ready } = useChannel("demo");
 
@@ -394,6 +479,22 @@ Override hosts when pointing at a local QPub stack:
 <CodeExamples>
 
 ```javascript
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+  wsHost: "localhost",
+  wsPort: 8131,
+  isSecure: false,
+});
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
+  httpHost: "localhost",
+  httpPort: 8111,
+  isSecure: false,
+});
+```
+
+```typescript
 const socket = new QPub.Socket({
   apiKey: process.env.QPUB_API_KEY,
   wsHost: "localhost",

@@ -3,6 +3,10 @@ title: "REST SDK Constructor"
 description: "QPub.Rest options and instance surface."
 ---
 
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
+<CodeExamples group="REST">
+
 ```javascript
 import { QPub } from "@qpub/sdk";
 
@@ -10,6 +14,34 @@ const rest = new QPub.Rest({
   apiKey: process.env.QPUB_API_KEY,
 });
 ```
+
+```typescript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
+});
+```
+
+```go
+import (
+	"os"
+
+	"github.com/qpubio/qpub-go"
+)
+
+rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+defer rest.Reset()
+```
+
+```curl
+# REST calls use Authorization: Basic or Bearer on each request
+API_KEY="publicId:secret"
+curl -X GET "https://rest.qpub.io/v1/..." \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)"
+```
+
+</CodeExamples>
 
 ## Options
 
@@ -40,3 +72,5 @@ Base URL: `{https|http}://{httpHost}[:port]/v1`
 | `rest.getInstanceId()` | Instance id |
 
 REST does **not** subscribe to channels.
+
+</ExampleScope>

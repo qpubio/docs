@@ -1,19 +1,34 @@
 ---
 title: "Subscribe"
-description: "Subscribe to channel messages with the Socket SDK (JavaScript, React, or Go)."
+description: "Subscribe to channel messages with the Socket client."
 ---
 
-Subscribing requires a WebSocket connection and `subscribe` permission on the channel. Use the **Language** control to switch **JavaScript**, **React**, or **Go**.
+Subscribing requires a WebSocket connection and `subscribe` permission on the channel. Use the **Language** control to switch samples.
 
 REST cannot open a realtime subscription — publish with REST, receive with Socket.
 
-<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "react", "go"]}>
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "react", "go"]}>
 
 ## Basic subscribe
 
 <CodeExamples group="Socket">
 
 ```javascript
+import { QPub } from "@qpub/sdk";
+
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+});
+
+socket.connection.on("connected", async () => {
+  const channel = socket.channels.get("notifications");
+  await channel.subscribe((message) => {
+    console.log(message.data);
+  });
+});
+```
+
+```typescript
 import { QPub } from "@qpub/sdk";
 
 const socket = new QPub.Socket({
@@ -99,7 +114,7 @@ func main() {
 
 </CodeExamples>
 
-<When lang="javascript">
+<When lang={["javascript", "typescript"]}>
 `subscribe` returns a Promise that resolves when the server acknowledges the subscription.
 </When>
 
@@ -111,7 +126,7 @@ func main() {
 `Subscribe` blocks until the server acknowledges the subscription or `ctx` is cancelled.
 </When>
 
-<When lang="javascript">
+<When lang={["javascript", "typescript"]}>
 > Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token.mdx) instead.
 </When>
 
@@ -130,6 +145,13 @@ The client still subscribes to the whole channel on the server. The SDK delivers
 <CodeExamples group="Socket">
 
 ```javascript
+await channel.subscribe(
+  (message) => console.log(message.data),
+  { event: "order.created" }
+);
+```
+
+```typescript
 await channel.subscribe(
   (message) => console.log(message.data),
   { event: "order.created" }
@@ -163,6 +185,10 @@ err := ch.Subscribe(ctx, func(m qpub.Message) {
 await channel.unsubscribe();
 ```
 
+```typescript
+await channel.unsubscribe();
+```
+
 ```react
 const { unsubscribe } = useChannel("notifications");
 
@@ -188,6 +214,12 @@ Prefer a scoped JWT or token request so the browser never holds the API key secr
 <CodeExamples group="Socket">
 
 ```javascript
+const socket = new QPub.Socket({
+  tokenRequest, // from your backend
+});
+```
+
+```typescript
 const socket = new QPub.Socket({
   tokenRequest, // from your backend
 });

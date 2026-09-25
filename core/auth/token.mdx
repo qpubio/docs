@@ -5,9 +5,9 @@ description: "Issue and use short-lived JWTs for QPub clients."
 
 JWTs give clients temporary access without exposing the API key secret. Tokens are issued from an API key and can carry an **alias** and **permission** scope.
 
-Use the **API** and **Language** controls to switch **Socket** vs **REST** and **JavaScript**, **React**, or **Go**.
+Use the **API** and **Language** controls to switch **Socket** vs **REST** and the sample language.
 
-<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "react", "go"]}>
+<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "typescript", "react", "go", "curl"]}>
 
 ## Using a token
 
@@ -22,6 +22,15 @@ wss://socket.qpub.io/v1?access_token=<jwt>
 <CodeExamples group="Socket">
 
 ```javascript
+import { QPub } from "@qpub/sdk";
+
+const socket = new QPub.Socket({
+  authUrl: "https://your-app.example/api/qpub-token",
+});
+// Your authUrl should return { token: "<jwt>" }
+```
+
+```typescript
 import { QPub } from "@qpub/sdk";
 
 const socket = new QPub.Socket({
@@ -66,12 +75,50 @@ defer socket.Reset()
 
 Call REST with a Bearer JWT:
 
-```bash
+<CodeExamples group="REST">
+
+```javascript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest();
+// Set Bearer JWT on rest.auth before publish, or pass token per request
+await rest.channels.get("demo").publish({ text: "Hello" });
+```
+
+```typescript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest();
+await rest.channels.get("demo").publish({ text: "Hello" });
+```
+
+```go
+import (
+	"context"
+	"log"
+
+	"github.com/qpubio/qpub-go/channel"
+	"github.com/qpubio/qpub-go"
+)
+
+ctx := context.Background()
+rest := qpub.NewRest(/* configure JWT on rest.Auth */)
+defer rest.Reset()
+
+_, err := rest.Channels.Get("demo").Publish(ctx, map[string]string{"text": "Hello"}, channel.PublishOptions{})
+if err != nil {
+	log.Fatal(err)
+}
+```
+
+```curl
 curl -X POST "https://rest.qpub.io/v1/channel/demo/messages" \
   -H "Authorization: Bearer <jwt>" \
   -H "Content-Type: application/json" \
   -d '{"messages":[{"data":{"text":"Hello"}}]}'
 ```
+
+</CodeExamples>
 
 On a trusted server you usually keep using `QPub.Rest({ apiKey })` instead of a JWT. For browsers, mint a JWT (or token request) on your backend and call REST with `Authorization: Bearer <jwt>` — or use **Socket** for realtime clients.
 
@@ -127,6 +174,18 @@ const token = await rest.auth.issueToken({
 });
 ```
 
+```typescript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+
+const token = await rest.auth.issueToken({
+  alias: "web-client-1",
+  permission: { notifications: ["subscribe"] },
+  expiresIn: 3600,
+});
+```
+
 ```go
 import (
 	"context"
@@ -150,6 +209,15 @@ if err != nil {
 _ = token
 ```
 
+```curl
+API_KEY="publicId:secret"
+KEY_ID="your-key-public-id"
+curl -X POST "https://rest.qpub.io/v1/key/${KEY_ID}/token/issue" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"alias":"web-client-1","permission":{"notifications":["subscribe"]},"expiresIn":3600}'
+```
+
 </CodeExamples>
 
 `generateToken` / `GenerateToken` signs a JWT locally with the API key secret (convenient for trusted servers). Prefer `issueToken` / `IssueToken` when you want the platform to mint the token.
@@ -163,6 +231,18 @@ For untrusted clients, create a **signed token request** on your server, send it
 <CodeExamples>
 
 ```javascript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+
+const tokenRequest = await rest.auth.createTokenRequest({
+  alias: "Alice",
+  permission: { "chat.lobby": ["subscribe", "publish"] },
+});
+// Return tokenRequest to the client
+```
+
+```typescript
 import { QPub } from "@qpub/sdk";
 
 const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
@@ -211,6 +291,12 @@ const socket = new QPub.Socket({
 });
 
 // Or: await socket.auth.requestToken(tokenRequest);
+```
+
+```typescript
+const socket = new QPub.Socket({
+  tokenRequest, // auto-requests a token on init when provided
+});
 ```
 
 ```react
@@ -263,6 +349,24 @@ await fetch("https://rest.qpub.io/v1/channel/demo/messages", {
 });
 ```
 
+```typescript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest();
+const { token } = await rest.auth.requestToken(tokenRequest);
+
+await fetch("https://rest.qpub.io/v1/channel/demo/messages", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    messages: [{ data: { text: "Hello" } }],
+  }),
+});
+```
+
 ```go
 import (
 	"context"
@@ -284,6 +388,12 @@ _, err := rest.Channels.Get("demo").Publish(ctx, map[string]string{"text": "Hell
 if err != nil {
 	log.Fatal(err)
 }
+```
+
+```curl
+curl -X POST "https://rest.qpub.io/v1/key/<keyID>/token/request" \
+  -H "Content-Type: application/json" \
+  -d '{"aki":"<publicId>","timestamp":1234567890,"signature":"<hmac>","alias":"Alice"}'
 ```
 
 </CodeExamples>

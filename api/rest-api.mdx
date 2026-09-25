@@ -40,6 +40,36 @@ Body: `aki`, `timestamp`, optional `alias` / `permission`, `signature`. Prefer S
 
 **200:** `{ "token": "<jwt>" }`
 
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
+### Issue JWT (SDK + cURL)
+
+<CodeExamples group="REST">
+
+```javascript
+const { token } = await rest.auth.issueToken({ expiresIn: 3600 });
+```
+
+```typescript
+const { token } = await rest.auth.issueToken({ expiresIn: 3600 });
+```
+
+```go
+tok, err := rest.Auth.IssueToken(ctx, qpub.TokenOptions{ExpiresIn: 3600})
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/key/<keyID>/token/issue" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"expiresIn":3600}'
+```
+
+</CodeExamples>
+
+</ExampleScope>
+
 ## Publish
 
 ### One channel
@@ -70,6 +100,34 @@ POST /v1/channel/:channelName/messages
   ]
 }
 ```
+
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
+<CodeExamples group="REST">
+
+```javascript
+await rest.channels.get("demo").publish({ text: "Hello" }, { event: "greeting" });
+```
+
+```typescript
+await rest.channels.get("demo").publish({ text: "Hello" }, { event: "greeting" });
+```
+
+```go
+_, err := rest.Channels.Get("demo").Publish(ctx, map[string]string{"text": "Hello"}, channel.PublishOptions{Event: "greeting"})
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/channel/demo/messages" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"event":"greeting","data":{"text":"Hello"}}]}'
+```
+
+</CodeExamples>
+
+</ExampleScope>
 
 ### Many channels
 

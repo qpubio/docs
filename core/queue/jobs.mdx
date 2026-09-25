@@ -5,7 +5,11 @@ description: "Enqueue, inspect, cancel, and retry queue jobs."
 
 A **job** is one unit of work on a named queue: a payload plus status, attempts, and optional scheduling metadata.
 
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
 ## Enqueue
+
+<CodeExamples group="REST">
 
 ```javascript
 const { jobId, status } = await rest.queues.enqueue(
@@ -19,6 +23,45 @@ const { jobId, status } = await rest.queues.enqueue(
   }
 );
 ```
+
+```typescript
+const { jobId, status } = await rest.queues.enqueue(
+  "emails",
+  { to: "user@example.com" },
+  {
+    delay: "30s",
+    idempotencyKey: "welcome-user-42",
+    scheduleAt: "2026-07-16T12:00:00Z",
+    metadata: { source: "signup" },
+  }
+);
+```
+
+```go
+import (
+	"context"
+
+	"github.com/qpubio/qpub-go/protocol"
+)
+
+result, err := rest.Queues.Enqueue(ctx, "emails", map[string]string{
+	"to": "user@example.com",
+}, protocol.EnqueueOptions{
+	Delay:          "30s",
+	IdempotencyKey: "welcome-user-42",
+})
+_ = result
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/queue/emails/jobs" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"payload":{"to":"user@example.com"},"idempotency_key":"welcome-user-42","delay":"30s"}'
+```
+
+</CodeExamples>
 
 HTTP:
 
@@ -48,17 +91,59 @@ When `idempotency_key` is set, repeating the same key for the same project and q
 
 ## Inspect
 
+<CodeExamples group="REST">
+
 ```javascript
 const job = await rest.queues.getJob("emails", jobId);
 const jobs = await rest.queues.listJobs("emails", { status: "pending" });
 ```
 
+```typescript
+const job = await rest.queues.getJob("emails", jobId);
+const jobs = await rest.queues.listJobs("emails", { status: "pending" });
+```
+
+```go
+job, err := rest.Queues.GetJob(ctx, "emails", jobId)
+jobs, err := rest.Queues.ListJobs(ctx, "emails", protocol.ListJobsOptions{Status: "pending"})
+```
+
+```curl
+API_KEY="publicId:secret"
+curl "https://rest.qpub.io/v1/queue/emails/jobs/${JOB_ID}" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)"
+```
+
+</CodeExamples>
+
 ## Cancel / retry
+
+<CodeExamples group="REST">
 
 ```javascript
 await rest.queues.cancelJob("emails", jobId);
 await rest.queues.retryJob("emails", jobId);
 ```
+
+```typescript
+await rest.queues.cancelJob("emails", jobId);
+await rest.queues.retryJob("emails", jobId);
+```
+
+```go
+_ = rest.Queues.CancelJob(ctx, "emails", jobId)
+_ = rest.Queues.RetryJob(ctx, "emails", jobId)
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X DELETE "https://rest.qpub.io/v1/queue/emails/jobs/${JOB_ID}" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)"
+curl -X POST "https://rest.qpub.io/v1/queue/emails/jobs/${JOB_ID}/retry" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)"
+```
+
+</CodeExamples>
 
 - `DELETE /v1/queue/:queueName/jobs/:jobId`
 - `POST /v1/queue/:queueName/jobs/:jobId/retry`
@@ -71,6 +156,8 @@ Create a queue (if it does not exist) with:
 PUT /v1/queue/:queueName
 ```
 
+<CodeExamples group="REST">
+
 ```javascript
 await rest.queues.updateConfig("emails", {
   maxAttempts: 25,
@@ -81,6 +168,33 @@ await rest.queues.updateConfig("emails", {
 const config = await rest.queues.getConfig("emails");
 ```
 
+```typescript
+await rest.queues.updateConfig("emails", {
+  maxAttempts: 25,
+  webhookUrl: "https://example.com/hooks/qpub",
+  webhookSecret: "whsec_...",
+});
+
+const config = await rest.queues.getConfig("emails");
+```
+
+```go
+_, err := rest.Queues.UpdateConfig(ctx, "emails", protocol.UpdateQueueConfigOptions{
+	MaxAttempts: 25,
+})
+cfg, err := rest.Queues.GetConfig(ctx, "emails")
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X PUT "https://rest.qpub.io/v1/queue/emails" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"max_attempts":25}'
+```
+
+</CodeExamples>
+
 Body fields applied on **create**: `max_attempts`, `webhook_url`, `webhook_secret`.
 
 If the queue already exists, the **PUT** endpoint returns the current config — those request fields are not applied as updates today.
@@ -88,3 +202,5 @@ If the queue already exists, the **PUT** endpoint returns the current config —
 Read the full config (including platform defaults such as visibility timeout) with `GET /v1/queue/:queueName` or `getConfig`.
 
 Durations in responses use Go-style strings such as `"30s"`.
+
+</ExampleScope>

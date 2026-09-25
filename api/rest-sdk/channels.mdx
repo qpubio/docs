@@ -3,7 +3,11 @@ title: "REST SDK Channels"
 description: "Publish and batch-publish with QPub.Rest."
 ---
 
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
 ## Single channel
+
+<CodeExamples group="REST">
 
 ```javascript
 const result = await rest.channels.get("notifications").publish(
@@ -12,9 +16,42 @@ const result = await rest.channels.get("notifications").publish(
 );
 ```
 
+```typescript
+const result = await rest.channels.get("notifications").publish(
+  { text: "Hello" },
+  { event: "greeting", alias: "api" }
+);
+```
+
+```go
+import (
+	"context"
+
+	"github.com/qpubio/qpub-go/channel"
+)
+
+_, err := rest.Channels.Get("notifications").Publish(
+	context.Background(),
+	map[string]string{"text": "Hello"},
+	channel.PublishOptions{Event: "greeting", Alias: "api"},
+)
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/channel/notifications/messages" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"event":"greeting","alias":"api","data":{"text":"Hello"}}]}'
+```
+
+</CodeExamples>
+
 Maps to `POST /v1/channel/notifications/messages`.
 
 ## Batch
+
+<CodeExamples group="REST">
 
 ```javascript
 await rest.channels.publishBatch(
@@ -26,8 +63,49 @@ await rest.channels.publishBatch(
 );
 ```
 
+```typescript
+await rest.channels.publishBatch(
+  ["notifications", "ops"],
+  [
+    { data: { text: "Hello" }, event: "greeting" },
+    { data: { text: "Again" }, event: "greeting" },
+  ]
+);
+```
+
+```go
+import (
+	"context"
+	"encoding/json"
+
+	"github.com/qpubio/qpub-go/protocol"
+)
+
+payload, _ := json.Marshal(map[string]string{"text": "Hello"})
+_, err := rest.Channels.PublishBatch(
+	context.Background(),
+	[]string{"notifications", "ops"},
+	[]protocol.DataMessagePayload{{
+		Event: "greeting",
+		Data:  payload,
+	}},
+)
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/channels/messages" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"channels":["notifications","ops"],"messages":[{"event":"greeting","data":{"text":"Hello"}},{"event":"greeting","data":{"text":"Again"}}]}'
+```
+
+</CodeExamples>
+
 Maps to `POST /v1/channels/messages` with a `channels` array.
 
 ## Auth
 
 Uses `rest.auth.getAuthHeaders()` (Bearer JWT if present, otherwise Basic API key).
+
+</ExampleScope>

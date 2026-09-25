@@ -13,15 +13,46 @@ Create and rotate keys in [QPub Cloud](/cloud/api-keys.mdx).
 
 ## REST
 
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
 Send the key as HTTP Basic (recommended):
 
-```bash
+<CodeExamples group="REST">
+
+```javascript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
+});
+
+await rest.channels.get("demo").publish({ text: "Hello" });
+```
+
+```typescript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
+});
+```
+
+```go
+rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+defer rest.Reset()
+```
+
+```curl
 API_KEY="publicId:secret"
 curl -X POST "https://rest.qpub.io/v1/channel/demo/messages" \
   -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
   -H "Content-Type: application/json" \
   -d '{"messages":[{"data":{"text":"Hello"}}]}'
 ```
+
+</CodeExamples>
+
+</ExampleScope>
 
 Or as a query parameter (less preferred — may appear in logs):
 
@@ -45,14 +76,18 @@ Connect to `wss://socket.qpub.io/v1` with:
 
 Optional: `&alias=my-client`.
 
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "react", "go"]}>
+
 ## SDK
+
+<CodeExamples group="Socket">
 
 ```javascript
 import { QPub } from "@qpub/sdk";
 
 const socket = new QPub.Socket({
   apiKey: process.env.QPUB_API_KEY,
-  alias: "server-worker-1", // optional
+  alias: "server-worker-1",
 });
 
 const rest = new QPub.Rest({
@@ -60,7 +95,35 @@ const rest = new QPub.Rest({
 });
 ```
 
+```typescript
+import { QPub } from "@qpub/sdk";
+
+const socket = new QPub.Socket({
+  apiKey: process.env.QPUB_API_KEY,
+  alias: "server-worker-1",
+});
+
+const rest = new QPub.Rest({
+  apiKey: process.env.QPUB_API_KEY,
+});
+```
+
+```react
+<SocketProvider options={{ apiKey: process.env.QPUB_API_KEY, alias: "server-worker-1" }}>
+  {children}
+</SocketProvider>
+```
+
+```go
+socket := qpub.NewSocket(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+```
+
+</CodeExamples>
+
 The SDK sends Basic auth on REST and `api_key` on the WebSocket URL when no JWT is active.
+
+</ExampleScope>
 
 ## Security
 

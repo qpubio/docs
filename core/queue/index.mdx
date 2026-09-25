@@ -5,7 +5,7 @@ description: "Durable job queues over the QPub REST API."
 
 Queues let you run background work reliably: enqueue a job with a payload, then have a worker pull it, process it, and ack or nack the result.
 
-Queues are **REST-only**. Use `QPub.Rest` (or raw HTTP). The Socket client does not enqueue or pull jobs.
+Queues are **REST-only**. Use the REST client (or raw HTTP). The Socket client does not enqueue or pull jobs.
 
 ## Concepts
 
@@ -18,6 +18,10 @@ Queues are **REST-only**. Use `QPub.Rest` (or raw HTTP). The Socket client does 
 Typical job statuses you will see: `pending`, `scheduled`, `running`, `completed`, `failed`, `cancelled`, `dlq`.
 
 ## Quick example
+
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
+<CodeExamples group="REST">
 
 ```javascript
 import { QPub } from "@qpub/sdk";
@@ -33,12 +37,58 @@ await rest.queues.enqueue("emails", {
   subject: "Welcome",
 });
 
-// Blocks until stopWorker() is called
 await rest.queues.runWorker("emails", async (job) => {
-  // send email from job.payload
   return { sent: true };
 });
 ```
+
+```typescript
+import { QPub } from "@qpub/sdk";
+
+const rest = new QPub.Rest({ apiKey: process.env.QPUB_API_KEY });
+
+await rest.queues.updateConfig("emails", { maxAttempts: 5 });
+
+await rest.queues.enqueue("emails", {
+  to: "user@example.com",
+  subject: "Welcome",
+});
+
+await rest.queues.runWorker("emails", async (job) => {
+  return { sent: true };
+});
+```
+
+```go
+import (
+	"context"
+	"os"
+
+	"github.com/qpubio/qpub-go"
+	"github.com/qpubio/qpub-go/protocol"
+)
+
+rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+defer rest.Reset()
+
+ctx := context.Background()
+_, _ = rest.Queues.UpdateConfig(ctx, "emails", protocol.UpdateQueueConfigOptions{MaxAttempts: 5})
+_, _ = rest.Queues.Enqueue(ctx, "emails", map[string]string{
+	"to": "user@example.com", "subject": "Welcome",
+}, protocol.EnqueueOptions{})
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/queue/emails/jobs" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"payload":{"to":"user@example.com","subject":"Welcome"}}'
+```
+
+</CodeExamples>
+
+</ExampleScope>
 
 ## Permissions
 

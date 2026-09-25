@@ -5,6 +5,35 @@ description: "Queue methods on QPub.Rest (`rest.queues`)."
 
 Access via `rest.queues` (`IRestQueueManager`). Wire JSON uses snake_case; the SDK exposes camelCase.
 
+<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+
+<CodeExamples group="REST">
+
+```javascript
+await rest.queues.enqueue("emails", { to: "user@example.com" });
+const job = await rest.queues.getJob("emails", jobId);
+```
+
+```typescript
+await rest.queues.enqueue("emails", { to: "user@example.com" });
+```
+
+```go
+_, err := rest.Queues.Enqueue(ctx, "emails", payload, protocol.EnqueueOptions{})
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/queue/emails/jobs" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"payload":{"to":"user@example.com"}}'
+```
+
+</CodeExamples>
+
+</ExampleScope>
+
 ## Jobs
 
 | Method | Description |

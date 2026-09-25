@@ -5,36 +5,107 @@ description: "Get, subscribe, publish, and manage channels with the SDK."
 
 Channels are named topics. You do not create them ahead of time — publish or subscribe with a string name.
 
+<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "typescript", "react", "go", "curl"]}>
+
 ## Get a channel handle
+
+<When group="Socket">
+
+<CodeExamples group="Socket">
 
 ```javascript
 const channel = socket.channels.get("chat.lobby");
 ```
 
+```typescript
+const channel = socket.channels.get("chat.lobby");
+```
+
+```react
+const { publish, subscribe } = useChannel("chat.lobby");
+```
+
+```go
+ch := socket.Channels.Get("chat.lobby")
+```
+
+</CodeExamples>
+
 `get` returns a local handle. It does not call the network by itself.
 
+</When>
+
 ## Subscribe (Socket only)
+
+<When group="Socket">
+
+<CodeExamples group="Socket">
 
 ```javascript
 await channel.subscribe((message) => {
   console.log(message.channel, message.event, message.data);
 });
 
-// Optional SDK event filter
 await channel.subscribe(handler, { event: "message.created" });
 ```
 
+```typescript
+await channel.subscribe((message) => {
+  console.log(message.channel, message.event, message.data);
+});
+```
+
+```react
+subscribe(onMessage, { event: "message.created" });
+```
+
+```go
+_ = ch.Subscribe(ctx, func(m qpub.Message) {
+	// ...
+}, channel.SubscribeOptions{Event: "message.created"})
+```
+
+</CodeExamples>
+
+</When>
+
 ## Publish
 
+<When group="Socket">
+
 **Socket**
+
+<CodeExamples group="Socket">
 
 ```javascript
 await channel.publish({ text: "hi" }, { event: "chat", alias: "Alice" });
 ```
 
+```typescript
+await channel.publish({ text: "hi" }, { event: "chat", alias: "Alice" });
+```
+
+```react
+publish({ text: "hi" }, { event: "chat", alias: "Alice" });
+```
+
+```go
+_ = ch.Publish(ctx, map[string]string{"text": "hi"}, channel.PublishOptions{
+	Event: "chat", Alias: "Alice",
+})
+```
+
+</CodeExamples>
+
 WebSocket publish is fire-and-forget from the client’s perspective.
 
+</When>
+
+<When group="REST">
+
 **REST**
+
+<CodeExamples group="REST">
 
 ```javascript
 const result = await rest.channels.get("chat.lobby").publish(
@@ -43,19 +114,84 @@ const result = await rest.channels.get("chat.lobby").publish(
 );
 ```
 
+```typescript
+const result = await rest.channels.get("chat.lobby").publish(
+  { text: "hi" },
+  { event: "chat" }
+);
+```
+
+```go
+_, err := rest.Channels.Get("chat.lobby").Publish(ctx, map[string]string{"text": "hi"}, channel.PublishOptions{Event: "chat"})
+```
+
+```curl
+API_KEY="publicId:secret"
+curl -X POST "https://rest.qpub.io/v1/channel/chat.lobby/messages" \
+  -H "Authorization: Basic $(echo -n "$API_KEY" | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"event":"chat","data":{"text":"hi"}}]}'
+```
+
+</CodeExamples>
+
+</When>
+
 ## Unsubscribe / release
+
+<When group="Socket">
+
+<CodeExamples group="Socket">
 
 ```javascript
 await channel.unsubscribe();
-socket.channels.release("chat.lobby"); // drop local handle (used by React hooks)
+socket.channels.release("chat.lobby");
 ```
 
+```typescript
+await channel.unsubscribe();
+socket.channels.release("chat.lobby");
+```
+
+```react
+await unsubscribe(onMessage);
+```
+
+```go
+_ = ch.Unsubscribe(ctx)
+socket.Channels.Release("chat.lobby")
+```
+
+</CodeExamples>
+
+</When>
+
 ## Pause / resume (Socket)
+
+<When group="Socket">
+
+<CodeExamples group="Socket">
 
 ```javascript
 channel.pause({ bufferMessages: true });
 channel.resume();
 ```
+
+```typescript
+channel.pause({ bufferMessages: true });
+channel.resume();
+```
+
+```go
+ch.Pause(channel.PauseOptions{BufferMessages: true})
+ch.Resume()
+```
+
+</CodeExamples>
+
+</When>
+
+</ExampleScope>
 
 ## Naming tips
 
