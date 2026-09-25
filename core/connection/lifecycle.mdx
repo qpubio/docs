@@ -5,6 +5,8 @@ description: "Socket connection events, reconnect, and ping."
 
 A Socket connection moves through a small set of SDK events from construction to ready, then reconnects automatically when the transport drops.
 
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "react", "go"]}>
+
 ## Events
 
 Listen on `socket.connection`:
@@ -19,8 +21,6 @@ Listen on `socket.connection`:
 | `closing` | Intentional close in progress |
 | `closed` | Closed (`code`, `reason`) |
 | `failed` | Unrecoverable failure (`error`, `context`) |
-
-<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "react", "go"]}>
 
 <CodeExamples group="Socket">
 
@@ -59,13 +59,9 @@ function Status() {
 
 </CodeExamples>
 
-</ExampleScope>
-
 Subscribe to channels after `connected` (or rely on `autoResubscribe` after reconnect).
 
 ## Manual connect / disconnect
-
-<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "go"]}>
 
 <CodeExamples group="Socket">
 
@@ -100,8 +96,6 @@ socket.Connection.Disconnect()
 
 </CodeExamples>
 
-</ExampleScope>
-
 ## Reconnect
 
 Defaults:
@@ -119,8 +113,6 @@ After reconnect, the SDK resubscribes to active channels when `autoResubscribe` 
 
 ## Ping
 
-<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "go"]}>
-
 <CodeExamples group="Socket">
 
 ```javascript
@@ -137,13 +129,9 @@ rttMs, err := socket.Connection.Ping(ctx)
 
 </CodeExamples>
 
-</ExampleScope>
-
 Uses protocol ping/pong. `pingTimeoutMs` defaults to `10000`.
 
 ## Helpers
-
-<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "go"]}>
 
 <CodeExamples group="Socket">
 

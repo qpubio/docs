@@ -11,9 +11,11 @@ API keys are project credentials in the form:
 
 Create and rotate keys in [QPub Cloud](/cloud/api-keys.mdx).
 
+<ExampleScope defaultGroup="REST" groups={["REST", "Socket"]} languages={["javascript", "typescript", "react", "go", "curl"]}>
+
 ## REST
 
-<ExampleScope defaultGroup="REST" groups={["REST"]} languages={["javascript", "typescript", "go", "curl"]}>
+<When group="REST">
 
 Send the key as HTTP Basic (recommended):
 
@@ -52,7 +54,7 @@ curl -X POST "https://rest.qpub.io/v1/channel/demo/messages" \
 
 </CodeExamples>
 
-</ExampleScope>
+</When>
 
 Or as a query parameter (less preferred — may appear in logs):
 
@@ -76,7 +78,7 @@ Connect to `wss://socket.qpub.io/v1` with:
 
 Optional: `&alias=my-client`.
 
-<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "typescript", "react", "go"]}>
+<When group="Socket">
 
 ## SDK
 
@@ -122,6 +124,8 @@ rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
 </CodeExamples>
 
 The SDK sends Basic auth on REST and `api_key` on the WebSocket URL when no JWT is active.
+
+</When>
 
 </ExampleScope>
 
