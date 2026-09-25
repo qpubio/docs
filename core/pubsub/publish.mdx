@@ -1,11 +1,11 @@
 ---
 title: "Publish"
-description: "Publish messages to channels over WebSocket or REST."
+description: "Publish messages to channels over WebSocket or REST (JavaScript, React, or Go)."
 ---
 
-Publish to a named channel with `publish` permission. Use the **API** and **Language** controls to switch **Socket** vs **REST** and **JavaScript** vs **React**.
+Publish to a named channel with `publish` permission. Use the **API** and **Language** controls to switch **Socket** vs **REST** and **JavaScript**, **React**, or **Go**.
 
-<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "react"]}>
+<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "react", "go"]}>
 
 ## Publish a message
 
@@ -61,12 +61,48 @@ function PublishButton() {
 }
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+
+	"github.com/qpubio/qpub-go/channel"
+	"github.com/qpubio/qpub-go/qpub"
+)
+
+func main() {
+	socket := qpub.NewSocket(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+	defer socket.Reset()
+
+	ctx := context.Background()
+	if err := socket.Connection.WaitUntilConnected(ctx); err != nil {
+		log.Fatal(err)
+	}
+
+	ch := socket.Channels.Get("notifications")
+	err := ch.Publish(ctx, map[string]interface{}{
+		"title":   "New order",
+		"orderId": "ord_1",
+	}, channel.PublishOptions{Event: "order.created", Alias: "api"})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
 </CodeExamples>
 
 Socket publish does not return the REST `published` payload.
 
 <When lang="react">
 Prefer a JWT or [token request](/core/auth/token.mdx) in `SocketProvider` for browsers instead of a production API key secret.
+</When>
+
+<When lang="go">
+Keep the API key on a trusted server or use [token auth](/core/auth/token.mdx) for credentials issued to other clients.
 </When>
 
 </When>
@@ -122,6 +158,33 @@ export function PublishButton() {
 }
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+
+	"github.com/qpubio/qpub-go/channel"
+	"github.com/qpubio/qpub-go/qpub"
+)
+
+func main() {
+	rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+	defer rest.Reset()
+
+	_, err := rest.Channels.Get("notifications").Publish(
+		context.Background(),
+		map[string]string{"title": "New order"},
+		channel.PublishOptions{Event: "order.created"},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
 </CodeExamples>
 
 HTTP:
@@ -151,6 +214,10 @@ Run REST publish from a trusted server or script that can hold the API key secre
 QPub's React hooks/providers (`@qpub/sdk/react`) are Socket-only. REST is recommended for **server-side** use, so there's no dedicated React integration — but you can still call the plain `QPub.Rest` client from React (an event handler or server action). Keep secrets off the public client bundle.
 </When>
 
+<When lang="go">
+REST publish is intended for trusted Go services and workers.
+</When>
+
 </When>
 
 ## Batch publish (REST)
@@ -177,6 +244,24 @@ await rest.channels.publishBatch(
     { data: { title: "New order" }, event: "order.created" },
   ]
 );
+```
+
+```go
+import (
+	"encoding/json"
+
+	"github.com/qpubio/qpub-go/protocol"
+)
+
+payload, _ := json.Marshal(map[string]string{"title": "New order"})
+_, err := rest.Channels.PublishBatch(
+	context.Background(),
+	[]string{"notifications", "ops"},
+	[]protocol.DataMessagePayload{{
+		Event: "order.created",
+		Data:  payload,
+	}},
+)
 ```
 
 </CodeExamples>

@@ -1,13 +1,13 @@
 ---
 title: "Subscribe"
-description: "Subscribe to channel messages with the Socket SDK."
+description: "Subscribe to channel messages with the Socket SDK (JavaScript, React, or Go)."
 ---
 
-Subscribing requires a WebSocket connection and `subscribe` permission on the channel. Use the **Language** control to switch **JavaScript** vs **React**.
+Subscribing requires a WebSocket connection and `subscribe` permission on the channel. Use the **Language** control to switch **JavaScript**, **React**, or **Go**.
 
 REST cannot open a realtime subscription — publish with REST, receive with Socket.
 
-<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "react"]}>
+<ExampleScope defaultGroup="Socket" groups={["Socket"]} languages={["javascript", "react", "go"]}>
 
 ## Basic subscribe
 
@@ -65,9 +65,51 @@ function Inbox() {
 }
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/qpubio/qpub-go/channel"
+	"github.com/qpubio/qpub-go/qpub"
+)
+
+func main() {
+	socket := qpub.NewSocket(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+	defer socket.Reset()
+
+	ctx := context.Background()
+	if err := socket.Connection.WaitUntilConnected(ctx); err != nil {
+		log.Fatal(err)
+	}
+
+	ch := socket.Channels.Get("notifications")
+	err := ch.Subscribe(ctx, func(m qpub.Message) {
+		fmt.Println(m.Data)
+	}, channel.SubscribeOptions{})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
 </CodeExamples>
 
+<When lang="javascript">
 `subscribe` returns a Promise that resolves when the server acknowledges the subscription.
+</When>
+
+<When lang="react">
+`subscribe` resolves when the server acknowledges the subscription (via the hook).
+</When>
+
+<When lang="go">
+`Subscribe` blocks until the server acknowledges the subscription or `ctx` is cancelled.
+</When>
 
 <When lang="javascript">
 > Do not put a production API key secret in a public browser app. Use [token auth](/core/auth/token.mdx) instead.
@@ -75,6 +117,10 @@ function Inbox() {
 
 <When lang="react">
 Prefer a JWT or [token request](/core/auth/token.mdx) in `SocketProvider` options instead of embedding a production API key secret.
+</When>
+
+<When lang="go">
+Use the API key only on trusted servers. For other clients, issue a [token request](/core/auth/token.mdx) or JWT instead.
 </When>
 
 ## Event filter (SDK)
@@ -101,6 +147,12 @@ useEffect(() => {
 }, [ready, subscribe, unsubscribe]);
 ```
 
+```go
+err := ch.Subscribe(ctx, func(m qpub.Message) {
+	fmt.Println(m.Data)
+}, channel.SubscribeOptions{Event: "order.created"})
+```
+
 </CodeExamples>
 
 ## Unsubscribe
@@ -119,6 +171,12 @@ await unsubscribe(onMessage);
 
 // Or omit the callback to clear handlers for this channel (SDK behavior).
 await unsubscribe();
+```
+
+```go
+if err := ch.Unsubscribe(ctx); err != nil {
+	log.Fatal(err)
+}
 ```
 
 </CodeExamples>
@@ -143,6 +201,15 @@ function App({ tokenRequest }) {
     </SocketProvider>
   );
 }
+```
+
+```go
+import "github.com/qpubio/qpub-go/option"
+
+socket := qpub.NewSocket(func(o *option.Option) {
+	o.TokenRequest = tokenRequest // from your backend
+})
+defer socket.Reset()
 ```
 
 </CodeExamples>

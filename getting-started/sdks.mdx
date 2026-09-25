@@ -1,29 +1,42 @@
 ---
 title: "SDKs"
-description: "Official QPub JavaScript SDK installation and usage."
+description: "Official QPub client SDKs for JavaScript, React, and Go."
 ---
 
-QPub’s official client library is `@qpub/sdk` for JavaScript and TypeScript (browsers, Node.js, Bun, and React). Use the **API** and **Language** controls to switch **Socket** vs **REST** and **JavaScript** vs **React**.
+QPub ships official client libraries: `@qpub/sdk` (JavaScript/TypeScript) and [qpub-go](https://github.com/qpubio/qpub-go) (Go). Use the **API** and **Language** controls to switch **Socket** vs **REST** and **JavaScript** vs **React** vs **Go**.
 
-<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "react"]}>
+<ExampleScope defaultGroup="Socket" groups={["Socket", "REST"]} languages={["javascript", "react", "go"]}>
 
 ## Install
 
+<When lang="javascript">
 ```bash
 npm install @qpub/sdk
 # or
 bun add @qpub/sdk
 ```
+</When>
+
+<When lang="react">
+```bash
+npm install @qpub/sdk
+```
+Import providers and hooks from `@qpub/sdk/react` (same package).
+</When>
+
+<When lang="go">
+```bash
+go get github.com/qpubio/qpub-go@v0.1.0
+```
+Requires Go 1.22 or newer.
+</When>
 
 | Import | Use |
 |--------|-----|
-| `@qpub/sdk` | `QPub.Socket`, `QPub.Rest`, types |
+| `@qpub/sdk` | `QPub.Socket`, `QPub.Rest`, types (JavaScript) |
 | `@qpub/sdk/react` | React providers and hooks |
+| `github.com/qpubio/qpub-go/qpub` | `qpub.NewSocket`, `qpub.NewRest` (Go) |
 | CDN UMD | Global `QPub` in the browser |
-
-<When lang="react">
-Import providers and hooks from `@qpub/sdk/react` (same package).
-</When>
 
 ## Quick example
 
@@ -93,6 +106,38 @@ function Chat() {
 }
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/qpubio/qpub-go/channel"
+	"github.com/qpubio/qpub-go/qpub"
+)
+
+func main() {
+	socket := qpub.NewSocket(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+	defer socket.Reset()
+
+	ctx := context.Background()
+	if err := socket.Connection.WaitUntilConnected(ctx); err != nil {
+		log.Fatal(err)
+	}
+
+	ch := socket.Channels.Get("news")
+	err := ch.Subscribe(ctx, func(m qpub.Message) {
+		fmt.Println(m.Data)
+	}, channel.SubscribeOptions{})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
 </CodeExamples>
 
 <When lang="javascript">
@@ -101,6 +146,10 @@ function Chat() {
 
 <When lang="react">
 For browsers, pass a JWT or [token request](/core/auth/token.mdx) into `SocketProvider` — not a secret API key in a public env var.
+</When>
+
+<When lang="go">
+Run on a trusted server or backend. Keep the API key in environment variables; use [token auth](/core/auth/token.mdx) when issuing credentials to other clients.
 </When>
 
 </When>
@@ -150,6 +199,33 @@ export function PublishButton() {
 }
 ```
 
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+
+	"github.com/qpubio/qpub-go/channel"
+	"github.com/qpubio/qpub-go/qpub"
+)
+
+func main() {
+	rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
+	defer rest.Reset()
+
+	_, err := rest.Channels.Get("news").Publish(
+		context.Background(),
+		map[string]string{"headline": "Ship it"},
+		channel.PublishOptions{},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
 </CodeExamples>
 
 <When lang="javascript">
@@ -158,6 +234,10 @@ Keep the API key on a trusted server. Use [queues](/core/queue/index.mdx) and [t
 
 <When lang="react">
 QPub's React hooks/providers (`@qpub/sdk/react`) are Socket-only. REST is recommended for **server-side** use, so there's no dedicated React integration — but you can still call the plain `QPub.Rest` client from React (a server action or trusted backend). For browser realtime, switch to **Socket** and use `@qpub/sdk/react`.
+</When>
+
+<When lang="go">
+REST and queues are a natural fit for Go services. See [qpub-go examples](https://github.com/qpubio/qpub-go/tree/main/examples) for queue workers and token flows.
 </When>
 
 </When>
@@ -171,6 +251,6 @@ QPub's React hooks/providers (`@qpub/sdk/react`) are Socket-only. REST is recomm
 
 ## Other languages
 
-Use the [REST API](/api/rest-api.mdx) and [Socket Protocol](/api/socket-protocol.mdx) directly. Official SDKs for other languages are not documented yet.
+Use the [REST API](/api/rest-api.mdx) and [Socket Protocol](/api/socket-protocol.mdx) directly when no official SDK exists for your stack.
 
 </ExampleScope>
