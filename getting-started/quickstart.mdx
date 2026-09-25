@@ -42,7 +42,7 @@ Import providers and hooks from `@qpub/sdk/react` (same package).
 
 <When lang="go">
 ```bash
-go get github.com/qpubio/qpub-go@v0.1.0
+go get github.com/qpubio/qpub-go@v0.2.0
 ```
 </When>
 
@@ -116,7 +116,7 @@ import (
 	"os"
 
 	"github.com/qpubio/qpub-go/channel"
-	"github.com/qpubio/qpub-go/qpub"
+	"github.com/qpubio/qpub-go"
 )
 
 func main() {
@@ -214,7 +214,7 @@ import (
 	"os"
 
 	"github.com/qpubio/qpub-go/channel"
-	"github.com/qpubio/qpub-go/qpub"
+	"github.com/qpubio/qpub-go"
 )
 
 func main() {
@@ -275,7 +275,7 @@ import (
 	"os"
 
 	"github.com/qpubio/qpub-go/channel"
-	"github.com/qpubio/qpub-go/qpub"
+	"github.com/qpubio/qpub-go"
 )
 
 rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
@@ -432,7 +432,7 @@ const rest = new QPub.Rest({
 import (
 	"os"
 
-	"github.com/qpubio/qpub-go/qpub"
+	"github.com/qpubio/qpub-go"
 )
 
 wsPort := 8131

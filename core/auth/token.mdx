@@ -48,7 +48,7 @@ function App() {
 
 ```go
 import (
-	"github.com/qpubio/qpub-go/qpub"
+	"github.com/qpubio/qpub-go"
 )
 
 socket := qpub.NewSocket(func(o *qpub.Option) {
@@ -133,7 +133,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/qpubio/qpub-go/qpub"
+	"github.com/qpubio/qpub-go"
 )
 
 rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
@@ -180,7 +180,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/qpubio/qpub-go/qpub"
+	"github.com/qpubio/qpub-go"
 )
 
 rest := qpub.NewRest(qpub.WithAPIKey(os.Getenv("QPUB_API_KEY")))
@@ -225,7 +225,7 @@ function App({ tokenRequest }) {
 
 ```go
 import (
-	"github.com/qpubio/qpub-go/qpub"
+	"github.com/qpubio/qpub-go"
 )
 
 socket := qpub.NewSocket(func(o *qpub.Option) {
@@ -269,7 +269,7 @@ import (
 	"log"
 
 	"github.com/qpubio/qpub-go/channel"
-	"github.com/qpubio/qpub-go/qpub"
+	"github.com/qpubio/qpub-go"
 )
 
 ctx := context.Background()
